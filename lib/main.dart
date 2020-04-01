@@ -33,9 +33,9 @@ class MyApp extends StatelessWidget {
 
 class Routes {
   static final sailor = Sailor();
-  static void createRoutes() {
-    sailor.addRoutes({SailorRoute(name: '/login', builder: null)});
-  }
+  // static void createRoutes() {
+  //   sailor.addRoutes({SailorRoute(name: '/login', builder: null)});
+  // }
 }
 
 class MyHomePage extends StatefulWidget {
