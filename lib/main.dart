@@ -3,6 +3,7 @@ import 'package:homemobileapp/pages/registrationPages/userNamePassword.dart';
 //import './UI/CustomLoginInput.dart';
 import './Animation/FadeinAnimation.dart';
 import './pages/registrationPages/otpVerification.dart';
+import 'package:sailor/sailor.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,6 +28,13 @@ class MyApp extends StatelessWidget {
       //home: MyHomePage(title: 'Home Delivery'),
       home: UserNamePassword(),
     );
+  }
+}
+
+class Routes {
+  static final sailor = Sailor();
+  static void createRoutes() {
+    sailor.addRoutes({SailorRoute(name: '/login', builder: null)});
   }
 }
 
