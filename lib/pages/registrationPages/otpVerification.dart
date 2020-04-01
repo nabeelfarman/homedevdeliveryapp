@@ -1,10 +1,41 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 //import 'package:flutter/services.dart';
 
-class OTPVerification extends StatelessWidget {
+class OTPVerification extends StatefulWidget {
+  @override
+  _OTPVerification createState() => _OTPVerification();
+}
+
+class _OTPVerification extends State<OTPVerification> {
   // final String productName;
-  OTPVerification();
+  _OTPVerification();
+  Timer _timer;
+  int _start = 180;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (_start < 1) {
+            timer.cancel();
+          } else {
+            _start = _start - 1;
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +91,7 @@ class OTPVerification extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '3:00',
+                            '$_start',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: blackClr,

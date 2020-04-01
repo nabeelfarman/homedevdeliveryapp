@@ -5,7 +5,10 @@ import './Animation/FadeinAnimation.dart';
 import './pages/registrationPages/otpVerification.dart';
 import 'package:sailor/sailor.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  Routes.createRoutes();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -25,16 +28,39 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      //home: MyHomePage(title: 'Home Delivery'),
-      home: UserNamePassword(),
+      // home: MyHomePage(title: 'Home Delivery'),
+      home: OTPVerification(),
+      onGenerateRoute: Routes.sailor.generator(),
+      navigatorKey: Routes.sailor.navigatorKey,
     );
   }
 }
 
+// void f(int x) {}
+
 class Routes {
   static final sailor = Sailor();
   static void createRoutes() {
-    sailor.addRoutes({SailorRoute(name: '/login', builder: null)});
+    sailor.addRoutes([
+      SailorRoute(
+        name: '/login',
+        builder: (context, args, params) {
+          return UserNamePassword();
+        },
+      ),
+      SailorRoute(
+        name: '/verification',
+        builder: (context, args, params) {
+          return OTPVerification();
+        },
+      ),
+      SailorRoute(
+        name: '/user',
+        builder: (context, args, params) {
+          return UserNamePassword();
+        },
+      )
+    ]);
   }
 }
 
@@ -267,8 +293,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void navigateToHome(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => OTPVerification(),
-    ));
+    Routes.sailor.navigate('/verification');
+    // Navigator.of(context).push(MaterialPageRoute(
+    //   builder: (context) => OTPVerification(),
+    // ));
   }
 }
