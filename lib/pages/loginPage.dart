@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 
 import '../Animation/FadeinAnimation.dart';
-import '../Animation/FadeinAnimation.dart';
-import '../Animation/FadeinAnimation.dart';
-import '../Animation/FadeinAnimation.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,10 +9,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  // AnimationController _controller;
 
   @override
-  // TODO: implement widget
   Widget build(BuildContext context) {
     //declarations
     Color blackClr = Color(0xff141622);

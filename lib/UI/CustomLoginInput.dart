@@ -8,7 +8,6 @@ class CustomLoginInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       width: 300,
       height: 60,
