@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:homemobileapp/pages/loginPage.dart';
 import 'package:homemobileapp/pages/registrationPages/userNamePassword.dart';
 //import './UI/CustomLoginInput.dart';
 import './Animation/FadeinAnimation.dart';
 import './pages/registrationPages/otpVerification.dart';
 import 'package:sailor/sailor.dart';
 
+import 'pages/registrationPages/otpVerification.dart';
 import 'pages/registrationPages/supplierCustomer.dart';
 
 void main() {
@@ -30,8 +32,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Home Delivery'),
-      //home: supplierCustomer(),
+      //home: MyHomePage(title: 'Home Delivery'),
+      home: LoginPage(),
       onGenerateRoute: Routes.sailor.generator(),
       navigatorKey: Routes.sailor.navigatorKey,
     );
