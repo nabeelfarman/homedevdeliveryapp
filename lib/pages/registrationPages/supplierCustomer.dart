@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 
-class supplierCustomer extends StatelessWidget {
-  supplierCustomer();
+class SupplierCustomer extends StatelessWidget {
+  SupplierCustomer();
 
   @override
   Widget build(BuildContext context) {
