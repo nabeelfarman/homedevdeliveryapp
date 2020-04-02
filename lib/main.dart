@@ -5,6 +5,8 @@ import './Animation/FadeinAnimation.dart';
 import './pages/registrationPages/otpVerification.dart';
 import 'package:sailor/sailor.dart';
 
+import 'pages/registrationPages/supplierCustomer.dart';
+
 void main() {
   Routes.createRoutes();
   runApp(MyApp());
@@ -28,8 +30,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      // home: MyHomePage(title: 'Home Delivery'),
-      home: OTPVerification(),
+      home: MyHomePage(title: 'Home Delivery'),
+      //home: supplierCustomer(),
       onGenerateRoute: Routes.sailor.generator(),
       navigatorKey: Routes.sailor.navigatorKey,
     );
