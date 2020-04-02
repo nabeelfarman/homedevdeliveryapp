@@ -7,7 +7,6 @@ import './pages/registrationPages/otpVerification.dart';
 import 'package:sailor/sailor.dart';
 
 import 'pages/registrationPages/otpVerification.dart';
-import 'pages/registrationPages/otpVerification.dart';
 import 'pages/registrationPages/supplierCustomer.dart';
 
 void main() {
@@ -39,7 +38,7 @@ class Routes {
       SailorRoute(
         name: '/login',
         builder: (context, args, params) {
-          return UserNamePassword();
+          return LoginPage();
         },
       ),
       SailorRoute(
