@@ -9,55 +9,12 @@ class OTPVerification extends StatefulWidget {
   _OTPVerification createState() => _OTPVerification();
 }
 
-class _OTPVerification extends State<OTPVerification>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(minutes: 3));
-    _controller.forward();
-  }
+class _OTPVerification extends State<OTPVerification> {
+  // final String productName;
+  _OTPVerification();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Countdown(
-            animation: StepTween(
-              begin: 3 * 60,
-              end: 0,
-            ).animate(_controller),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-}
-
-class Countdown extends AnimatedWidget {
-  // _OTPVerification verification;
-
-  Countdown({Key key, this.animation}) : super(key: key, listenable: animation);
-  Animation<int> animation;
-
-  @override
-  Widget build(BuildContext context) {
-    Duration clockTimer = Duration(seconds: animation.value);
-
-    String timerText =
-        '${clockTimer.inMinutes.remainder(60).toString()}:${(clockTimer.inSeconds.remainder(60) % 60).toString().padLeft(2, '0')}';
-
     //declarations
     Color blackClr = Color(0xff141622);
     Color greenClr = Color(0xff8cc540);
@@ -110,7 +67,7 @@ class Countdown extends AnimatedWidget {
                             ),
                           ),
                           Text(
-                            '$timerText',
+                            '3:00',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: blackClr,
@@ -129,12 +86,19 @@ class Countdown extends AnimatedWidget {
                           ),
                           TextFormField(
                             key: Key('password'),
+                            keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             maxLength: 4,
                             decoration: InputDecoration(
                               hintText: '04 digit OTP',
                               // labelText: 'mobile number',
                             ),
+                            validator: (String value) {
+                              if (value.isEmpty) {
+                                return 'Enter Verification Code';
+                              }
+                            },
+                            onSaved: (String value) {},
                           ),
                           Padding(
                             padding:
@@ -168,9 +132,7 @@ class Countdown extends AnimatedWidget {
                                   )
                                 ],
                               ),
-                              onPressed: () {
-                                print('ok');
-                              },
+                              onPressed: () {},
                             ),
                           ),
                           Padding(
