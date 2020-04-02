@@ -7,6 +7,7 @@ import './pages/registrationPages/otpVerification.dart';
 import 'package:sailor/sailor.dart';
 
 import 'pages/registrationPages/otpVerification.dart';
+import 'pages/registrationPages/otpVerification.dart';
 import 'pages/registrationPages/supplierCustomer.dart';
 
 void main() {
@@ -33,9 +34,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //home: MyHomePage(title: 'Home Delivery'),
-      home: LoginPage(),
-      onGenerateRoute: Routes.sailor.generator(),
-      navigatorKey: Routes.sailor.navigatorKey,
+      home: OTPVerification(),
+      // onGenerateRoute: Routes.sailor.generator(),
+      // navigatorKey: Routes.sailor.navigatorKey,
     );
   }
 }
