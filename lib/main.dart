@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/pages/loginPage.dart';
+import 'package:homemobileapp/pages/mainOTPVerification.dart';
 import 'package:homemobileapp/pages/registrationPages/BusinessInfo.dart';
 import 'package:homemobileapp/pages/registrationPages/contactInfo.dart';
 import 'package:homemobileapp/pages/registrationPages/personalInfo.dart';
 import 'package:homemobileapp/pages/registrationPages/registrationSuccess.dart';
 import 'package:homemobileapp/pages/registrationPages/userNamePassword.dart';
+import 'package:homemobileapp/pages/resetPassword.dart';
 //import './UI/CustomLoginInput.dart';
 // import './Animation/FadeinAnimation.dart';
 import './pages/registrationPages/otpVerification.dart';
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //home: MyHomePage(title: 'Home Delivery'),
-      home: RegistrationSuccess(),
+      home: MainOTPVerification(),
       // onGenerateRoute: Routes.sailor.generator(),
       // navigatorKey: Routes.sailor.navigatorKey,
     );
