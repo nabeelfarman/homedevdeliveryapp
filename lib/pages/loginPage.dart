@@ -26,62 +26,60 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
     try {
       pr.show();
 
-      if (validateMobile == true && validatePwd == true) {
-        http.Response response = await http.get(
-            Uri.encodeFull("http://95.217.147.105:2002/api/login?UserName=" +
-                mobile.text +
-                "&HashPassword=" +
-                pwd.text),
-            headers: {"Accept": "application/json"});
-        final Map responseJson = json.decode(response.body);
+      http.Response response = await http.get(
+          Uri.encodeFull("http://95.217.147.105:2002/api/login?UserName=" +
+              mobile.text +
+              "&HashPassword=" +
+              pwd.text),
+          headers: {"Accept": "application/json"});
+      final Map responseJson = json.decode(response.body);
 
-        Widget okButton = FlatButton(
-          child: Text("OK"),
-          onPressed: () {
-            Navigator.pop(context);
-            // navigateToHome(context);
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+      if (responseJson["msg"] == "User successfully logged in") {
+        // showNotification();
+        pr.hide();
+        mobile.clear();
+        pwd.clear();
+        AlertDialog alert = AlertDialog(
+          title: Text("Success!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
           },
         );
-        if (responseJson["msg"] == "User successfully logged in") {
-          // showNotification();
-          pr.hide();
-          mobile.clear();
-          pwd.clear();
-          String message = responseJson["msg"];
-          AlertDialog alert = AlertDialog(
-            title: Text("Success!"),
-            content: Text(responseJson["msg"]),
-            actions: [
-              okButton,
-            ],
-          );
-          // show the dialog
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return alert;
-            },
-          );
-        } else {
-          pr.hide();
-          // set up the AlertDialog
-          AlertDialog alert = AlertDialog(
-            title: Text("Error!"),
-            content: Text('Error Occured'),
-            actions: [
-              okButton,
-            ],
-          );
-          // show the dialog
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return alert;
-            },
-          );
-        }
+      } else {
+        pr.hide();
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
       }
     } catch (e) {
+      pr.hide();
       Widget okButton = FlatButton(
         child: Text("OK"),
         onPressed: () {
@@ -220,7 +218,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                     hintText: 'password',
                                     // labelText: 'mobile number',
                                     prefixIcon: Icon(Icons.lock_outline),
-                                    errorText: validateMobile
+                                    errorText: validatePwd
                                         ? 'Password is Required'
                                         : null,
                                   ),
@@ -262,7 +260,10 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                               pwd.text.isEmpty
                                   ? validatePwd = true
                                   : validatePwd = false;
-                              login();
+                              if (mobile.text.isNotEmpty &&
+                                  pwd.text.isNotEmpty) {
+                                login();
+                              }
                             });
                           },
                         )),
@@ -300,7 +301,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                         fontSize: 18,
                                         fontFamily: 'Abel')),
                                 onTap: () {
-                                  // do what you need to do when "Click here" gets clicked
+                                  navigateToRegister(context);
                                 }),
                           ],
                         ),
@@ -313,7 +314,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                   fontSize: 18,
                                   fontFamily: 'Abel')),
                           onTap: () {
-                            // do what you need to do when "Click here" gets clicked
+                            navigateToForgot(context);
                           }),
                     ],
                   ),
@@ -326,7 +327,11 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
     ));
   }
 
-  void navigateToHome(BuildContext context) {
+  void navigateToRegister(BuildContext context) {
+    Routes.sailor.navigate('/register');
+  }
+
+  void navigateToForgot(BuildContext context) {
     Routes.sailor.navigate('/verification');
   }
 }

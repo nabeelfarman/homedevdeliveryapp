@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
+import 'package:homemobileapp/main.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class RegistrationSuccess extends StatelessWidget {
   RegistrationSuccess();

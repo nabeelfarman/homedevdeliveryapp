@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
       //home: MyHomePage(title: 'Home Delivery'),
       home: SplashScreen(),
       // home: LoginPage(),
-      // onGenerateRoute: Routes.sailor.generator(),
-      // navigatorKey: Routes.sailor.navigatorKey,
+      onGenerateRoute: Routes.sailor.generator(),
+      navigatorKey: Routes.sailor.navigatorKey,
     );
   }
 }
@@ -150,7 +150,7 @@ class Routes {
         },
       ),
       SailorRoute(
-        name: '/user',
+        name: '/register',
         builder: (context, args, params) {
           return UserNamePassword();
         },
@@ -163,11 +163,4 @@ class Routes {
       )
     ]);
   }
-}
-
-void navigateToLogin(BuildContext context) {
-  Routes.sailor.navigate('/login');
-  // Navigator.of(context).push(MaterialPageRoute(
-  //   builder: (context) => OTPVerification(),
-  // ));
 }
