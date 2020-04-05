@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
-
+import 'package:homemobileapp/main.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:progress_dialog/progress_dialog.dart';
 import '../Animation/FadeinAnimation.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,6 +15,94 @@ class LoginPage extends StatefulWidget {
 class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
   // AnimationController _controller;
 
+  TextEditingController mobile = new TextEditingController();
+  TextEditingController pwd = new TextEditingController();
+  ProgressDialog pr;
+
+  bool validateMobile = false;
+  bool validatePwd = false;
+
+  Future<List> login() async {
+    try {
+      pr.show();
+
+      http.Response response = await http.get(
+          Uri.encodeFull("http://95.217.147.105:2002/api/login?UserName=" +
+              mobile.text +
+              "&HashPassword=" +
+              pwd.text),
+          headers: {"Accept": "application/json"});
+      final Map responseJson = json.decode(response.body);
+
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+      if (responseJson["msg"] == "User successfully logged in") {
+        // showNotification();
+        pr.hide();
+        mobile.clear();
+        pwd.clear();
+        AlertDialog alert = AlertDialog(
+          title: Text("Success!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      } else {
+        pr.hide();
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      pr.hide();
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Error!"),
+        content: Text(e.toString()),
+        actions: [
+          okButton,
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //declarations
@@ -18,6 +110,23 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
     Color greenClr = Color(0xff8cc540);
     Color blueClr = Color(0xff408cc5);
     Color bodyClr = Color(0xfff8f7f7);
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
 
     return MaterialApp(
         home: Scaffold(
@@ -69,12 +178,14 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                   child: FadeAnimation(
                     2.0,
                     Padding(
-                      padding: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                      ),
                       child: Material(
                         elevation: 5,
                         child: Container(
                           width: 300,
-                          height: 130,
+                          height: 170,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
@@ -82,24 +193,34 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                 padding: const EdgeInsets.only(
                                     top: 10, left: 10, right: 10),
                                 child: TextFormField(
+                                  controller: mobile,
+                                  maxLength: 11,
+                                  keyboardType: TextInputType.number,
                                   key: Key('mobileNumber'),
                                   decoration: InputDecoration(
-                                    hintText: 'mobile number',
+                                    hintText: '03001234567',
                                     // labelText: 'mobile number',
                                     prefixIcon: Icon(Icons.phone_android),
+                                    errorText: validateMobile
+                                        ? 'Mobile Number is Required'
+                                        : null,
                                   ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 10, left: 10, right: 10),
+                                    top: 10, left: 10, right: 10, bottom: 10),
                                 child: TextFormField(
+                                  controller: pwd,
                                   key: Key('password'),
                                   obscureText: true,
                                   decoration: InputDecoration(
                                     hintText: 'password',
                                     // labelText: 'mobile number',
                                     prefixIcon: Icon(Icons.lock_outline),
+                                    errorText: validatePwd
+                                        ? 'Password is Required'
+                                        : null,
                                   ),
                                 ),
                               ),
@@ -131,7 +252,20 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                               fontFamily: 'Abel',
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              mobile.text.isEmpty
+                                  ? validateMobile = true
+                                  : validateMobile = false;
+                              pwd.text.isEmpty
+                                  ? validatePwd = true
+                                  : validatePwd = false;
+                              if (mobile.text.isNotEmpty &&
+                                  pwd.text.isNotEmpty) {
+                                login();
+                              }
+                            });
+                          },
                         )),
                   ),
                 )
@@ -167,7 +301,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                         fontSize: 18,
                                         fontFamily: 'Abel')),
                                 onTap: () {
-                                  // do what you need to do when "Click here" gets clicked
+                                  navigateToRegister(context);
                                 }),
                           ],
                         ),
@@ -180,7 +314,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                   fontSize: 18,
                                   fontFamily: 'Abel')),
                           onTap: () {
-                            // do what you need to do when "Click here" gets clicked
+                            navigateToForgot(context);
                           }),
                     ],
                   ),
@@ -191,5 +325,13 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
         ),
       ),
     ));
+  }
+
+  void navigateToRegister(BuildContext context) {
+    Routes.sailor.navigate('/register');
+  }
+
+  void navigateToForgot(BuildContext context) {
+    Routes.sailor.navigate('/verification');
   }
 }

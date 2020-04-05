@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/pages/loginPage.dart';
 import 'package:homemobileapp/pages/mainOTPVerification.dart';
@@ -33,9 +35,110 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //home: MyHomePage(title: 'Home Delivery'),
+<<<<<<< HEAD
       home: SideBarLayout(),
       // onGenerateRoute: Routes.sailor.generator(),
       // navigatorKey: Routes.sailor.navigatorKey,
+=======
+      home: SplashScreen(),
+      // home: LoginPage(),
+      onGenerateRoute: Routes.sailor.generator(),
+      navigatorKey: Routes.sailor.navigatorKey,
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => new _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // print('ok1');
+    Timer(
+      Duration(seconds: 4),
+      () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) => LoginPage(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(color: Color(0xff8cc540)),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 50.0,
+                        child: Icon(
+                          Icons.shopping_cart,
+                          color: Color(0xff8cc540),
+                          size: 50.0,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                      ),
+                      Text(
+                        "FlutKart",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                        Color(0xff141622),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                    ),
+                    Text(
+                      "Online Store \n For Everyone",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+>>>>>>> 59ce4a8b05255bc3c4ad65780e9b4493daa9adea
     );
   }
 }
@@ -57,7 +160,7 @@ class Routes {
         },
       ),
       SailorRoute(
-        name: '/user',
+        name: '/register',
         builder: (context, args, params) {
           return UserNamePassword();
         },
@@ -70,11 +173,4 @@ class Routes {
       )
     ]);
   }
-}
-
-void navigateToHome(BuildContext context) {
-  Routes.sailor.navigate('/verification');
-  // Navigator.of(context).push(MaterialPageRoute(
-  //   builder: (context) => OTPVerification(),
-  // ));
 }
