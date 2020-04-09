@@ -9,7 +9,7 @@ import 'package:homemobileapp/pages/registrationPages/registrationSuccess.dart';
 import 'package:homemobileapp/pages/registrationPages/userNamePassword.dart';
 //import './UI/CustomLoginInput.dart';
 // import './Animation/FadeinAnimation.dart';
-import './pages/registrationPages/otpVerification.dart';
+// import './pages/registrationPages/otpVerification.dart';
 import 'package:sailor/sailor.dart';
 
 import 'pages/registrationPages/otpVerification.dart';
@@ -30,9 +30,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      //home: MyHomePage(title: 'Home Delivery'),
       home: SplashScreen(),
-      // home: LoginPage(),
       onGenerateRoute: Routes.sailor.generator(),
       navigatorKey: Routes.sailor.navigatorKey,
     );
@@ -146,8 +144,17 @@ class Routes {
       SailorRoute(
         name: '/verification',
         builder: (context, args, params) {
-          return OTPVerification();
+          return OTPVerification(
+            mobileNumber: params.param('mobileNumber'),
+            pwd: params.param('pwd'),
+            pin: params.param<int>('pin'),
+          );
         },
+        params: [
+          SailorParam<String>(name: 'mobileNumber', isRequired: true),
+          SailorParam<String>(name: 'pwd', isRequired: true),
+          SailorParam<int>(name: 'pin', isRequired: true),
+        ],
       ),
       SailorRoute(
         name: '/register',
@@ -158,9 +165,75 @@ class Routes {
       SailorRoute(
         name: '/supplier',
         builder: (context, args, params) {
-          return SupplierCustomer();
+          return SupplierCustomer(
+            mobileNumber: params.param('mobileNumber'),
+            pwd: params.param('pwd'),
+            pin: params.param<int>('pin'),
+          );
         },
-      )
+        params: [
+          SailorParam<String>(name: 'mobileNumber', isRequired: true),
+          SailorParam<String>(name: 'pwd', isRequired: true),
+          SailorParam<int>(name: 'pin', isRequired: true),
+        ],
+      ),
+      SailorRoute(
+        name: '/business',
+        builder: (context, args, params) {
+          return BusinessInfo(
+            mobileNumber: params.param('mobileNumber'),
+            pwd: params.param('pwd'),
+            pin: params.param<int>('pin'),
+            usr: params.param('usr'),
+          );
+        },
+        params: [
+          SailorParam<String>(name: 'mobileNumber', isRequired: true),
+          SailorParam<String>(name: 'pwd', isRequired: true),
+          SailorParam<int>(name: 'pin', isRequired: true),
+          SailorParam<String>(name: 'usr', isRequired: true),
+        ],
+      ),
+      SailorRoute(
+        name: '/personal',
+        builder: (context, args, params) {
+          return PersonalInfo(
+            mobileNumber: params.param('mobileNumber'),
+            pwd: params.param('pwd'),
+            pin: params.param<int>('pin'),
+            usr: params.param('usr'),
+          );
+        },
+        params: [
+          SailorParam<String>(name: 'mobileNumber', isRequired: true),
+          SailorParam<String>(name: 'pwd', isRequired: true),
+          SailorParam<int>(name: 'pin', isRequired: true),
+          SailorParam<String>(name: 'usr', isRequired: true),
+        ],
+      ),
+      SailorRoute(
+        name: '/contact',
+        builder: (context, args, params) {
+          return ContactInfo(
+            mobileNumber: params.param('mobileNumber'),
+            pwd: params.param('pwd'),
+            pin: params.param<int>('pin'),
+            usr: params.param('usr'),
+            businessName: params.param('businessName'),
+            ownerName: params.param('ownerName'),
+            email: params.param('email'),
+          );
+        },
+        params: [
+          SailorParam<String>(name: 'mobileNumber', isRequired: true),
+          SailorParam<String>(name: 'pwd', isRequired: true),
+          SailorParam<int>(name: 'pin', isRequired: true),
+          SailorParam<String>(name: 'usr', isRequired: true),
+          SailorParam<String>(name: 'businessName'),
+          SailorParam<String>(name: 'ownerName', isRequired: true),
+          SailorParam<String>(name: 'email', isRequired: true),
+        ],
+      ),
     ]);
   }
 }
