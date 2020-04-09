@@ -1,10 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
+import 'package:homemobileapp/main.dart';
 
 import '../../Animation/FadeinAnimation.dart';
 
-class PersonalInfo extends StatelessWidget {
-  PersonalInfo();
+class PersonalInfo extends StatefulWidget {
+  final String mobileNumber;
+  final String pwd;
+  final String usr;
+  final int pin;
+
+  PersonalInfo({
+    @required this.mobileNumber,
+    @required this.pwd,
+    @required this.pin,
+    @required this.usr,
+  });
+
+  @override
+  _PersonalInfo createState() => _PersonalInfo(mobileNumber, pwd, pin, usr);
+}
+
+class _PersonalInfo extends State<PersonalInfo> {
+  String mobileNumber;
+  String pwd;
+  String usr;
+  int pin;
+
+  _PersonalInfo(
+    this.mobileNumber,
+    this.pwd,
+    this.pin,
+    this.usr,
+  );
 
 //declarations
   Color blackClr = Color(0xff141622);
@@ -109,7 +137,9 @@ class PersonalInfo extends StatelessWidget {
                       )
                     ],
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    navigateToSupplier(context);
+                  },
                 ),
                 Container(
                   width: 100,
@@ -193,5 +223,16 @@ class PersonalInfo extends StatelessWidget {
         ],
       ),
     ));
+  }
+
+  void navigateToSupplier(BuildContext context) {
+    Routes.sailor.navigate(
+      '/supplier',
+      params: {
+        'mobileNumber': mobileNumber,
+        'pwd': pwd,
+        'pin': pin,
+      },
+    );
   }
 }

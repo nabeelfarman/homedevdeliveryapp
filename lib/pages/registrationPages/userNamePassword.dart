@@ -23,10 +23,16 @@ class _UserNamePassword extends State<UserNamePassword>
   bool validateRegPwd = false;
   bool validateCnfrmPwd = false;
 
+  String _mobile;
+  String _regPwd;
+  String _cnfrmPwd;
+  String _code;
+  int _pin;
+
   Future<String> genPin() async {
     try {
-      String _regPwd = regPwd.text;
-      String _cnfrmPwd = cnfrmPwd.text;
+      _regPwd = regPwd.text;
+      _cnfrmPwd = cnfrmPwd.text;
 
       if (_regPwd != _cnfrmPwd) {
         Widget okButton = FlatButton(
@@ -51,8 +57,8 @@ class _UserNamePassword extends State<UserNamePassword>
           },
         );
       } else {
-        String _mobile = regMobile.text;
-        String _code = "123";
+        _mobile = regMobile.text;
+        _code = "123";
 
         pr.show();
 
@@ -67,7 +73,9 @@ class _UserNamePassword extends State<UserNamePassword>
 
         final Map responseJson = json.decode(response.body);
         print(responseJson['msg']);
+        _pin = responseJson['msg'];
         pr.hide();
+        navigateToVerification(context);
       }
     } catch (e) {
       pr.hide();
@@ -343,5 +351,16 @@ class _UserNamePassword extends State<UserNamePassword>
 
   void navigateToLogin(BuildContext context) {
     Routes.sailor.navigate('/login');
+  }
+
+  void navigateToVerification(BuildContext context) {
+    Routes.sailor.navigate(
+      '/verification',
+      params: {
+        'mobileNumber': _mobile,
+        'pwd': _regPwd,
+        'pin': _pin,
+      },
+    );
   }
 }

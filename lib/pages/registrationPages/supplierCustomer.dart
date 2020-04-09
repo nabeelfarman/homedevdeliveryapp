@@ -1,8 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:homemobileapp/main.dart';
 
-class SupplierCustomer extends StatelessWidget {
-  SupplierCustomer();
+class SupplierCustomer extends StatefulWidget {
+  final String mobileNumber;
+  final String pwd;
+  final int pin;
+  SupplierCustomer({
+    this.mobileNumber,
+    this.pwd,
+    this.pin,
+  });
+
+  @override
+  _SupplierCustomer createState() => _SupplierCustomer(mobileNumber, pwd, pin);
+}
+
+class _SupplierCustomer extends State<SupplierCustomer> {
+  String mobileNumber;
+  String pwd;
+  int pin;
+  String usr;
+
+  int selectedRadio = 0;
+
+  _SupplierCustomer(
+    this.mobileNumber,
+    this.pwd,
+    this.pin,
+  );
+
+  setSelectedRadio(int val) {
+    setState(() {
+      selectedRadio = val;
+    });
+  }
+
+  void registerUser() async {
+    try {
+      if (selectedRadio == 0) {
+        usr = 'Supplier';
+        print(usr);
+        navigateToBusiness(context);
+      } else if (selectedRadio == 1) {
+        usr = 'Customer';
+        print(usr);
+        navigateToPersonal(context);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +113,13 @@ class SupplierCustomer extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Radio(
-                                value: null, groupValue: null, onChanged: null),
+                                value: 0,
+                                groupValue: selectedRadio,
+                                activeColor: Colors.green,
+                                onChanged: (val) {
+                                  print('Radio $val');
+                                  setSelectedRadio(val);
+                                }),
                             Text(
                               'Supplier',
                               style: TextStyle(
@@ -72,7 +129,13 @@ class SupplierCustomer extends StatelessWidget {
                               ),
                             ),
                             Radio(
-                                value: null, groupValue: null, onChanged: null),
+                                value: 1,
+                                groupValue: selectedRadio,
+                                activeColor: Colors.green,
+                                onChanged: (val) {
+                                  print('Radio $val');
+                                  setSelectedRadio(val);
+                                }),
                             Text('Customer',
                                 style: TextStyle(
                                     color: blackClr,
@@ -113,7 +176,9 @@ class SupplierCustomer extends StatelessWidget {
                             )
                           ],
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          navigateToVerification(context);
+                        },
                       ),
                       Container(
                         width: 100,
@@ -189,12 +254,56 @@ class SupplierCustomer extends StatelessWidget {
                             )
                           ],
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          print(mobileNumber);
+                          print(pwd);
+                          print(pin);
+                          registerUser();
+                        },
                       )
                     ],
                   ),
                 )
               ],
             )));
+  }
+
+  void navigateToVerification(BuildContext context) {
+    if (pin == null) {
+      pin = 1234;
+    } else {
+      Routes.sailor.navigate(
+        '/verification',
+        params: {
+          'mobileNumber': mobileNumber,
+          'pwd': pwd,
+          'pin': pin,
+        },
+      );
+    }
+  }
+
+  void navigateToBusiness(BuildContext context) {
+    Routes.sailor.navigate(
+      '/business',
+      params: {
+        'mobileNumber': mobileNumber,
+        'pwd': pwd,
+        'pin': pin,
+        'usr': usr,
+      },
+    );
+  }
+
+  void navigateToPersonal(BuildContext context) {
+    Routes.sailor.navigate(
+      '/personal',
+      params: {
+        'mobileNumber': mobileNumber,
+        'pwd': pwd,
+        'pin': pin,
+        'usr': usr,
+      },
+    );
   }
 }
