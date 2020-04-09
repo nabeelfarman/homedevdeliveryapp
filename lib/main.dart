@@ -9,7 +9,7 @@ import 'package:homemobileapp/pages/registrationPages/personalInfo.dart';
 import 'package:homemobileapp/pages/registrationPages/registrationSuccess.dart';
 import 'package:homemobileapp/pages/registrationPages/userNamePassword.dart';
 import 'package:homemobileapp/pages/resetPassword.dart';
-import 'package:homemobileapp/pages/supplierSelection.dart';
+import 'package:homemobileapp/pages/customerHome.dart';
 import 'package:homemobileapp/sidebar/sidebar_layout.dart';
 //import './UI/CustomLoginInput.dart';
 // import './Animation/FadeinAnimation.dart';
@@ -35,12 +35,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //home: MyHomePage(title: 'Home Delivery'),
-<<<<<<< HEAD
+
       home: SideBarLayout(),
       // onGenerateRoute: Routes.sailor.generator(),
       // navigatorKey: Routes.sailor.navigatorKey,
-=======
-      home: SplashScreen(),
+// =======
+//       home: SplashScreen(),
       // home: LoginPage(),
       onGenerateRoute: Routes.sailor.generator(),
       navigatorKey: Routes.sailor.navigatorKey,
@@ -138,7 +138,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ],
       ),
->>>>>>> 59ce4a8b05255bc3c4ad65780e9b4493daa9adea
     );
   }
 }
