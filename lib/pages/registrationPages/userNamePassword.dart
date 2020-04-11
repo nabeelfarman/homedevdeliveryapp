@@ -30,18 +30,18 @@ class _UserNamePassword extends State<UserNamePassword>
   int _pin;
 
   Future<String> genPin() async {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+        // navigateToHome(context);
+      },
+    );
     try {
       _regPwd = regPwd.text;
       _cnfrmPwd = cnfrmPwd.text;
 
       if (_regPwd != _cnfrmPwd) {
-        Widget okButton = FlatButton(
-          child: Text("OK"),
-          onPressed: () {
-            Navigator.pop(context);
-            // navigateToHome(context);
-          },
-        );
         AlertDialog alert = AlertDialog(
           title: Text("Success!"),
           content: Text('Password & Confirm Password not Matched'),
@@ -63,7 +63,7 @@ class _UserNamePassword extends State<UserNamePassword>
         pr.show();
 
         http.Response response = await http.post(
-          'http://95.217.147.105:2003/api/genotp',
+          'http://95.217.147.105:2001/api/genotp',
           headers: <String, String>{
             "Accept": "application/json",
             "content-type": "application/json"
@@ -72,10 +72,28 @@ class _UserNamePassword extends State<UserNamePassword>
         );
 
         final Map responseJson = json.decode(response.body);
-        print(responseJson['msg']);
-        _pin = responseJson['msg'];
         pr.hide();
-        navigateToVerification(context);
+
+        print(responseJson['msg']);
+        if (responseJson['msg'] == 'Mobile Number Already Exist!') {
+          AlertDialog alert = AlertDialog(
+            title: Text("Success!"),
+            content: Text(responseJson['msg']),
+            actions: [
+              okButton,
+            ],
+          );
+          // show the dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+        } else {
+          _pin = responseJson['msg'];
+          navigateToVerification(context);
+        }
       }
     } catch (e) {
       pr.hide();

@@ -59,9 +59,15 @@ class _NewOrderPageState extends State<NewOrderPage>
             : TextField(
                 onChanged: (Text) {
                   // supplierListPage.prinText(value);
-                  _tabController.animateTo(_tabController.index + 1);
-                  // _tabController.animateTo(_tabController.index - 1);
-                  print(1);
+                  // _tabController.animateTo(_tabController.index);
+                  setState(() {
+                    supplierListPage = SupplierListView(
+                      value: _tabController.index + 1,
+                      searchText: Text,
+                    );
+                    supplierListPage.prinText(Text);
+                    // supplierListPage.prinText(Text);
+                  });
                 },
                 style: TextStyle(color: redClr),
                 decoration: InputDecoration(
