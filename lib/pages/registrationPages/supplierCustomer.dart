@@ -42,11 +42,11 @@ class _SupplierCustomer extends State<SupplierCustomer> {
   void registerUser() async {
     try {
       if (selectedRadio == 0) {
-        usr = 'Supplier';
+        usr = '1';
         print(usr);
         navigateToBusiness(context);
       } else if (selectedRadio == 1) {
-        usr = 'Customer';
+        usr = '2';
         print(usr);
         navigateToPersonal(context);
       }

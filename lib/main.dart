@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/pages/loginPage.dart';
 import 'package:homemobileapp/pages/mainOTPVerification.dart';
+import 'package:homemobileapp/pages/newOrder.dart';
 import 'package:homemobileapp/pages/registrationPages/BusinessInfo.dart';
 import 'package:homemobileapp/pages/registrationPages/contactInfo.dart';
 import 'package:homemobileapp/pages/registrationPages/personalInfo.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      // home: ContactInfo(),
       home: SplashScreen(),
       onGenerateRoute: Routes.sailor.generator(),
       navigatorKey: Routes.sailor.navigatorKey,
@@ -237,6 +239,12 @@ class Routes {
           SailorParam<String>(name: 'ownerName', isRequired: true),
           SailorParam<String>(name: 'email', isRequired: true),
         ],
+      ),
+      SailorRoute(
+        name: '/registerSuccess',
+        builder: (context, args, params) {
+          return RegistrationSuccess();
+        },
       ),
     ]);
   }

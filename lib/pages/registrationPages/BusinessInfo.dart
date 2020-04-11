@@ -51,15 +51,6 @@ class _BusinessInfo extends State<BusinessInfo> {
     this.usr,
   );
 
-  void validateAndSave() {
-    final FormState form = _formKey.currentState;
-    if (form.validate()) {
-      print('Form is valid');
-    } else {
-      print('Form is invalid');
-    }
-  }
-
   void registerBusinessInfo() async {
     Widget okButton = FlatButton(
       child: Text("OK"),
@@ -68,39 +59,44 @@ class _BusinessInfo extends State<BusinessInfo> {
       },
     );
     try {
-      validateAndSave();
-
-      bool emailValid = RegExp(
-              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-          .hasMatch(txtEmail.text);
-      if (emailValid == false) {
-        AlertDialog alert = AlertDialog(
-          title: Text("Error!"),
-          content: Text('Invalid Email'),
-          actions: [
-            okButton,
-          ],
-        );
-        // show the dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
+      final FormState form = _formKey.currentState;
+      if (form.validate()) {
+        print('Form is valid');
+        bool emailValid = RegExp(
+                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+            .hasMatch(txtEmail.text);
+        if (emailValid == false) {
+          AlertDialog alert = AlertDialog(
+            title: Text("Error!"),
+            content: Text('Invalid Email'),
+            actions: [
+              okButton,
+            ],
+          );
+          // show the dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+        } else {
+          // pr.show();
+          businessName = txtBusinessName.text;
+          ownerName = txtOwnerName.text;
+          email = txtEmail.text;
+          // pr.hide();
+          print(mobileNumber);
+          print(pin);
+          print(pwd);
+          print(businessName);
+          print(ownerName);
+          print(email);
+          print(usr);
+          navigateToContactInfo(context);
+        }
       } else {
-        // pr.show();
-        businessName = txtBusinessName.text;
-        ownerName = txtOwnerName.text;
-        email = txtEmail.text;
-        // pr.hide();
-        print(mobileNumber);
-        print(pin);
-        print(pwd);
-        print(businessName);
-        print(ownerName);
-        print(email);
-        navigateToContactInfo(context);
+        print('Form is invalid');
       }
     } catch (e) {
       // pr.hide();
@@ -391,6 +387,7 @@ class _BusinessInfo extends State<BusinessInfo> {
         'pwd': pwd,
         'pin': pin,
         'businessName': businessName,
+        'usr': usr,
         'ownerName': ownerName,
         'email': email,
       },

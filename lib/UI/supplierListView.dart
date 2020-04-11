@@ -9,9 +9,9 @@ class SupplierListView extends StatefulWidget {
   _SupplierListViewState createState() =>
       _SupplierListViewState(this.value, this.searchText);
 
-  // void prinText(String s) {
-  //   _SupplierListViewState(this.value).searchSupplier(s);
-  // }
+  void prinText(String s) {
+    _SupplierListViewState(this.value, this.searchText).initState();
+  }
 }
 
 class _SupplierListViewState extends State<SupplierListView> {
@@ -56,25 +56,28 @@ class _SupplierListViewState extends State<SupplierListView> {
   void initState() {
     super.initState();
 
-    filteredSupplier =
-        supplierList.where((supplier) => supplier.category == value).toList();
     if (searchText != '') {
       filteredSupplier = supplierList
           .where((supplier) =>
               supplier.category == value &&
               supplier.title.toLowerCase().contains(searchText.toLowerCase()))
           .toList();
+    } else {
+      filteredSupplier =
+          supplierList.where((supplier) => supplier.category == value).toList();
     }
+    print(filteredSupplier.length);
+    print(value);
   }
 
   void searchSupplier(String str) {
-    filteredSupplier = supplierList
-        .where((supplier) =>
-            supplier.title.toLowerCase().contains(str.toLowerCase()))
-        .toList();
+    // filteredSupplier = supplierList.where((supplier) =>
+    // supplier.category == value &&
+    // supplier.title.toLowerCase().contains(str.toLowerCase())).toList();
 
-    print(filteredSupplier);
-    print(value);
+    // return filteredSupplier;
+    // print(filteredSupplier);
+    // print(value);
   }
 
   @override
