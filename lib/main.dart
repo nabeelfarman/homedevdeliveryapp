@@ -9,7 +9,7 @@ import 'package:homemobileapp/pages/registrationPages/personalInfo.dart';
 import 'package:homemobileapp/pages/registrationPages/registrationSuccess.dart';
 import 'package:homemobileapp/pages/registrationPages/userNamePassword.dart';
 import 'package:homemobileapp/pages/resetPassword.dart';
-import 'package:homemobileapp/pages/customerHome.dart';
+import 'package:homemobileapp/pages/customerPages/customerHome.dart';
 import 'package:homemobileapp/sidebar/sidebar_layout.dart';
 //import './UI/CustomLoginInput.dart';
 // import './Animation/FadeinAnimation.dart';
@@ -34,9 +34,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SplashScreen(),
-      onGenerateRoute: Routes.sailor.generator(),
-      navigatorKey: Routes.sailor.navigatorKey,
+      home: SideBarLayout(),
+      // onGenerateRoute: Routes.sailor.generator(),
+      // navigatorKey: Routes.sailor.navigatorKey,
     );
   }
 }
