@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: ContactInfo(),
-      home: SplashScreen(),
+      // home: SplashScreen(),
+      home: SideBarLayout(),
       onGenerateRoute: Routes.sailor.generator(),
       navigatorKey: Routes.sailor.navigatorKey,
     );

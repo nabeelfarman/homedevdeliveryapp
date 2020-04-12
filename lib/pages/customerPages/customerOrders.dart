@@ -52,11 +52,29 @@ class _CustomerOrdersState extends State<CustomerOrders>
   List customerOrdersList = List();
   final formatter = new NumberFormat('##,###.##');
   bool isSearching = false;
+  Color foreColor;
+  Color bgColor;
 
   @override
   void initState() {
     super.initState();
     this.getCustomerOrders();
+  }
+
+  @override
+  void _filteredOrders(String searchText) {
+    try {
+      setState(() {
+        customerOrdersList = customer_orders
+            .where((item) => item['supplier']
+                .toString()
+                .toLowerCase()
+                .contains(searchText.toLowerCase()))
+            .toList();
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<String> getCustomerOrders() async {
@@ -84,9 +102,8 @@ class _CustomerOrdersState extends State<CustomerOrders>
             : TextField(
                 onChanged: (Text) {
                   // supplierListPage.prinText(value);
-
+                  _filteredOrders(Text);
                   // _tabController.animateTo(_tabController.index - 1);
-                  print(1);
                 },
                 style: TextStyle(color: redClr),
                 decoration: InputDecoration(
@@ -148,91 +165,114 @@ class _CustomerOrdersState extends State<CustomerOrders>
     return FadeAnimation(
       1.5,
       Card(
+          color: whiteClr,
           child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.all(8),
+            child: Column(
               children: <Widget>[
-                Text(item['supplier'],
-                    style: TextStyle(
-                        color: blackClr,
-                        fontFamily: 'Baloo',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800)),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Rs. ' + item['price'],
-                    style: TextStyle(
-                        color: blackClr, fontFamily: 'Baloo', fontSize: 18)),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    RaisedButton(
-                      color: lightClr,
-                      shape: CircleBorder(),
-                      onPressed: () {
-                        setState(() {
-                          int qty = int.parse(item['totalAmount']);
-
-                          if (qty > 0) {
-                            item['totalAmount'] = (qty - 1).toString();
-                          }
-                        });
-                      },
-                      child: Text(
-                        '-',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    Text(
-                      item['totalAmount'],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Baloo'),
-                    ),
-                    RaisedButton(
-                      color: greenClr,
-                      shape: CircleBorder(),
-                      onPressed: () {
-                        setState(() {
-                          var qty = int.parse(item['totalAmount']);
-                          if (qty < 500) {
-                            item['totalAmount'] = (qty + 1).toString();
-                          }
-                        });
-                      },
-                      child: Text(
-                        '+',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
+                    Text(item['supplier'],
+                        style: TextStyle(
+                            color: blackClr,
+                            fontFamily: 'Baloo',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800)),
                   ],
                 ),
-                Text(
-                  'Rs. ' +
-                      formatter
-                          .format(double.parse(item['price']) *
-                              double.parse(item['quantity']))
-                          .toString(),
-                  style: TextStyle(
-                      fontFamily: 'Ubuntu',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      item['address'],
+                      style: TextStyle(
+                          color: blackClr, fontFamily: 'Baloo', fontSize: 18),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                        'Rs. ' +
+                            formatter.format(double.parse(item['totalAmount'])),
+                        style: TextStyle(
+                            color: blackClr,
+                            fontFamily: 'Baloo',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700)),
+                    item['orderStatus'] == 'pending'
+                        ? Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.yellowAccent),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              child: Text(
+                                item['orderStatus'],
+                                style: TextStyle(
+                                    color: blackClr,
+                                    fontFamily: 'Baloo',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          )
+                        : item['orderStatus'] == 'completed'
+                            ? Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: greenClr),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Text(
+                                    item['orderStatus'],
+                                    style: TextStyle(
+                                        color: blackClr,
+                                        fontFamily: 'Baloo',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: redClr),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Text(
+                                    item['orderStatus'],
+                                    style: TextStyle(
+                                        color: whiteClr,
+                                        fontFamily: 'Baloo',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ),
+                    RaisedButton(
+                      elevation: 10,
+                      color: redClr,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      onPressed: () {},
+                      child: Text(
+                        'Option',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Baloo', color: whiteClr, fontSize: 16),
+                      ),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-        ),
-      )),
+            ),
+          )),
     );
   }
 }

@@ -13,7 +13,7 @@ class SideBarLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-      children: <Widget>[CustomerHome(), SideBar()],
+      children: <Widget>[CustomerOrders(), SideBar()],
     ));
   }
 }

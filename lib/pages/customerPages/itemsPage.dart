@@ -128,12 +128,6 @@ class _ItemsPageState extends State<ItemsPage>
                 .contains(searchText.toLowerCase()))
             .toList();
       });
-      print(filteredItems = items_data
-          .where((item) => item['itemTitle']
-              .toString()
-              .toLowerCase()
-              .contains(searchText.toLowerCase()))
-          .toList());
     } catch (e) {
       print(e);
     }
@@ -165,9 +159,8 @@ class _ItemsPageState extends State<ItemsPage>
             : TextField(
                 onChanged: (Text) {
                   // supplierListPage.prinText(value);
-
+                  _filteredItems(Text);
                   // _tabController.animateTo(_tabController.index - 1);
-                  print(1);
                 },
                 style: TextStyle(color: redClr),
                 decoration: InputDecoration(
