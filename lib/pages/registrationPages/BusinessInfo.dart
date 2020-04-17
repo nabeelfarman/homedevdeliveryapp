@@ -53,10 +53,10 @@ class _BusinessInfo extends State<BusinessInfo> {
   ProgressDialog pr;
 
   List categories = [
-    {'categoryID': '1', 'categoryTitle': 'Groccery'},
-    {'categoryID': '2', 'categoryTitle': 'Vegetable'},
-    {'categoryID': '3', 'categoryTitle': 'Fruits'},
-    {'categoryID': '4', 'categoryTitle': 'Meat'}
+    {'categoryID': '1', 'categoryTitle': 'Groccery', 'checked': 'false'},
+    {'categoryID': '2', 'categoryTitle': 'Vegetable', 'checked': 'false'},
+    {'categoryID': '3', 'categoryTitle': 'Fruits', 'checked': 'false'},
+    {'categoryID': '4', 'categoryTitle': 'Meat', 'checked': 'false'}
   ];
 
   _BusinessInfo(
@@ -267,8 +267,17 @@ class _BusinessInfo extends State<BusinessInfo> {
                               child: Column(
                                 children: <Widget>[
                                   new CheckboxListTile(
-                                      value: true,
-                                      onChanged: null,
+                                      value: item['checked'] == 'true'
+                                          ? true
+                                          : false,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          item['checked'] = value.toString();
+                                          print(item['checked'] +
+                                              ' ' +
+                                              item['categoryTitle']);
+                                        });
+                                      },
                                       title: new Text(item['categoryTitle']))
                                 ],
                               ),
