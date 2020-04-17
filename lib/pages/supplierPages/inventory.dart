@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
+import 'package:homemobileapp/UI/supplier_bottom_bar.dart';
 
-import '../../main.dart';
-
-class ItemsPage extends StatefulWidget {
+class InventoryPage extends StatefulWidget {
   @override
-  ItemsPage();
-
-  @override
-  _ItemsPageState createState() => _ItemsPageState();
+  _InventoryPageState createState() => _InventoryPageState();
 }
 
-class _ItemsPageState extends State<ItemsPage>
+class _InventoryPageState extends State<InventoryPage>
     with SingleTickerProviderStateMixin {
   Color blackClr = Color(0xff2d2d2d);
   // Color yellowClr = Color(0xfff7d73a);
@@ -24,98 +19,106 @@ class _ItemsPageState extends State<ItemsPage>
 
   bool isSearching = false;
 
-  String pageName = 'ItemsPage';
-
   List items_data = [
     {
       'itemCode': '21',
       'itemTitle': 'Pespsi 1.5 Ltr',
       'price': '150',
       'unit': 'piece',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '22',
       'itemTitle': 'Dalada Banaspati',
       'price': '180',
       'unit': 'liter',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '23',
       'itemTitle': 'Sensodyn Toothpaste',
       'price': '230',
       'unit': 'piece',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '24',
       'itemTitle': 'Surf Excel 1kg',
       'price': '530',
       'unit': '1 kg',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '25',
       'itemTitle': 'Safe Guard Soap',
       'price': '60',
       'unit': 'piece',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '26',
       'itemTitle': 'Lays Chips Small',
       'price': '20',
       'unit': 'piece',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '27',
       'itemTitle': 'Dawn Bread',
       'price': '85',
       'unit': 'pack',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '28',
       'itemTitle': 'Rice Kernal Banaspati',
       'price': '280',
       'unit': 'kg',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '29',
       'itemTitle': 'Daal Mash',
       'price': '140',
       'unit': 'kg',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '30',
       'itemTitle': 'Tissue Roll',
       'price': '45',
       'unit': 'piece',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '31',
       'itemTitle': 'Tomato Katchup',
       'price': '150',
       'unit': 'bottle',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     },
     {
       'itemCode': '32',
       'itemTitle': 'Head & Shoulders Small',
       'price': '210',
       'unit': 'piece',
-      'quantity': '0'
+      'quantity': '0',
+      'mol': '0'
     }
   ];
 
   List filteredItems = List();
-
-  List tempList = [];
 
   @override
   void initState() {
@@ -160,7 +163,7 @@ class _ItemsPageState extends State<ItemsPage>
         elevation: 0,
         backgroundColor: whiteClr,
         title: !isSearching
-            ? Text('Select Items',
+            ? Text('Inventory Settings',
                 style: TextStyle(
                     color: blackClr, fontFamily: 'Josefin', fontSize: 25))
             : TextField(
@@ -219,17 +222,12 @@ class _ItemsPageState extends State<ItemsPage>
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          navigateToShoppingCart(context);
-        },
+        onPressed: () {},
         backgroundColor: Color(0xFFF17532),
-        child: Icon(Icons.shopping_cart),
+        child: Icon(Icons.notifications),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomBar(
-        pageName,
-        tempList,
-      ),
+      bottomNavigationBar: SupplierBottomBar(),
     );
   }
 
@@ -256,100 +254,40 @@ class _ItemsPageState extends State<ItemsPage>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('Rs. ' + item['price'],
+                Text('Rs.  ',
                     style: TextStyle(
-                        color: blackClr, fontFamily: 'Baloo', fontSize: 18)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    RaisedButton(
-                      color: lightClr,
-                      shape: CircleBorder(),
-                      onPressed: () {
-                        setState(() {
-                          int qty = int.parse(item['quantity']);
-
-                          if (qty > 0) {
-                            item['quantity'] = (qty - 1).toString();
-                          }
-                        });
-                      },
-                      child: Text(
-                        '-',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    Text(
-                      item['quantity'],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Baloo'),
-                    ),
-                    RaisedButton(
-                      color: greenClr,
-                      shape: CircleBorder(),
-                      onPressed: () {
-                        setState(() {
-                          var qty = int.parse(item['quantity']);
-                          if (qty < 500) {
-                            item['quantity'] = (qty + 1).toString();
-                            if (tempList.length == 0) {
-                              tempList.add({
-                                'iTitle': item['itemTitle'],
-                                'iQty': item['quantity'],
-                              });
-                            } else {
-                              bool found = false;
-                              for (int i = 0; i < tempList.length; i++) {
-                                if (tempList[i]['iTitle'] ==
-                                    item['itemTitle']) {
-                                  String itemsTitle = item['itemTitle'];
-                                  tempList.removeWhere(
-                                      (items) => items['iTitle'] == itemsTitle);
-                                  tempList.add({
-                                    'iTitle': item['itemTitle'],
-                                    'iQty': item['quantity'],
-                                  });
-                                  i = tempList.length;
-                                  found = true;
-                                }
-                              }
-                              if (found == false) {
-                                tempList.add({
-                                  'iTitle': item['itemTitle'],
-                                  'iQty': item['quantity'],
-                                });
-                              }
-                            }
-
-                            print(tempList);
-                          }
-                        });
-                      },
-                      child: Text(
-                        '+',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  ],
-                ),
+                        color: redClr, fontFamily: 'Baloo', fontSize: 18)),
+                Flexible(
+                    child: TextFormField(
+                  key: Key('price'),
+                  decoration: InputDecoration(
+                    hintText: 'price',
+                  ),
+                  maxLength: 5,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                )),
+                Text('  Quantity:  ',
+                    style: TextStyle(
+                        color: redClr, fontFamily: 'Baloo', fontSize: 18)),
+                Flexible(
+                    child: TextFormField(
+                  key: Key('quantity'),
+                  decoration: InputDecoration(
+                    hintText: 'quantity',
+                  ),
+                  maxLength: 5,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                )),
+                Text('  ' + item['unit'] + '   ',
+                    style: TextStyle(
+                        color: redClr, fontFamily: 'Baloo', fontSize: 18)),
               ],
             )
           ],
         ),
       )),
     );
-  }
-
-  void navigateToShoppingCart(BuildContext context) {
-    Routes.sailor.navigate('/shoppingCart');
-  }
-
-  void navigateToOrderPage(BuildContext context) {
-    Routes.sailor.navigate('/newOrder');
   }
 }

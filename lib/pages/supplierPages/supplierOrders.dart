@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
-import 'package:homemobileapp/UI/bottom_bar.dart';
+import 'package:homemobileapp/UI/supplier_bottom_bar.dart';
 import 'package:intl/intl.dart';
 
-class CustomerOrders extends StatefulWidget {
+class SupplierOrders extends StatefulWidget {
   @override
-  _CustomerOrdersState createState() => _CustomerOrdersState();
+  _SupplierOrdersState createState() => _SupplierOrdersState();
 }
 
-class _CustomerOrdersState extends State<CustomerOrders>
+class _SupplierOrdersState extends State<SupplierOrders>
     with SingleTickerProviderStateMixin {
   Color blackClr = Color(0xff2d2d2d);
   // Color yellowClr = Color(0xfff7d73a);
@@ -18,41 +18,38 @@ class _CustomerOrdersState extends State<CustomerOrders>
   Color greenClr = Color(0x0ff8ee269);
   Color redClr = Color(0x0fff0513c);
 
-  String pageName = 'customerOrder';
-  List tempList = [];
-
-  List customer_orders = [
+  List supplier_orders = [
     {
       'orderNo': '1',
-      'supplier': 'Save Mart',
+      'customer': 'Haroon Qadeer',
       'address': 'G.T Road, G-15, Islamabad',
       'totalAmount': '1500',
       'orderStatus': 'pending'
     },
     {
       'orderNo': '2',
-      'supplier': 'Madina Cash & Carry',
+      'customer': 'Imran Ejaz',
       'address': 'G-9 Markaz, Islamabad',
       'totalAmount': '20530',
       'orderStatus': 'Rjected'
     },
     {
       'orderNo': '3',
-      'supplier': 'Punjab Cash & Carry',
+      'customer': 'Nabeel Ahmed Khan',
       'address': 'G-9 Markaz, Islamabad',
       'totalAmount': '10365',
       'orderStatus': 'completed'
     },
     {
       'orderNo': '4',
-      'supplier': 'Shaan Fruits',
+      'customer': 'Adnan Ali',
       'address': 'G-14 Markaz, Islamabad',
       'totalAmount': '1500',
       'orderStatus': 'completed'
     }
   ];
 
-  List customerOrdersList = List();
+  List supplierOrdersList = List();
   final formatter = new NumberFormat('##,###.##');
   bool isSearching = false;
   Color foreColor;
@@ -61,15 +58,15 @@ class _CustomerOrdersState extends State<CustomerOrders>
   @override
   void initState() {
     super.initState();
-    this.getCustomerOrders();
+    this.getSupplierOrders();
   }
 
   @override
   void _filteredOrders(String searchText) {
     try {
       setState(() {
-        customerOrdersList = customer_orders
-            .where((item) => item['supplier']
+        supplierOrdersList = supplier_orders
+            .where((item) => item['customer']
                 .toString()
                 .toLowerCase()
                 .contains(searchText.toLowerCase()))
@@ -80,10 +77,10 @@ class _CustomerOrdersState extends State<CustomerOrders>
     }
   }
 
-  Future<String> getCustomerOrders() async {
+  Future<String> getSupplierOrders() async {
     try {
       setState(() {
-        customerOrdersList = customer_orders;
+        supplierOrdersList = supplier_orders;
       });
       return 'success';
     } catch (e) {
@@ -116,7 +113,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
                     ),
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: redClr)),
-                    hintText: 'search order by supplier name',
+                    hintText: 'search order by customer name',
                     hintStyle: TextStyle(
                         color: redClr, fontFamily: 'Baloo', fontSize: 18))),
         actions: <Widget>[
@@ -145,7 +142,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
             height: MediaQuery.of(context).size.height - 160.0,
             width: double.infinity,
             child: new ListView.builder(
-              itemCount: customerOrdersList.length,
+              itemCount: supplierOrdersList.length,
               itemBuilder: (BuildContext context, int index) =>
                   buildOrderCard(context, index),
             ),
@@ -154,20 +151,17 @@ class _CustomerOrdersState extends State<CustomerOrders>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: Color(0xFFF17532),
-        child: Icon(Icons.shopping_cart),
+        backgroundColor: redClr,
+        child: Icon(Icons.notifications),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomBar(
-        pageName,
-        tempList,
-      ),
+      bottomNavigationBar: SupplierBottomBar(),
     );
   }
 
   // orders widget
   Widget buildOrderCard(BuildContext context, int index) {
-    final item = customerOrdersList[index];
+    final item = supplierOrdersList[index];
     return FadeAnimation(
       1.5,
       Card(
@@ -179,7 +173,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(item['supplier'],
+                    Text(item['customer'],
                         style: TextStyle(
                             color: blackClr,
                             fontFamily: 'Baloo',

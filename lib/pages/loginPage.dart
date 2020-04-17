@@ -115,10 +115,14 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //declarations
-    Color blackClr = Color(0xff141622);
-    Color greenClr = Color(0xff8cc540);
-    Color blueClr = Color(0xff408cc5);
-    Color bodyClr = Color(0xfff8f7f7);
+    Color blackClr = Color(0xff2d2d2d);
+    // Color yellowClr = Color(0xfff7d73a);
+    Color whiteClr = Color(0x0ffffffff);
+    Color lightClr = Color(0x0fffdebe7);
+    Color purpleClr = Color(0x0ffd183fd);
+    Color greenClr = Color(0x0ff8ee269);
+    Color redClr = Color(0x0fff0513c);
+
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
       message: 'Please Wait...',
@@ -142,143 +146,121 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: bodyClr,
-        child: Stack(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [redClr, greenClr])),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Align(
-                alignment: Alignment.bottomCenter,
-                widthFactor: 0.5,
-                heightFactor: 0.6,
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.all(Radius.circular(200)),
-                  color: blackClr,
-                  child: FadeAnimation(
-                      1.0,
-                      Container(
-                        width: 400,
-                        height: 400,
-                      )),
-                )),
-            Padding(
-              padding: const EdgeInsets.only(top: 80, left: 85),
-              child: FadeAnimation(
-                  1.0,
-                  Text('LOGIN',
-                      style: TextStyle(
-                          color: bodyClr, fontSize: 40, fontFamily: 'Abel'))),
+            Text(
+              'Welcome to App',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: greenClr,
+                  fontFamily: 'Ubuntu',
+                  fontSize: 25,
+                  fontWeight: FontWeight.w700),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: FadeAnimation(
-                      1.5,
+            FadeAnimation(
+                1.5,
+                CircleAvatar(
+                  child: Icon(
+                    Icons.shopping_basket,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                  radius: 50,
+                  backgroundColor: greenClr,
+                )),
+            Center(
+              child: FadeAnimation(
+                2.0,
+                Container(
+                  width: 300,
+                  height: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top: 100),
-                        child: Icon(
-                          Icons.shopping_basket,
-                          color: blueClr,
-                          size: 70,
-                        ),
-                      )),
-                ),
-                Center(
-                  child: FadeAnimation(
-                    2.0,
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 10,
-                      ),
-                      child: Material(
-                        elevation: 5,
-                        child: Container(
-                          width: 300,
-                          height: 170,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 10, left: 10, right: 10),
-                                child: TextFormField(
-                                  controller: mobile,
-                                  maxLength: 10,
-                                  keyboardType: TextInputType.number,
-                                  key: Key('mobileNumber'),
-                                  decoration: InputDecoration(
-                                    hintText: '3001234567',
-                                    // labelText: 'mobile number',
-                                    prefixIcon: Icon(Icons.phone_android),
-                                    errorText: validateMobile
-                                        ? 'Mobile Number is Required'
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 10, left: 10, right: 10, bottom: 10),
-                                child: TextFormField(
-                                  controller: pwd,
-                                  key: Key('password'),
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintText: 'password',
-                                    // labelText: 'mobile number',
-                                    prefixIcon: Icon(Icons.lock_outline),
-                                    errorText: validatePwd
-                                        ? 'Password is Required'
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        padding:
+                            const EdgeInsets.only(top: 10, left: 10, right: 10),
+                        child: TextFormField(
+                          controller: mobile,
+                          maxLength: 11,
+                          keyboardType: TextInputType.number,
+                          key: Key('mobileNumber'),
+                          style: TextStyle(color: whiteClr),
+                          decoration: InputDecoration(
+                            hintStyle: TextStyle(
+                                color: blackClr,
+                                fontFamily: 'Baloo',
+                                fontSize: 18),
+                            hintText: '03001234567',
+                            // labelText: 'mobile number',
+                            prefixIcon: Icon(Icons.phone_android),
+                            errorText: validateMobile
+                                ? 'Mobile Number is Required'
+                                : null,
                           ),
                         ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10, left: 10, right: 10, bottom: 10),
+                        child: TextFormField(
+                          controller: pwd,
+                          key: Key('password'),
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            hintText: 'password',
+                            // labelText: 'mobile number',
+                            prefixIcon: Icon(Icons.lock_outline),
+                            errorText:
+                                validatePwd ? 'Password is Required' : null,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: FadeAnimation(
+                  2.5,
+                  RaisedButton(
+                    elevation: 5,
+                    padding: EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 10.0),
+                    shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(10),
+                    ),
+                    color: redClr,
+                    splashColor: greenClr,
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Baloo',
                       ),
                     ),
-                  ),
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: FadeAnimation(
-                        2.5,
-                        RaisedButton(
-                          elevation: 5,
-                          padding: EdgeInsets.fromLTRB(40.0, 10.0, 40.0, 10.0),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10),
-                          ),
-                          color: Color(0xff8cc540),
-                          splashColor: Color(0xff141622),
-                          child: Text(
-                            "Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: 'Abel',
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              mobile.text.isEmpty
-                                  ? validateMobile = true
-                                  : validateMobile = false;
-                              pwd.text.isEmpty
-                                  ? validatePwd = true
-                                  : validatePwd = false;
-                              if (mobile.text.isNotEmpty &&
-                                  pwd.text.isNotEmpty) {
-                                login();
-                              }
-                            });
-                          },
-                        )),
-                  ),
-                )
-              ],
+                    onPressed: () {
+                      setState(() {
+                        mobile.text.isEmpty
+                            ? validateMobile = true
+                            : validateMobile = false;
+                        pwd.text.isEmpty
+                            ? validatePwd = true
+                            : validatePwd = false;
+                        if (mobile.text.isNotEmpty && pwd.text.isNotEmpty) {
+                          login();
+                        }
+                      });
+                    },
+                  )),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -303,12 +285,12 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                     fontSize: 16,
                                     fontFamily: 'Baloo')),
                             GestureDetector(
-                                child: Text("Register",
+                                child: Text(" Register",
                                     style: TextStyle(
                                         decoration: TextDecoration.underline,
-                                        color: greenClr,
+                                        color: whiteClr,
                                         fontSize: 18,
-                                        fontFamily: 'Abel')),
+                                        fontFamily: 'Josefin')),
                                 onTap: () {
                                   navigateToRegister(context);
                                 }),
@@ -319,9 +301,9 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                           child: Text("forget password",
                               style: TextStyle(
                                   decoration: TextDecoration.underline,
-                                  color: blueClr,
+                                  color: redClr,
                                   fontSize: 18,
-                                  fontFamily: 'Abel')),
+                                  fontFamily: 'Baloo')),
                           onTap: () {
                             navigateToForgot(context);
                           }),

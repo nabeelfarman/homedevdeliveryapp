@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: SideBarLayout(),
       home: SplashScreen(),
+      //home: SideBarLayout(),
       onGenerateRoute: Routes.sailor.generator(),
       navigatorKey: Routes.sailor.navigatorKey,
     );
