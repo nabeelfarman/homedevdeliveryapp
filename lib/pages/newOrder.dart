@@ -2,15 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/UI/supplierListView.dart';
 import 'package:homemobileapp/models/categoryModel.dart';
+import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 
-class NewOrderPage extends StatefulWidget {
+class NewOrderPage extends StatefulWidget with NavigationStates {
+  final int userID;
+  final int townID;
+
+  @required
+  NewOrderPage({
+    @required this.userID,
+    @required this.townID,
+  });
+
   @override
-  _NewOrderPageState createState() => _NewOrderPageState();
+  _NewOrderPageState createState() => _NewOrderPageState(
+        userID,
+        townID,
+      );
 }
 
 class _NewOrderPageState extends State<NewOrderPage>
     with SingleTickerProviderStateMixin {
+  int userID;
+  int townID;
+
+  _NewOrderPageState(
+    this.userID,
+    this.townID,
+  );
+
   //declaration
+  String pageName = 'newOrder';
+  List tempList = [];
+
   final List<CategoryModel> categoryList = [
     CategoryModel(1, 'Grocery'),
     CategoryModel(2, 'Vegetable'),
@@ -27,14 +51,13 @@ class _NewOrderPageState extends State<NewOrderPage>
   Color redClr = Color(0x0fff0513c);
 
   bool isSearching = false;
-
   SupplierListView supplierListPage;
 
   // GlobalKey<SupplierListView> _supplierState = GlobalKey();
-
   @override
   void initState() {
     super.initState();
+
     _tabController =
         new TabController(length: categoryList.length, vsync: this);
   }
@@ -61,11 +84,11 @@ class _NewOrderPageState extends State<NewOrderPage>
                   // supplierListPage.prinText(value);
                   // _tabController.animateTo(_tabController.index);
                   setState(() {
-                    supplierListPage = SupplierListView(
-                      value: _tabController.index + 1,
-                      searchText: Text,
-                    );
-                    supplierListPage.prinText(Text);
+                    // supplierListPage = SupplierListView(
+                    //   value: _tabController.index + 1,
+                    //   searchText: Text,
+                    // );
+                    // supplierListPage.prinText(Text);
                     // supplierListPage.prinText(Text);
                   });
                 },
@@ -153,18 +176,26 @@ class _NewOrderPageState extends State<NewOrderPage>
                 supplierListPage = SupplierListView(
                   value: 1,
                   searchText: '',
+                  userID: userID,
+                  townID: townID,
                 ),
                 supplierListPage = SupplierListView(
                   value: 2,
                   searchText: '',
+                  userID: userID,
+                  townID: townID,
                 ),
                 supplierListPage = SupplierListView(
                   value: 3,
                   searchText: '',
+                  userID: userID,
+                  townID: townID,
                 ),
                 supplierListPage = SupplierListView(
                   value: 4,
                   searchText: '',
+                  userID: userID,
+                  townID: townID,
                 )
               ]))
         ],
@@ -175,7 +206,10 @@ class _NewOrderPageState extends State<NewOrderPage>
         child: Icon(Icons.shopping_cart),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        pageName,
+        tempList,
+      ),
     );
   }
 }

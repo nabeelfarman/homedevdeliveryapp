@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/models/supplierModel.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import '../main.dart';
 
 class SupplierListView extends StatefulWidget {
   final int value;
+  final int userID;
+  final int townID;
   final String searchText;
-  SupplierListView({@required this.value, @required this.searchText});
+  SupplierListView({
+    @required this.value,
+    @required this.searchText,
+    @required this.userID,
+    @required this.townID,
+  });
   @override
-  _SupplierListViewState createState() =>
-      _SupplierListViewState(this.value, this.searchText);
-
-  void prinText(String s) {
-    _SupplierListViewState(this.value, this.searchText).initState();
-  }
+  _SupplierListViewState createState() => _SupplierListViewState(
+      this.value, this.searchText, this.userID, this.townID);
 }
 
 class _SupplierListViewState extends State<SupplierListView> {
   int value;
+  int userID;
+  int townID;
   String searchText;
-  _SupplierListViewState(this.value, this.searchText);
+
+  _SupplierListViewState(
+    this.value,
+    this.searchText,
+    this.userID,
+    this.townID,
+  );
 
   final List<SupplierModel> supplierList = [
     SupplierModel(1, "Save Mart", "G.T Road Branch G-15, Islamabad", 1, true),
@@ -43,6 +56,7 @@ class _SupplierListViewState extends State<SupplierListView> {
   ];
 
   List<SupplierModel> filteredSupplier = [];
+  ProgressDialog pr;
 
   Color blackClr = Color(0xff2d2d2d);
   // Color yellowClr = Color(0xfff7d73a);
@@ -56,18 +70,47 @@ class _SupplierListViewState extends State<SupplierListView> {
   void initState() {
     super.initState();
 
-    if (searchText != '') {
-      filteredSupplier = supplierList
-          .where((supplier) =>
-              supplier.category == value &&
-              supplier.title.toLowerCase().contains(searchText.toLowerCase()))
-          .toList();
-    } else {
-      filteredSupplier =
-          supplierList.where((supplier) => supplier.category == value).toList();
+    // if (searchText != '') {
+    //   filteredSupplier = supplierList
+    //       .where((supplier) =>
+    //           supplier.category == value &&
+    //           supplier.title.toLowerCase().contains(searchText.toLowerCase()))
+    //       .toList();
+    // } else {
+    //   filteredSupplier =
+    //       supplierList.where((supplier) => supplier.category == value).toList();
+    // }
+    print(userID);
+    print(townID);
+  }
+
+  Future<String> getMerchants() async {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    try {
+      pr.show();
+    } catch (e) {
+      pr.hide();
+      AlertDialog alert = AlertDialog(
+        title: Text("Error!"),
+        content: Text(e.toString()),
+        actions: [
+          okButton,
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
     }
-    print(filteredSupplier.length);
-    print(value);
+    // http://95.217.147.105:2001/api/getmerchantintown?TownID=1
   }
 
   void searchSupplier(String str) {
@@ -92,37 +135,47 @@ class _SupplierListViewState extends State<SupplierListView> {
 
   Widget buildSupplierCard(BuildContext context, int index) {
     final supplier = filteredSupplier[index];
-    return Card(
-        child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(supplier.title,
-                  style: TextStyle(
-                      color: blackClr,
-                      fontFamily: 'Baloo',
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800)),
-              FlatButton(
-                color: greenClr,
-                shape: CircleBorder(),
-                onPressed: () => {},
-                child: Text('A'),
-              ),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              Text(supplier.address,
-                  style: TextStyle(
-                      color: blackClr, fontFamily: 'Baloo', fontSize: 16))
-            ],
-          )
-        ],
-      ),
-    ));
+    return GestureDetector(
+      onTap: () {
+        print(supplier.title);
+        navigateToItems(context);
+      },
+      child: Card(
+          child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(supplier.title,
+                    style: TextStyle(
+                        color: blackClr,
+                        fontFamily: 'Baloo',
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800)),
+                FlatButton(
+                  color: greenClr,
+                  shape: CircleBorder(),
+                  onPressed: () => {},
+                  child: Text('A'),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text(supplier.address,
+                    style: TextStyle(
+                        color: blackClr, fontFamily: 'Baloo', fontSize: 16))
+              ],
+            )
+          ],
+        ),
+      )),
+    );
+  }
+
+  void navigateToItems(BuildContext context) {
+    Routes.sailor.navigate('/item');
   }
 }

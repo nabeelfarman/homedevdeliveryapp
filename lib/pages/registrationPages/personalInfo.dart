@@ -84,6 +84,7 @@ class _PersonalInfo extends State<PersonalInfo> {
           print(pin);
           print(pwd);
           print(businessName);
+          print(usr);
           print(ownerName);
           print(email);
           navigateToContactInfo(context);
@@ -359,6 +360,7 @@ class _PersonalInfo extends State<PersonalInfo> {
         'pwd': pwd,
         'pin': pin,
         'businessName': businessName,
+        'usr': usr,
         'ownerName': ownerName,
         'email': email,
       },

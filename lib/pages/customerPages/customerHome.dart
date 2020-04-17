@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/home_card.dart';
 import 'package:homemobileapp/UI/image_carousel.dart';
+import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 
-class CustomerHome extends StatefulWidget {
+class CustomerHome extends StatefulWidget with NavigationStates {
+  @override
+  CustomerHome();
+
   @override
   _CustomerHomeState createState() => _CustomerHomeState();
 }
@@ -52,10 +56,15 @@ class _CustomerHomeState extends State<CustomerHome> {
                 child: GridView.count(
                   crossAxisCount: 2,
                   children: <Widget>[
-                    HomeCard(
-                      icon: Icons.assignment,
-                      iconTitle: 'New Order',
-                      cardColor: redClr,
+                    GestureDetector(
+                      child: HomeCard(
+                        icon: Icons.assignment,
+                        iconTitle: 'New Order',
+                        cardColor: redClr,
+                      ),
+                      onTap: () {
+                        print('New Order');
+                      },
                     ),
                     HomeCard(
                       icon: Icons.history,

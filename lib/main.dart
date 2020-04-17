@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:homemobileapp/pages/customerPages/shoppingCart.dart';
 import 'package:homemobileapp/pages/loginPage.dart';
 import 'package:homemobileapp/pages/mainOTPVerification.dart';
 import 'package:homemobileapp/pages/newOrder.dart';
@@ -17,6 +17,7 @@ import 'package:homemobileapp/sidebar/sidebar_layout.dart';
 // import './pages/registrationPages/otpVerification.dart';
 import 'package:sailor/sailor.dart';
 
+import 'package:homemobileapp/pages/customerPages/itemsPage.dart';
 import 'pages/registrationPages/otpVerification.dart';
 
 import 'pages/registrationPages/supplierCustomer.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: ContactInfo(),
+      // home: SideBarLayout(),
       home: SplashScreen(),
       onGenerateRoute: Routes.sailor.generator(),
       navigatorKey: Routes.sailor.navigatorKey,
@@ -169,6 +170,12 @@ class Routes {
         },
       ),
       SailorRoute(
+        name: '/customerHome',
+        builder: (context, args, params) {
+          return CustomerHome();
+        },
+      ),
+      SailorRoute(
         name: '/supplier',
         builder: (context, args, params) {
           return SupplierCustomer(
@@ -243,7 +250,57 @@ class Routes {
       SailorRoute(
         name: '/registerSuccess',
         builder: (context, args, params) {
-          return RegistrationSuccess();
+          return RegistrationSuccess(
+            userID: params.param<int>('userID'),
+            userName: params.param('userName'),
+            appTypeID: params.param<int>('appTypeID'),
+            email: params.param('email'),
+            townID: params.param('townID'),
+          );
+        },
+        params: [
+          SailorParam<int>(name: 'userID', isRequired: true),
+          SailorParam<String>(name: 'userName', isRequired: true),
+          SailorParam<int>(name: 'appTypeID', isRequired: true),
+          SailorParam<int>(name: 'email', isRequired: true),
+          SailorParam<String>(name: 'townID', isRequired: true),
+        ],
+      ),
+      SailorRoute(
+        name: '/newOrder',
+        builder: (context, args, params) {
+          return NewOrderPage();
+        },
+      ),
+      SailorRoute(
+        name: '/sideBarLayout',
+        builder: (context, args, params) {
+          return SideBarLayout(
+            userID: params.param<int>('userID'),
+            userName: params.param('userName'),
+            appTypeID: params.param<int>('appTypeID'),
+            email: params.param('email'),
+            townID: params.param('townID'),
+          );
+        },
+        params: [
+          SailorParam<int>(name: 'userID', isRequired: true),
+          SailorParam<String>(name: 'userName', isRequired: true),
+          SailorParam<int>(name: 'appTypeID', isRequired: true),
+          SailorParam<String>(name: 'email', isRequired: true),
+          SailorParam<String>(name: 'townID', isRequired: true),
+        ],
+      ),
+      SailorRoute(
+        name: '/item',
+        builder: (context, args, params) {
+          return ItemsPage();
+        },
+      ),
+      SailorRoute(
+        name: '/shoppingCart',
+        builder: (context, args, params) {
+          return ShoppingCart();
         },
       ),
     ]);

@@ -1,16 +1,59 @@
 import 'dart:async';
+import 'package:homemobileapp/pages/newOrder.dart';
 import 'package:homemobileapp/sidebar/menu_item.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
+import 'package:homemobileapp/main.dart';
+import 'package:homemobileapp/pages/newOrder.dart';
+import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
+import 'package:sailor/sailor.dart';
 
 class SideBar extends StatefulWidget {
+  int userID;
+  String userName;
+  int appTypeID;
+  String email;
+  int townID;
+
+  @override
+  SideBar(
+    @required this.userID,
+    @required this.userName,
+    @required this.appTypeID,
+    @required this.email,
+    @required this.townID,
+  );
+
   //declaration
   @override
-  _SideBarState createState() => _SideBarState();
+  _SideBarState createState() => _SideBarState(
+        userID,
+        userName,
+        appTypeID,
+        email,
+        townID,
+      );
 }
 
 class _SideBarState extends State<SideBar>
     with SingleTickerProviderStateMixin<SideBar> {
+  int userID;
+  String userName;
+  int appTypeID;
+  String email;
+  int townID;
+
+  @override
+  _SideBarState(
+    this.userID,
+    this.userName,
+    this.appTypeID,
+    this.email,
+    this.townID,
+  );
+
   AnimationController _animationController;
   StreamController<bool> isSideBarOpenedStreamController;
   Stream<bool> isSideBarOpenedStream;
@@ -36,6 +79,11 @@ class _SideBarState extends State<SideBar>
     isSideBarOpenedStreamController = PublishSubject<bool>();
     isSideBarOpenedStream = isSideBarOpenedStreamController.stream;
     isSideBarOpenedSink = isSideBarOpenedStreamController.sink;
+
+    print(userID);
+    print(userName);
+    print(appTypeID);
+    print(email);
   }
 
   @override
@@ -90,13 +138,17 @@ class _SideBarState extends State<SideBar>
                           ),
                           ListTile(
                             title: Text(
-                              'Haroon Qadeer',
+                              userName
+                                      .trimLeft()
+                                      .substring(0, 1)
+                                      .toUpperCase() +
+                                  userName.trimRight().substring(1),
                               style: TextStyle(
                                   color: greenClr,
                                   fontSize: 25,
                                   fontWeight: FontWeight.w800),
                             ),
-                            subtitle: Text('haroon.qadeer@hotmail.com',
+                            subtitle: Text(email,
                                 style:
                                     TextStyle(color: whiteClr, fontSize: 16)),
                             leading: CircleAvatar(
@@ -113,9 +165,31 @@ class _SideBarState extends State<SideBar>
                             indent: 32,
                             endIndent: 32,
                           ),
-                          MenuItem(icon: Icons.home, title: 'Home Page'),
-                          MenuItem(
-                              icon: Icons.shopping_basket, title: 'My Orders'),
+                          GestureDetector(
+                            child: MenuItem(
+                              icon: Icons.home,
+                              title: 'Home Page',
+                            ),
+                            onTap: () {
+                              onIconPressed();
+                              BlocProvider.of<NavigationBloc>(context)
+                                  .add(customerHome());
+                            },
+                          ),
+                          GestureDetector(
+                            child: MenuItem(
+                              icon: Icons.shopping_basket,
+                              title: 'My Orders',
+                            ),
+                            onTap: () {
+                              onIconPressed();
+                              BlocProvider.of<NavigationBloc>(context)
+                                  .add(newOrder(
+                                userID: userID,
+                                townID: townID,
+                              ));
+                            },
+                          ),
                           Divider(
                             height: 64,
                             thickness: 0.5,

@@ -18,6 +18,9 @@ class _CustomerOrdersState extends State<CustomerOrders>
   Color greenClr = Color(0x0ff8ee269);
   Color redClr = Color(0x0fff0513c);
 
+  String pageName = 'customerOrder';
+  List tempList = [];
+
   List customer_orders = [
     {
       'orderNo': '1',
@@ -138,7 +141,10 @@ class _CustomerOrdersState extends State<CustomerOrders>
         child: Icon(Icons.shopping_cart),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        pageName,
+        tempList,
+      ),
     );
   }
 

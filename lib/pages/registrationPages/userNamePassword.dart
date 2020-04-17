@@ -146,225 +146,230 @@ class _UserNamePassword extends State<UserNamePassword>
           color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
     );
 
-    return Scaffold(
-        body: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: bodyClr,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Material(
-                  elevation: 10,
-                  child: FadeAnimation(
-                      1.0,
-                      Container(
-                        height: 80,
-                        alignment: Alignment.bottomCenter,
-                        color: blackClr,
-                        child: Text(
-                          'REGISTRATION',
-                          style: TextStyle(
-                              color: greenClr,
-                              fontSize: 40,
-                              fontFamily: 'Abel'),
-                        ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+          body: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: bodyClr,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Material(
+                    elevation: 10,
+                    child: FadeAnimation(
+                        1.0,
+                        Container(
+                          height: 80,
+                          alignment: Alignment.bottomCenter,
+                          color: blackClr,
+                          child: Text(
+                            'REGISTRATION',
+                            style: TextStyle(
+                                color: greenClr,
+                                fontSize: 40,
+                                fontFamily: 'Abel'),
+                          ),
+                        )),
+                  ),
+                  FadeAnimation(
+                      1.5,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50, right: 50),
+                        child: Container(
+                            height: 250,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('REGISTER YOUR MOBILE',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: blueClr,
+                                        fontSize: 30,
+                                        fontFamily: 'Abel',
+                                        fontWeight: FontWeight.bold)),
+                                TextFormField(
+                                  controller: regMobile,
+                                  maxLength: 10,
+                                  key: Key('mobileNumber'),
+                                  keyboardType: TextInputType.number,
+                                  //textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                    hintText: '3001234567',
+                                    prefixIcon: Icon(Icons.phone_android),
+                                    errorText: validateRegMobile
+                                        ? 'Mobile is Required'
+                                        : null,
+                                    // labelText: 'mobile number',
+                                  ),
+                                ),
+                                TextFormField(
+                                  controller: regPwd,
+                                  key: Key('password'),
+                                  obscureText: true,
+                                  //textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                    hintText: 'password',
+                                    prefixIcon: Icon(Icons.lock_outline),
+                                    errorText: validateRegPwd
+                                        ? 'Password is Required'
+                                        : null,
+                                    // labelText: 'mobile number',
+                                  ),
+                                ),
+                                TextFormField(
+                                  controller: cnfrmPwd,
+                                  key: Key('confirmPassword'),
+                                  obscureText: true,
+                                  //textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                    hintText: 'confirm password',
+                                    prefixIcon: Icon(Icons.done),
+                                    errorText: validateCnfrmPwd
+                                        ? 'Confirm Password is Required'
+                                        : null,
+                                    // labelText: 'mobile number',
+                                  ),
+                                ),
+                              ],
+                            )),
                       )),
-                ),
-                FadeAnimation(
-                    1.5,
-                    Padding(
-                      padding: const EdgeInsets.only(left: 50, right: 50),
-                      child: Container(
-                          height: 250,
-                          child: Column(
+                  FadeAnimation(
+                    2.0,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        FlatButton(
+                          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(0),
+                          ),
+                          splashColor: blackClr,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(Icons.arrow_back, color: greenClr),
+                              ),
+                              Text(
+                                "Back",
+                                style: TextStyle(
+                                  color: greenClr,
+                                  fontSize: 20,
+                                  fontFamily: 'Abel',
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
+                          onPressed: () {
+                            navigateToLogin(context);
+                          },
+                        ),
+                        Container(
+                          width: 100,
+                          height: 30,
+                          //color: Colors.orangeAccent,
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('REGISTER YOUR MOBILE',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: blueClr,
-                                      fontSize: 30,
-                                      fontFamily: 'Abel',
-                                      fontWeight: FontWeight.bold)),
-                              TextFormField(
-                                controller: regMobile,
-                                key: Key('mobileNumber'),
-                                keyboardType: TextInputType.number,
-                                //textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  hintText: 'mobile number',
-                                  prefixIcon: Icon(Icons.phone_android),
-                                  errorText: validateRegMobile
-                                      ? 'Mobile is Required'
-                                      : null,
-                                  // labelText: 'mobile number',
-                                ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    color: blueClr,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: blueClr)),
                               ),
-                              TextFormField(
-                                controller: regPwd,
-                                key: Key('password'),
-                                obscureText: true,
-                                //textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  hintText: 'password',
-                                  prefixIcon: Icon(Icons.lock_outline),
-                                  errorText: validateRegPwd
-                                      ? 'Password is Required'
-                                      : null,
-                                  // labelText: 'mobile number',
-                                ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    //color: blueClr,
+                                    border: Border.all(color: blueClr)),
                               ),
-                              TextFormField(
-                                controller: cnfrmPwd,
-                                key: Key('confirmPassword'),
-                                obscureText: true,
-                                //textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  hintText: 'confirm password',
-                                  prefixIcon: Icon(Icons.done),
-                                  errorText: validateCnfrmPwd
-                                      ? 'Confirm Password is Required'
-                                      : null,
-                                  // labelText: 'mobile number',
-                                ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    //color: blueClr,
+                                    border: Border.all(color: blueClr)),
                               ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    //color: blueClr,
+                                    border: Border.all(color: blueClr)),
+                              ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    //color: blueClr,
+                                    border: Border.all(color: blueClr)),
+                              )
                             ],
-                          )),
-                    )),
-                FadeAnimation(
-                  2.0,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      FlatButton(
-                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(0),
+                          ),
                         ),
-                        splashColor: blackClr,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Icon(Icons.arrow_back, color: greenClr),
-                            ),
-                            Text(
-                              "Back",
-                              style: TextStyle(
-                                color: greenClr,
-                                fontSize: 20,
-                                fontFamily: 'Abel',
-                                fontWeight: FontWeight.bold,
+                        FlatButton(
+                          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(0),
+                          ),
+                          splashColor: blackClr,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Text(
+                                "Next",
+                                style: TextStyle(
+                                  color: greenClr,
+                                  fontSize: 20,
+                                  fontFamily: 'Abel',
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            )
-                          ],
-                        ),
-                        onPressed: () {
-                          navigateToLogin(context);
-                        },
-                      ),
-                      Container(
-                        width: 100,
-                        height: 30,
-                        //color: Colors.orangeAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  color: blueClr,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: blueClr)),
-                            ),
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  //color: blueClr,
-                                  border: Border.all(color: blueClr)),
-                            ),
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  //color: blueClr,
-                                  border: Border.all(color: blueClr)),
-                            ),
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  //color: blueClr,
-                                  border: Border.all(color: blueClr)),
-                            ),
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  //color: blueClr,
-                                  border: Border.all(color: blueClr)),
-                            )
-                          ],
-                        ),
-                      ),
-                      FlatButton(
-                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(0),
-                        ),
-                        splashColor: blackClr,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Text(
-                              "Next",
-                              style: TextStyle(
-                                color: greenClr,
-                                fontSize: 20,
-                                fontFamily: 'Abel',
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Icon(Icons.arrow_forward, color: greenClr),
-                            )
-                          ],
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            regMobile.text.isEmpty
-                                ? validateRegMobile = true
-                                : validateRegMobile = false;
-                            regPwd.text.isEmpty
-                                ? validateRegPwd = true
-                                : validateRegPwd = false;
-                            cnfrmPwd.text.isEmpty
-                                ? validateCnfrmPwd = true
-                                : validateCnfrmPwd = false;
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child:
+                                    Icon(Icons.arrow_forward, color: greenClr),
+                              )
+                            ],
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              regMobile.text.isEmpty
+                                  ? validateRegMobile = true
+                                  : validateRegMobile = false;
+                              regPwd.text.isEmpty
+                                  ? validateRegPwd = true
+                                  : validateRegPwd = false;
+                              cnfrmPwd.text.isEmpty
+                                  ? validateCnfrmPwd = true
+                                  : validateCnfrmPwd = false;
 
-                            if (regMobile.text.isNotEmpty &&
-                                regPwd.text.isNotEmpty &&
-                                cnfrmPwd.text.isNotEmpty) {
-                              genPin();
-                            }
-                          });
-                        },
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )));
+                              if (regMobile.text.isNotEmpty &&
+                                  regPwd.text.isNotEmpty &&
+                                  cnfrmPwd.text.isNotEmpty) {
+                                genPin();
+                              }
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ))),
+    );
   }
 
   void navigateToLogin(BuildContext context) {

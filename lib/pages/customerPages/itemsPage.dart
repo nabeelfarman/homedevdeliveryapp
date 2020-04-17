@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 
+import '../../main.dart';
+
 class ItemsPage extends StatefulWidget {
+  @override
+  ItemsPage();
+
   @override
   _ItemsPageState createState() => _ItemsPageState();
 }
@@ -20,6 +25,8 @@ class _ItemsPageState extends State<ItemsPage>
   Color redClr = Color(0x0fff0513c);
 
   bool isSearching = false;
+
+  String pageName = 'ItemsPage';
 
   List items_data = [
     {
@@ -109,6 +116,8 @@ class _ItemsPageState extends State<ItemsPage>
   ];
 
   List filteredItems = List();
+
+  List tempList = [];
 
   @override
   void initState() {
@@ -219,12 +228,17 @@ class _ItemsPageState extends State<ItemsPage>
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          navigateToShoppingCart(context);
+        },
         backgroundColor: Color(0xFFF17532),
         child: Icon(Icons.shopping_cart),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        pageName,
+        tempList,
+      ),
     );
   }
 
@@ -291,6 +305,36 @@ class _ItemsPageState extends State<ItemsPage>
                           var qty = int.parse(item['quantity']);
                           if (qty < 500) {
                             item['quantity'] = (qty + 1).toString();
+                            if (tempList.length == 0) {
+                              tempList.add({
+                                'iTitle': item['itemTitle'],
+                                'iQty': item['quantity'],
+                              });
+                            } else {
+                              bool found = false;
+                              for (int i = 0; i < tempList.length; i++) {
+                                if (tempList[i]['iTitle'] ==
+                                    item['itemTitle']) {
+                                  String itemsTitle = item['itemTitle'];
+                                  tempList.removeWhere(
+                                      (items) => items['iTitle'] == itemsTitle);
+                                  tempList.add({
+                                    'iTitle': item['itemTitle'],
+                                    'iQty': item['quantity'],
+                                  });
+                                  i = tempList.length;
+                                  found = true;
+                                }
+                              }
+                              if (found == false) {
+                                tempList.add({
+                                  'iTitle': item['itemTitle'],
+                                  'iQty': item['quantity'],
+                                });
+                              }
+                            }
+
+                            print(tempList);
                           }
                         });
                       },
@@ -308,5 +352,13 @@ class _ItemsPageState extends State<ItemsPage>
         ),
       )),
     );
+  }
+
+  void navigateToShoppingCart(BuildContext context) {
+    Routes.sailor.navigate('/shoppingCart');
+  }
+
+  void navigateToOrderPage(BuildContext context) {
+    Routes.sailor.navigate('/newOrder');
   }
 }

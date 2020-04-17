@@ -14,6 +14,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
   // AnimationController _controller;
+  int userID;
+  String userName;
+  int appTypeID;
+  String email;
+  int townID;
 
   TextEditingController mobile = new TextEditingController();
   TextEditingController pwd = new TextEditingController();
@@ -25,13 +30,17 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
   Future<List> login() async {
     try {
       pr.show();
+      String mobileNumber = mobile.text;
+      String password = pwd.text;
 
-      http.Response response = await http.get(
-          Uri.encodeFull("http://95.217.147.105:2002/api/login?UserName=" +
-              mobile.text +
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/login?MobileNo=" +
+              mobileNumber +
               "&HashPassword=" +
-              pwd.text),
-          headers: {"Accept": "application/json"});
+              password,
+          headers: {
+            "Content-Type": "application/json",
+          });
       final Map responseJson = json.decode(response.body);
 
       Widget okButton = FlatButton(
@@ -41,31 +50,31 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
           // navigateToHome(context);
         },
       );
-      if (responseJson["msg"] == "User successfully logged in") {
+
+      // print(responseJson["data"]["userID"]);
+      if (responseJson["rows"].length != 0) {
         // showNotification();
         pr.hide();
         mobile.clear();
         pwd.clear();
-        AlertDialog alert = AlertDialog(
-          title: Text("Success!"),
-          content: Text(responseJson["msg"]),
-          actions: [
-            okButton,
-          ],
-        );
-        // show the dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
+        userID = responseJson["rows"][0]["userID"];
+        userName = responseJson["rows"][0]["userName"];
+        appTypeID = responseJson["rows"][0]["appTypeID"];
+        email = responseJson["rows"][0]["email"];
+        townID = responseJson["rows"][0]["townID"];
+
+        // print(userID);
+        // print(userName);
+        // print(appTypeID);
+        // print(email);
+
+        navigateToSideBarLayout(context);
       } else {
         pr.hide();
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
           title: Text("Error!"),
-          content: Text(responseJson["msg"]),
+          content: Text("Invalid Login Name & Password"),
           actions: [
             okButton,
           ],
@@ -194,11 +203,11 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                     top: 10, left: 10, right: 10),
                                 child: TextFormField(
                                   controller: mobile,
-                                  maxLength: 11,
+                                  maxLength: 10,
                                   keyboardType: TextInputType.number,
                                   key: Key('mobileNumber'),
                                   decoration: InputDecoration(
-                                    hintText: '03001234567',
+                                    hintText: '3001234567',
                                     // labelText: 'mobile number',
                                     prefixIcon: Icon(Icons.phone_android),
                                     errorText: validateMobile
@@ -333,5 +342,18 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
 
   void navigateToForgot(BuildContext context) {
     Routes.sailor.navigate('/verification');
+  }
+
+  void navigateToSideBarLayout(BuildContext context) {
+    Routes.sailor.navigate(
+      '/sideBarLayout',
+      params: {
+        'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
+        'townID': townID,
+      },
+    );
   }
 }

@@ -71,6 +71,12 @@ class _ContactInfo extends State<ContactInfo> {
   String _tehsil;
   String _town;
 
+  int userID;
+  String userName;
+  int appTypeID;
+  String uEmail;
+  int townID;
+
   //dropdown lists
   // List<DropdownMenuItem<int>> listProvince = [];
   void initState() {
@@ -268,11 +274,37 @@ class _ContactInfo extends State<ContactInfo> {
 
         pr.hide();
         final Map responseJson = json.decode(response.body);
-        if (responseJson['msg'] == 'Success') {
+        if (responseJson["rows"].length != 0) {
+          userID = responseJson["rows"][0]["userID"];
+          userName = responseJson["rows"][0]["userName"];
+          appTypeID = responseJson["rows"][0]["appTypeID"];
+          uEmail = responseJson["rows"][0]["email"];
+          townID = responseJson["rows"][0]["townID"];
+
           navigateToSuccess(context);
         } else {
-          print(responseJson['msg']);
-          print('Already Registered');
+          Widget okButton = FlatButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.pop(context);
+              // navigateToHome(context);
+            },
+          );
+
+          AlertDialog alert = AlertDialog(
+            title: Text("Error!"),
+            content: Text("Already Registered"),
+            actions: [
+              okButton,
+            ],
+          );
+          // show the dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
         }
       }
     } catch (e) {
@@ -653,8 +685,16 @@ class _ContactInfo extends State<ContactInfo> {
                       ],
                     ),
                     onPressed: () {
-                      print(_district);
-                      print(_province);
+                      // print(_district);
+                      // print(_province);
+                      print(ownerName);
+                      print(pwd);
+                      print(usr);
+                      print(mobileNumber);
+                      print(email);
+                      print(_town);
+                      print(txtAddress.text);
+
                       registerContact();
                     },
                   )

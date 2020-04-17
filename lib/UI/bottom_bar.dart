@@ -1,6 +1,29 @@
 import 'package:flutter/material.dart';
 
-class BottomBar extends StatelessWidget {
+class BottomBar extends StatefulWidget {
+  String pageName;
+  List tempList;
+
+  @override
+  BottomBar(@required this.pageName, @required this.tempList);
+
+  @override
+  _BottomBar createState() => _BottomBar(
+        pageName,
+        tempList,
+      );
+}
+
+class _BottomBar extends State<BottomBar> {
+  String pageName;
+  List tempList;
+
+  @override
+  _BottomBar(
+    this.pageName,
+    this.tempList,
+  );
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -25,7 +48,25 @@ class BottomBar extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Icon(Icons.arrow_back, color: Color(0xFFEF7532)),
+                          GestureDetector(
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Color(0xFFEF7532),
+                            ),
+                            onTap: () {
+                              if (pageName == "ItemsPage") {
+                                if (tempList.length == 0) {
+                                  print('No item Selected');
+                                } else {
+                                  for (int i = 0; i < tempList.length; i++) {
+                                    print(tempList[i]['iTitle']);
+                                  }
+                                }
+                              } else {
+                                print(pageName);
+                              }
+                            },
+                          ),
                           // Icon(Icons.person_outline, color: Color(0xFF676E79))
                         ],
                       )),

@@ -7,7 +7,19 @@ import 'dart:convert';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class RegistrationSuccess extends StatelessWidget {
-  RegistrationSuccess();
+  final int userID;
+  final String userName;
+  final int appTypeID;
+  final String email;
+  final int townID;
+
+  RegistrationSuccess({
+    @required this.userID,
+    @required this.userName,
+    @required this.appTypeID,
+    @required this.email,
+    @required this.townID,
+  });
 
   //declarations
   Color blackClr = Color(0xff141622);
@@ -80,7 +92,9 @@ class RegistrationSuccess extends StatelessWidget {
                           fontFamily: 'Abel',
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        navigateToSideBarLayout(context);
+                      },
                     ),
                   )
                 ],
@@ -90,5 +104,18 @@ class RegistrationSuccess extends StatelessWidget {
         ],
       ),
     ));
+  }
+
+  void navigateToSideBarLayout(BuildContext context) {
+    Routes.sailor.navigate(
+      '/sideBarLayout',
+      params: {
+        'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
+        'townID': townID,
+      },
+    );
   }
 }

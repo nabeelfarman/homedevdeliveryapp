@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
+import 'package:homemobileapp/pages/customerPages/itemsPage.dart';
 import 'package:intl/intl.dart';
+
+import '../../main.dart';
 
 class ShoppingCart extends StatefulWidget {
   @override
@@ -96,7 +99,12 @@ class _ShoppingCartState extends State<ShoppingCart>
                 color: blackClr, fontFamily: 'Josefin', fontSize: 25)),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.arrow_back), onPressed: () {}, color: redClr)
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              navigateToItems(context);
+            },
+            color: redClr,
+          )
         ],
       ),
       body: ListView(
@@ -252,5 +260,9 @@ class _ShoppingCartState extends State<ShoppingCart>
         ),
       )),
     );
+  }
+
+  void navigateToItems(BuildContext context) {
+    Routes.sailor.navigate('/item');
   }
 }
