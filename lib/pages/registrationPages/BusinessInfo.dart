@@ -153,259 +153,242 @@ class _BusinessInfo extends State<BusinessInfo> {
     );
 
     return Scaffold(
-        body: Form(
-      key: _formKey,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        // color: whiteClr,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Material(
-              elevation: 2,
-              child: FadeAnimation(
-                  1.0,
-                  Container(
-                    height: 80,
-                    alignment: Alignment.bottomCenter,
-                    color: whiteClr,
-                    child: Text(
-                      'Registration',
-                      style: TextStyle(
-                          color: redClr, fontSize: 40, fontFamily: 'Josefin'),
-                    ),
-                  )),
-            ),
-            FadeAnimation(
-              1.5,
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text('Business Information',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: greenClr,
-                          fontSize: 30,
-                          fontFamily: 'Baloo',
-                          fontWeight: FontWeight.bold)),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 50, right: 50),
-                    child: TextFormField(
-                      controller: txtBusinessName,
-                      key: Key('businessName'),
-                      textAlign: TextAlign.center,
-                      //textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        hintText: 'business name',
-                        //prefixIcon: Icon(Icons.phone_android),
-                        // labelText: 'mobile number',
+      appBar: new AppBar(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: whiteClr,
+          title: Text('Business Information',
+              style: TextStyle(
+                  color: blackClr, fontFamily: 'Josefin', fontSize: 25))),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          // color: whiteClr,
+          child: Column(
+            children: <Widget>[
+              FadeAnimation(
+                1.5,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 50, right: 50),
+                      child: TextFormField(
+                        controller: txtBusinessName,
+                        key: Key('businessName'),
+                        textAlign: TextAlign.center,
+                        //textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: 'business name',
+                          //prefixIcon: Icon(Icons.phone_android),
+                          // labelText: 'mobile number',
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Enter Business Name';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter Business Name';
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 50, right: 50),
-                    child: TextFormField(
-                      controller: txtOwnerName,
-                      key: Key('ownerName'),
-                      textAlign: TextAlign.center,
-                      //textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        hintText: 'owner name',
-                        //prefixIcon: Icon(Icons.phone_android),
-                        // labelText: 'mobile number',
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 50, right: 50),
+                      child: TextFormField(
+                        controller: txtOwnerName,
+                        key: Key('ownerName'),
+                        textAlign: TextAlign.center,
+                        //textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: 'owner name',
+                          //prefixIcon: Icon(Icons.phone_android),
+                          // labelText: 'mobile number',
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Enter Owner Name';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter Owner Name';
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 50, right: 50),
-                    child: TextFormField(
-                      controller: txtEmail,
-                      key: Key('email'),
-                      textAlign: TextAlign.center,
-                      //textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        hintText: 'email address',
-                        //prefixIcon: Icon(Icons.phone_android),
-                        // labelText: 'mobile number',
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 50, right: 50),
+                      child: TextFormField(
+                        controller: txtEmail,
+                        key: Key('email'),
+                        textAlign: TextAlign.center,
+                        //textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: 'email address',
+                          //prefixIcon: Icon(Icons.phone_android),
+                          // labelText: 'mobile number',
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Enter Email Address';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter Email Address';
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 50, right: 50),
-                    child: new ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: categories.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final item = categories[index];
-                          return new Card(
-                            child: new Container(
-                              padding: new EdgeInsets.all(5),
-                              child: Column(
-                                children: <Widget>[
-                                  new CheckboxListTile(
-                                      value: item['checked'] == 'true'
-                                          ? true
-                                          : false,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          item['checked'] = value.toString();
-                                          print(item['checked'] +
-                                              ' ' +
-                                              item['categoryTitle']);
-                                        });
-                                      },
-                                      title: new Text(item['categoryTitle']))
-                                ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 50, right: 50),
+                      child: new ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: categories.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final item = categories[index];
+                            return new Card(
+                              child: new Container(
+                                padding: new EdgeInsets.all(5),
+                                child: Column(
+                                  children: <Widget>[
+                                    new CheckboxListTile(
+                                        value: item['checked'] == 'true'
+                                            ? true
+                                            : false,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            item['checked'] = value.toString();
+                                            print(item['checked'] +
+                                                ' ' +
+                                                item['categoryTitle']);
+                                          });
+                                        },
+                                        title: new Text(item['categoryTitle']))
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          }),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        color: whiteClr,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            FlatButton(
+              padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(0),
+              ),
+              splashColor: blackClr,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Icon(Icons.arrow_back, color: greenClr),
+                  ),
+                  Text(
+                    "Back",
+                    style: TextStyle(
+                      color: greenClr,
+                      fontSize: 20,
+                      fontFamily: 'Abel',
+                      fontWeight: FontWeight.bold,
+                    ),
                   )
                 ],
               ),
+              onPressed: () {
+                navigateToSupplier(context);
+              },
             ),
-            FadeAnimation(
-              2.0,
-              Row(
+            Container(
+              width: 100,
+              height: 30,
+              //color: Colors.orangeAccent,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  FlatButton(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(0),
-                    ),
-                    splashColor: blackClr,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Icon(Icons.arrow_back, color: greenClr),
-                        ),
-                        Text(
-                          "Back",
-                          style: TextStyle(
-                            color: greenClr,
-                            fontSize: 20,
-                            fontFamily: 'Abel',
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                    onPressed: () {
-                      navigateToSupplier(context);
-                    },
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        //color: blueClr,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: redClr)),
                   ),
                   Container(
-                    width: 100,
-                    height: 30,
-                    //color: Colors.orangeAccent,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              //color: blueClr,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: redClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: redClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: redClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: redClr,
-                              border: Border.all(color: redClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: redClr)),
-                        )
-                      ],
-                    ),
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        //color: blueClr,
+                        border: Border.all(color: redClr)),
                   ),
-                  FlatButton(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(0),
-                    ),
-                    splashColor: blackClr,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Text(
-                          "Next",
-                          style: TextStyle(
-                            color: greenClr,
-                            fontSize: 20,
-                            fontFamily: 'Abel',
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Icon(Icons.arrow_forward, color: greenClr),
-                        )
-                      ],
-                    ),
-                    onPressed: () {
-                      registerBusinessInfo();
-                    },
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        //color: blueClr,
+                        border: Border.all(color: redClr)),
+                  ),
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: redClr,
+                        border: Border.all(color: redClr)),
+                  ),
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        //color: blueClr,
+                        border: Border.all(color: redClr)),
                   )
                 ],
               ),
+            ),
+            FlatButton(
+              padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(0),
+              ),
+              splashColor: blackClr,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text(
+                    "Next",
+                    style: TextStyle(
+                      color: greenClr,
+                      fontSize: 20,
+                      fontFamily: 'Abel',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Icon(Icons.arrow_forward, color: greenClr),
+                  )
+                ],
+              ),
+              onPressed: () {
+                registerBusinessInfo();
+              },
             )
           ],
         ),
       ),
-    ));
+    );
   }
 
   void navigateToSupplier(BuildContext context) {
