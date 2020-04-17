@@ -28,6 +28,14 @@ class BusinessInfo extends StatefulWidget {
 }
 
 class _BusinessInfo extends State<BusinessInfo> {
+  Color blackClr = Color(0xff2d2d2d);
+  // Color yellowClr = Color(0xfff7d73a);
+  Color whiteClr = Color(0x0ffffffff);
+  Color lightClr = Color(0x0fffdebe7);
+  Color purpleClr = Color(0x0ffd183fd);
+  Color greenClr = Color(0x0ff8ee269);
+  Color redClr = Color(0x0fff0513c);
+
   TextEditingController txtBusinessName = new TextEditingController();
   TextEditingController txtOwnerName = new TextEditingController();
   TextEditingController txtEmail = new TextEditingController();
@@ -43,6 +51,13 @@ class _BusinessInfo extends State<BusinessInfo> {
   String email;
 
   ProgressDialog pr;
+
+  List categories = [
+    {'categoryID': '1', 'categoryTitle': 'Groccery'},
+    {'categoryID': '2', 'categoryTitle': 'Vegetable'},
+    {'categoryID': '3', 'categoryTitle': 'Fruits'},
+    {'categoryID': '4', 'categoryTitle': 'Meat'}
+  ];
 
   _BusinessInfo(
     this.mobileNumber,
@@ -117,12 +132,6 @@ class _BusinessInfo extends State<BusinessInfo> {
     }
   }
 
-  //declarations
-  Color blackClr = Color(0xff141622);
-  Color greenClr = Color(0xff8cc540);
-  Color blueClr = Color(0xff408cc5);
-  Color bodyClr = Color(0xfff8f7f7);
-
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
@@ -149,23 +158,23 @@ class _BusinessInfo extends State<BusinessInfo> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: bodyClr,
+        // color: whiteClr,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Material(
-              elevation: 10,
+              elevation: 2,
               child: FadeAnimation(
                   1.0,
                   Container(
                     height: 80,
                     alignment: Alignment.bottomCenter,
-                    color: blackClr,
+                    color: whiteClr,
                     child: Text(
                       'Registration',
                       style: TextStyle(
-                          color: greenClr, fontSize: 40, fontFamily: 'Abel'),
+                          color: redClr, fontSize: 40, fontFamily: 'Josefin'),
                     ),
                   )),
             ),
@@ -178,13 +187,13 @@ class _BusinessInfo extends State<BusinessInfo> {
                   Text('Business Information',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: blueClr,
+                          color: greenClr,
                           fontSize: 30,
-                          fontFamily: 'Abel',
+                          fontFamily: 'Baloo',
                           fontWeight: FontWeight.bold)),
                   Padding(
                     padding:
-                        const EdgeInsets.only(top: 30, left: 50, right: 50),
+                        const EdgeInsets.only(top: 10, left: 50, right: 50),
                     child: TextFormField(
                       controller: txtBusinessName,
                       key: Key('businessName'),
@@ -245,6 +254,28 @@ class _BusinessInfo extends State<BusinessInfo> {
                       },
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 50, right: 50),
+                    child: new ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: categories.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item = categories[index];
+                          return new Card(
+                            child: new Container(
+                              padding: new EdgeInsets.all(5),
+                              child: Column(
+                                children: <Widget>[
+                                  new CheckboxListTile(
+                                      value: true,
+                                      onChanged: null,
+                                      title: new Text(item['categoryTitle']))
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                  )
                 ],
               ),
             ),
@@ -294,7 +325,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                           decoration: BoxDecoration(
                               //color: blueClr,
                               shape: BoxShape.circle,
-                              border: Border.all(color: blueClr)),
+                              border: Border.all(color: redClr)),
                         ),
                         Container(
                           width: 15,
@@ -302,7 +333,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               //color: blueClr,
-                              border: Border.all(color: blueClr)),
+                              border: Border.all(color: redClr)),
                         ),
                         Container(
                           width: 15,
@@ -310,15 +341,15 @@ class _BusinessInfo extends State<BusinessInfo> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               //color: blueClr,
-                              border: Border.all(color: blueClr)),
+                              border: Border.all(color: redClr)),
                         ),
                         Container(
                           width: 15,
                           height: 15,
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: blueClr,
-                              border: Border.all(color: blueClr)),
+                              color: redClr,
+                              border: Border.all(color: redClr)),
                         ),
                         Container(
                           width: 15,
@@ -326,7 +357,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               //color: blueClr,
-                              border: Border.all(color: blueClr)),
+                              border: Border.all(color: redClr)),
                         )
                       ],
                     ),
