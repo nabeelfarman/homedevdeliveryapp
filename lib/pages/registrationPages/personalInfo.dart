@@ -35,6 +35,7 @@ class _PersonalInfo extends State<PersonalInfo> {
   String businessName;
   String ownerName;
   String email;
+  List tempList = [];
 
   ProgressDialog pr;
 
@@ -363,6 +364,7 @@ class _PersonalInfo extends State<PersonalInfo> {
         'usr': usr,
         'ownerName': ownerName,
         'email': email,
+        'natureList': tempList,
       },
     );
   }

@@ -52,6 +52,7 @@ class _BusinessInfo extends State<BusinessInfo> {
 
   ProgressDialog pr;
 
+  List tempList = [];
   List categories = [
     {'categoryID': '1', 'categoryTitle': 'Groccery', 'checked': 'false'},
     {'categoryID': '2', 'categoryTitle': 'Vegetable', 'checked': 'false'},
@@ -97,18 +98,36 @@ class _BusinessInfo extends State<BusinessInfo> {
           );
         } else {
           // pr.show();
-          businessName = txtBusinessName.text;
-          ownerName = txtOwnerName.text;
-          email = txtEmail.text;
-          // pr.hide();
-          print(mobileNumber);
-          print(pin);
-          print(pwd);
-          print(businessName);
-          print(ownerName);
-          print(email);
-          print(usr);
-          navigateToContactInfo(context);
+          if (tempList.length == 0) {
+            AlertDialog alert = AlertDialog(
+              title: Text("Error!"),
+              content: Text('Business Nature is Required'),
+              actions: [
+                okButton,
+              ],
+            );
+            // show the dialog
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return alert;
+              },
+            );
+          } else {
+            businessName = txtBusinessName.text;
+            ownerName = txtOwnerName.text;
+            email = txtEmail.text;
+            // pr.hide();
+            print(mobileNumber);
+            print(pin);
+            print(pwd);
+            print(businessName);
+            print(ownerName);
+            print(email);
+            print(usr);
+            print(tempList);
+            navigateToContactInfo(context);
+          }
         }
       } else {
         print('Form is invalid');
@@ -255,9 +274,35 @@ class _BusinessInfo extends State<BusinessInfo> {
                                         onChanged: (bool value) {
                                           setState(() {
                                             item['checked'] = value.toString();
-                                            print(item['checked'] +
-                                                ' ' +
-                                                item['categoryTitle']);
+                                            if (tempList.length == 0) {
+                                              tempList.add({
+                                                'BusinessID':
+                                                    item['categoryID'],
+                                              });
+                                            } else {
+                                              bool found = false;
+
+                                              for (int i = 0;
+                                                  i < tempList.length;
+                                                  i++) {
+                                                if (tempList[i]['BusinessID'] ==
+                                                    item['categoryID']) {
+                                                  tempList.removeWhere(
+                                                      (items) =>
+                                                          items['BusinessID'] ==
+                                                          item['categoryID']);
+                                                  i = tempList.length;
+                                                  found = true;
+                                                }
+                                              }
+                                              if (found == false) {
+                                                tempList.add({
+                                                  'BusinessID':
+                                                      item['categoryID'],
+                                                });
+                                              }
+                                            }
+                                            print(tempList);
                                           });
                                         },
                                         title: new Text(item['categoryTitle']))
@@ -413,6 +458,7 @@ class _BusinessInfo extends State<BusinessInfo> {
         'usr': usr,
         'ownerName': ownerName,
         'email': email,
+        'natureList': tempList,
       },
     );
   }

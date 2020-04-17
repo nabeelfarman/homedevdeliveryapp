@@ -236,6 +236,7 @@ class Routes {
             businessName: params.param('businessName'),
             ownerName: params.param('ownerName'),
             email: params.param('email'),
+            natureList: params.param('natureList'),
           );
         },
         params: [
@@ -246,6 +247,7 @@ class Routes {
           SailorParam<String>(name: 'businessName'),
           SailorParam<String>(name: 'ownerName', isRequired: true),
           SailorParam<String>(name: 'email', isRequired: true),
+          SailorParam(name: 'natureList'),
         ],
       ),
       SailorRoute(
