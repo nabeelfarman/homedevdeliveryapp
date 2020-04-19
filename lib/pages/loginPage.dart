@@ -206,17 +206,13 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                               top: 10, left: 10, right: 10),
                           child: TextFormField(
                             controller: mobile,
-                            maxLength: 11,
+                            maxLength: 10,
                             keyboardType: TextInputType.number,
                             key: Key('mobileNumber'),
-                            style: TextStyle(color: whiteClr),
                             decoration: InputDecoration(
-                              hintStyle: TextStyle(
-                                  color: blackClr,
-                                  fontFamily: 'Baloo',
-                                  fontSize: 18),
-                              hintText: '03001234567',
-                              // labelText: 'mobile number',
+                              hintStyle:
+                                  TextStyle(fontFamily: 'Baloo', fontSize: 18),
+                              hintText: '3001234567',
                               prefixIcon: Icon(Icons.phone_android),
                               errorText: validateMobile
                                   ? 'Mobile Number is Required'
@@ -338,7 +334,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
   }
 
   void navigateToForgot(BuildContext context) {
-    Routes.sailor.navigate('/verification');
+    Routes.sailor.navigate('/forgotPassword');
   }
 
   void navigateToSideBarLayout(BuildContext context) {

@@ -3,6 +3,9 @@ import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/UI/supplierListView.dart';
 import 'package:homemobileapp/models/categoryModel.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class NewOrderPage extends StatefulWidget with NavigationStates {
   final int userID;
@@ -34,6 +37,8 @@ class _NewOrderPageState extends State<NewOrderPage>
   //declaration
   String pageName = 'newOrder';
   List tempList = [];
+  List supplierList = [];
+  ProgressDialog pr;
 
   final List<CategoryModel> categoryList = [
     CategoryModel(1, 'Grocery'),
@@ -57,6 +62,7 @@ class _NewOrderPageState extends State<NewOrderPage>
   @override
   void initState() {
     super.initState();
+    getMerchants();
 
     _tabController =
         new TabController(length: categoryList.length, vsync: this);
@@ -68,8 +74,76 @@ class _NewOrderPageState extends State<NewOrderPage>
     super.dispose();
   }
 
+  Future<String> getMerchants() async {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    try {
+      // pr.show();
+
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getmerchantintown?TownID=" +
+              townID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      for (int i = 0; i < responseJson.length; i++) {
+        supplierList.add({
+          'id': responseJson[i]["merchantID"],
+          'title': responseJson[i]["companyName"],
+          'address': responseJson[i]["townName"],
+          'category': responseJson[i]["businessID"],
+          'active': true,
+        });
+      }
+
+      print(supplierList.length);
+
+      // pr.hide();
+    } catch (e) {
+      // pr.hide();
+      AlertDialog alert = AlertDialog(
+        title: Text("Error!"),
+        content: Text(e.toString()),
+        actions: [
+          okButton,
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
       appBar: new AppBar(
         centerTitle: true,
@@ -178,24 +252,28 @@ class _NewOrderPageState extends State<NewOrderPage>
                   searchText: '',
                   userID: userID,
                   townID: townID,
+                  supplierList: supplierList,
                 ),
                 supplierListPage = SupplierListView(
                   value: 2,
                   searchText: '',
                   userID: userID,
                   townID: townID,
+                  supplierList: supplierList,
                 ),
                 supplierListPage = SupplierListView(
                   value: 3,
                   searchText: '',
                   userID: userID,
                   townID: townID,
+                  supplierList: supplierList,
                 ),
                 supplierListPage = SupplierListView(
                   value: 4,
                   searchText: '',
                   userID: userID,
                   townID: townID,
+                  supplierList: supplierList,
                 )
               ]))
         ],

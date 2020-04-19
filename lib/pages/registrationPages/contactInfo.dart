@@ -730,6 +730,13 @@ class _ContactInfo extends State<ContactInfo> {
   void navigateToSuccess(BuildContext context) {
     Routes.sailor.navigate(
       '/registerSuccess',
+      params: {
+        'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
+        'townID': townID,
+      },
     );
   }
 }
