@@ -115,13 +115,17 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //declarations
-    Color blackClr = Color(0xff2d2d2d);
-    // Color yellowClr = Color(0xfff7d73a);
+    Color blackClr = Color(0xff1D2028);
+
     Color whiteClr = Color(0x0ffffffff);
-    Color lightClr = Color(0x0fffdebe7);
-    Color purpleClr = Color(0x0ffd183fd);
-    Color greenClr = Color(0x0ff8ee269);
-    Color redClr = Color(0x0fff0513c);
+    Color lightClr = Color(0x0ffEEF2F5);
+    Color greyClr = Color(0x0ffB5BED0);
+    Color greenClr = Color(0x0ffA3C12E);
+    Color redClr = Color(0x0ffcf3f3d);
+
+    Color yellowClr = Color(0x0ffF8D247);
+    Color darkYellowClr = Color(0x0ffdfbd3f);
+    Color lightYellowClr = Color(0x0ffffde22);
 
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
@@ -143,186 +147,217 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
 
     return MaterialApp(
         home: Scaffold(
-      appBar: new AppBar(
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: redClr,
-        title: Text(
-          'Welcome to Delivery',
-          style: TextStyle(color: whiteClr, fontFamily: 'Lato', fontSize: 25),
-        ),
-      ),
       body: Container(
+        // color: whiteClr,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: redClr,
+        decoration: new BoxDecoration(
+          // color: yellowClr,
+          gradient: new LinearGradient(
+              colors: [darkYellowClr, lightYellowClr, yellowClr],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter),
+        ),
+
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             FadeAnimation(
-                1.5,
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 30, bottom: 30, right: 30, left: 30),
-                  child: CircleAvatar(
-                    child: Icon(
-                      Icons.shopping_basket,
-                      color: redClr,
-                      size: 40,
-                    ),
-                    radius: 50,
-                    backgroundColor: whiteClr,
-                  ),
-                )),
-            Center(
-              child: FadeAnimation(
-                2.0,
-                Container(
-                  width: 350,
-                  // color: whiteClr,
-                  decoration: BoxDecoration(
-                    color: whiteClr,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        bottomRight: Radius.circular(30.0)),
-                    boxShadow: [
-                      new BoxShadow(
-                          color: Colors.black.withOpacity(0.5),
-                          offset: new Offset(10.0, 10.0),
-                          blurRadius: 20.0)
-                    ],
-                  ),
-                  // height: 200,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 10, bottom: 20, left: 10, right: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10),
-                          child: TextFormField(
-                            controller: mobile,
-                            maxLength: 10,
-                            keyboardType: TextInputType.number,
-                            key: Key('mobileNumber'),
-                            decoration: InputDecoration(
-                              hintStyle:
-                                  TextStyle(fontFamily: 'Baloo', fontSize: 18),
-                              hintText: '3001234567',
-                              prefixIcon: Icon(Icons.phone_android),
-                              errorText: validateMobile
-                                  ? 'Mobile Number is Required'
-                                  : null,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10, bottom: 10),
-                          child: TextFormField(
-                            controller: pwd,
-                            key: Key('password'),
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              hintText: 'password',
-                              // labelText: 'mobile number',
-                              prefixIcon: Icon(Icons.lock_outline),
-                              errorText:
-                                  validatePwd ? 'Password is Required' : null,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 300,
-                          padding: const EdgeInsets.only(top: 20),
-                          child: FadeAnimation(
-                              2.5,
-                              RaisedButton(
-                                elevation: 5,
-                                padding:
-                                    EdgeInsets.fromLTRB(50.0, 5.0, 50.0, 5.0),
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(10),
-                                ),
-                                color: redClr,
-                                splashColor: greenClr,
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontFamily: 'Baloo',
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    mobile.text.isEmpty
-                                        ? validateMobile = true
-                                        : validateMobile = false;
-                                    pwd.text.isEmpty
-                                        ? validatePwd = true
-                                        : validatePwd = false;
-                                    if (mobile.text.isNotEmpty &&
-                                        pwd.text.isNotEmpty) {
-                                      login();
-                                    }
-                                  });
-                                },
-                              )),
-                        ),
-                      ],
-                    ),
+              1.0,
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Text(
+                  'Welcome to Delivery',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: blackClr,
+                    fontFamily: 'Anton',
+                    fontSize: 30,
                   ),
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        width: 300,
-        height: 50,
-        color: redClr,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              width: 200,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: <Widget>[
-                  Text('If New?',
-                      style: TextStyle(
-                          color: blackClr, fontSize: 16, fontFamily: 'Baloo')),
-                  GestureDetector(
-                      child: Text(" Register",
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: whiteClr,
-                              fontSize: 18,
-                              fontFamily: 'Josefin')),
-                      onTap: () {
-                        navigateToRegister(context);
-                      }),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * (3 / 4),
+                  // height: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FadeAnimation(
+                        1.5,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 30, bottom: 30, right: 30, left: 30),
+                          child: CircleAvatar(
+                            child: Icon(
+                              Icons.shopping_basket,
+                              color: blackClr,
+                              size: 40,
+                            ),
+                            radius: 50,
+                            backgroundColor: whiteClr,
+                          ),
+                        ),
+                      ),
+                      FadeAnimation(
+                        2.0,
+                        TextField(
+                          style: TextStyle(color: blackClr),
+                          controller: mobile,
+                          maxLength: 10,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          decoration: new InputDecoration(
+                              enabledBorder: new OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)),
+                                  borderSide: new BorderSide(color: whiteClr)),
+                              filled: true,
+                              hintStyle: new TextStyle(
+                                  color: blackClr.withOpacity(0.4)),
+                              hintText: "mobile number",
+                              prefixIcon: Icon(
+                                Icons.phone_android,
+                                color: blackClr.withOpacity(0.4),
+                              ),
+                              errorText: validateMobile
+                                  ? 'Mobile Number is Required'
+                                  : null,
+                              errorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: redClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              focusedErrorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              fillColor: whiteClr,
+                              focusedBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)))),
+                        ),
+                      ),
+                      FadeAnimation(
+                        2.0,
+                        TextField(
+                          style: TextStyle(color: blackClr),
+                          controller: pwd,
+                          maxLength: 15,
+                          textInputAction: TextInputAction.done,
+                          obscureText: true,
+                          decoration: new InputDecoration(
+                              enabledBorder: new OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)),
+                                  borderSide: new BorderSide(color: whiteClr)),
+                              filled: true,
+                              hintStyle: new TextStyle(
+                                  color: blackClr.withOpacity(0.4)),
+                              hintText: "password",
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: blackClr.withOpacity(0.4),
+                              ),
+                              errorText:
+                                  validatePwd ? 'Password is Required' : null,
+                              errorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: redClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              focusedErrorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              fillColor: whiteClr,
+                              focusedBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)))),
+                        ),
+                      ),
+                      FadeAnimation(
+                          2.5,
+                          RaisedButton(
+                            elevation: 5,
+                            padding: EdgeInsets.fromLTRB(50.0, 5.0, 50.0, 5.0),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(20),
+                            ),
+                            color: redClr,
+                            splashColor: greyClr,
+                            child: Text(
+                              "Login",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'Baloo',
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                mobile.text.isEmpty
+                                    ? validateMobile = true
+                                    : validateMobile = false;
+                                pwd.text.isEmpty
+                                    ? validatePwd = true
+                                    : validatePwd = false;
+                                if (mobile.text.isNotEmpty &&
+                                    pwd.text.isNotEmpty) {
+                                  login();
+                                }
+                              });
+                            },
+                          )),
+                    ],
+                  ),
+                )
+              ],
             ),
-            GestureDetector(
-                child: Text("forget password",
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: whiteClr,
-                        fontSize: 18,
-                        fontFamily: 'Baloo')),
-                onTap: () {
-                  navigateToForgot(context);
-                }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                  width: 200,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: <Widget>[
+                      Text('If New?',
+                          style: TextStyle(
+                              color: whiteClr,
+                              fontSize: 16,
+                              fontFamily: 'Baloo')),
+                      GestureDetector(
+                          child: Text(" Register",
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: blackClr,
+                                  fontSize: 16,
+                                  fontFamily: 'Josefin')),
+                          onTap: () {
+                            navigateToRegister(context);
+                          }),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                    child: Text("forget password",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: redClr,
+                            fontSize: 16,
+                            fontFamily: 'Baloo')),
+                    onTap: () {
+                      navigateToForgot(context);
+                    }),
+              ],
+            ),
           ],
         ),
       ),

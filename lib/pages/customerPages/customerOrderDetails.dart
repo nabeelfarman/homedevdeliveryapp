@@ -27,7 +27,7 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
   // Color yellowClr = Color(0xfff7d73a);
   Color whiteClr = Color(0x0ffffffff);
   Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
+  Color purpleClr = Color(0x0ff3c3055);
   Color greenClr = Color(0x0ff8ee269);
   Color redClr = Color(0x0fff0513c);
 

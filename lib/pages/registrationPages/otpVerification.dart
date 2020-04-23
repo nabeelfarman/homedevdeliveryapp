@@ -23,6 +23,8 @@ class OTPVerification extends StatefulWidget {
 }
 
 class _OTPVerification extends State<OTPVerification> {
+  bool validateOTP = false;
+
   String mobileNumber;
   String pwd;
   int pin;
@@ -184,10 +186,17 @@ class _OTPVerification extends State<OTPVerification> {
   @override
   Widget build(BuildContext context) {
     //declarations
-    Color blackClr = Color(0xff141622);
-    Color greenClr = Color(0xff8cc540);
-    Color blueClr = Color(0xff408cc5);
-    Color bodyClr = Color(0xfff8f7f7);
+    Color blackClr = Color(0xff1D2028);
+
+    Color whiteClr = Color(0x0ffffffff);
+    Color lightClr = Color(0x0ffEEF2F5);
+    Color greyClr = Color(0x0ffB5BED0);
+    Color greenClr = Color(0x0ffA3C12E);
+    Color redClr = Color(0x0ffcf3f3d);
+
+    Color yellowClr = Color(0x0ffF8D247);
+    Color darkYellowClr = Color(0x0ffdfbd3f);
+    Color lightYellowClr = Color(0x0ffffde22);
 
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
@@ -213,96 +222,115 @@ class _OTPVerification extends State<OTPVerification> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: bodyClr,
+          decoration: new BoxDecoration(
+            // color: yellowClr,
+            gradient: new LinearGradient(
+                colors: [darkYellowClr, lightYellowClr, yellowClr],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Material(
-                elevation: 10,
-                child: FadeAnimation(
-                    1.0,
-                    Container(
-                      height: 80,
-                      alignment: Alignment.bottomCenter,
-                      color: blackClr,
-                      child: Text(
-                        'REGISTRATION',
-                        style: TextStyle(
-                            color: greenClr, fontSize: 40, fontFamily: 'Abel'),
-                      ),
-                    )),
-              ),
+              FadeAnimation(
+                  1.0,
+                  Container(
+                    height: 80,
+                    alignment: Alignment.bottomCenter,
+                    // color: pinkClr,
+                    child: Text(
+                      'REGISTRATION',
+                      style: TextStyle(
+                          color: blackClr, fontSize: 30, fontFamily: 'Anton'),
+                    ),
+                  )),
               FadeAnimation(
                 1.5,
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Center(
-                      child: Icon(
-                        Icons.alarm,
-                        size: 80,
-                        color: blueClr,
-                      ),
-                    ),
-                    Text(
-                      '3:00',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: blackClr,
-                          fontSize: 30,
-                          fontFamily: 'Josefin',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 50, right: 50),
-                      child: Text(
-                        'One Time Password  (OTP) has been sent to your registered mobile number. Please enter  One Time Password (OTP) within the stipulated time.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontFamily: 'Baloo', fontSize: 18),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 50, right: 50),
-                      child: TextFormField(
-                        obscureText: true,
-                        controller: txtPin,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        maxLength: 4,
-                        decoration: InputDecoration(
-                          hintText: '04 digit OTP',
-                          // labelText: 'mobile number',
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Enter Verification Code';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 125, right: 125),
-                      child: RaisedButton(
-                        elevation: 10,
-                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10),
-                        ),
-                        color: greenClr,
-                        splashColor: blackClr,
-                        child: Text(
-                          "Resend OTP",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: 'Abel',
+                    Container(
+                      width: MediaQuery.of(context).size.width * (3 / 4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Center(
+                            child: Icon(
+                              Icons.alarm,
+                              size: 80,
+                              color: greyClr,
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          resendPin();
-                        },
+                          Text(
+                            '3:00',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: blackClr,
+                                fontSize: 30,
+                                fontFamily: 'Josefin',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'One Time Password  (OTP) has been sent to your registered mobile number. Please enter  One Time Password (OTP) within the stipulated time.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Baloo', fontSize: 18),
+                          ),
+                          TextField(
+                            obscureText: true,
+                            controller: txtPin,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            maxLength: 4,
+                            decoration: InputDecoration(
+                                enabledBorder: new OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                        const Radius.circular(40.0)),
+                                    borderSide:
+                                        new BorderSide(color: whiteClr)),
+                                filled: true,
+                                fillColor: whiteClr,
+                                hintText: '04 digit OTP',
+                                errorText: validateOTP
+                                    ? 'Enter Verification Code'
+                                    : null,
+                                errorBorder: new OutlineInputBorder(
+                                    borderSide: new BorderSide(color: redClr),
+                                    borderRadius: const BorderRadius.all(
+                                        const Radius.circular(40.0))),
+                                focusedErrorBorder: new OutlineInputBorder(
+                                    borderSide: new BorderSide(color: blackClr),
+                                    borderRadius: const BorderRadius.all(
+                                        const Radius.circular(40.0))),
+                                focusedBorder: new OutlineInputBorder(
+                                    borderSide: new BorderSide(color: blackClr),
+                                    borderRadius: const BorderRadius.all(
+                                        const Radius.circular(40.0)))
+                                // labelText: 'mobile number',
+                                ),
+                          ),
+                          RaisedButton(
+                            elevation: 5,
+                            padding:
+                                EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(20),
+                            ),
+                            color: redClr,
+                            splashColor: greyClr,
+                            child: Text(
+                              "Resend OTP",
+                              style: TextStyle(
+                                color: whiteClr,
+                                fontSize: 16,
+                                fontFamily: 'Abel',
+                              ),
+                            ),
+                            onPressed: () {
+                              resendPin();
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -310,110 +338,113 @@ class _OTPVerification extends State<OTPVerification> {
               ),
               FadeAnimation(
                 2.0,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FlatButton(
-                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(0),
-                      ),
-                      splashColor: blackClr,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: Icon(Icons.arrow_back, color: greenClr),
-                          ),
-                          Text(
-                            "Back",
-                            style: TextStyle(
-                              color: greenClr,
-                              fontSize: 20,
-                              fontFamily: 'Abel',
-                              fontWeight: FontWeight.bold,
+                Container(
+                  // color: whiteClr,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FlatButton(
+                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(0),
+                        ),
+                        splashColor: greyClr,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Icon(Icons.arrow_back, color: blackClr),
                             ),
+                            Text(
+                              "Back",
+                              style: TextStyle(
+                                color: blackClr,
+                                fontSize: 20,
+                                fontFamily: 'Abel',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          ],
+                        ),
+                        onPressed: () {
+                          navigateToRegister(context);
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: redClr)),
+                          ),
+                          Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: redClr,
+                                border: Border.all(color: redClr)),
+                          ),
+                          Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                //color: blueClr,
+                                border: Border.all(color: redClr)),
+                          ),
+                          Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                //color: blueClr,
+                                border: Border.all(color: redClr)),
+                          ),
+                          Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                //color: blueClr,
+                                border: Border.all(color: redClr)),
                           )
                         ],
                       ),
-                      onPressed: () {
-                        navigateToRegister(context);
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: blueClr)),
+                      FlatButton(
+                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(0),
                         ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: blueClr,
-                              border: Border.all(color: blueClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: blueClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: blueClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: blueClr)),
-                        )
-                      ],
-                    ),
-                    FlatButton(
-                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(0),
-                      ),
-                      splashColor: blackClr,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Text(
-                            "Next",
-                            style: TextStyle(
-                              color: greenClr,
-                              fontSize: 20,
-                              fontFamily: 'Abel',
-                              fontWeight: FontWeight.bold,
+                        splashColor: redClr,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text(
+                              "Next",
+                              style: TextStyle(
+                                color: blackClr,
+                                fontSize: 20,
+                                fontFamily: 'Abel',
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Icon(Icons.arrow_forward, color: greenClr),
-                          )
-                        ],
-                      ),
-                      onPressed: () {
-                        checkPin();
-                      },
-                    )
-                  ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Icon(Icons.arrow_forward, color: blackClr),
+                            )
+                          ],
+                        ),
+                        onPressed: () {
+                          checkPin();
+                        },
+                      )
+                    ],
+                  ),
                 ),
               )
             ],

@@ -28,13 +28,15 @@ class BusinessInfo extends StatefulWidget {
 }
 
 class _BusinessInfo extends State<BusinessInfo> {
-  Color blackClr = Color(0xff2d2d2d);
-  // Color yellowClr = Color(0xfff7d73a);
+  //declarations
+  Color blackClr = Color(0xff1D2028);
+  Color pinkClr = Color(0xffFF9C81);
   Color whiteClr = Color(0x0ffffffff);
-  Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
-  Color greenClr = Color(0x0ff8ee269);
-  Color redClr = Color(0x0fff0513c);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ff3CB54B);
+  Color redClr = Color(0x0ffE72C2D);
+  Color blueClr = Color(0x0ff0858D3);
 
   TextEditingController txtBusinessName = new TextEditingController();
   TextEditingController txtOwnerName = new TextEditingController();
@@ -175,147 +177,212 @@ class _BusinessInfo extends State<BusinessInfo> {
       appBar: new AppBar(
           centerTitle: true,
           elevation: 0,
-          backgroundColor: whiteClr,
+          backgroundColor: pinkClr,
           title: Text('Business Information',
               style: TextStyle(
-                  color: blackClr, fontFamily: 'Josefin', fontSize: 25))),
+                  color: whiteClr, fontFamily: 'Anton', fontSize: 25))),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
           // color: whiteClr,
-          child: Column(
-            children: <Widget>[
-              FadeAnimation(
-                1.5,
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 50, right: 50),
-                      child: TextFormField(
-                        controller: txtBusinessName,
-                        key: Key('businessName'),
-                        textAlign: TextAlign.center,
-                        //textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          hintText: 'business name',
-                          //prefixIcon: Icon(Icons.phone_android),
-                          // labelText: 'mobile number',
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Enter Business Name';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 50, right: 50),
-                      child: TextFormField(
-                        controller: txtOwnerName,
-                        key: Key('ownerName'),
-                        textAlign: TextAlign.center,
-                        //textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          hintText: 'owner name',
-                          //prefixIcon: Icon(Icons.phone_android),
-                          // labelText: 'mobile number',
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Enter Owner Name';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 50, right: 50),
-                      child: TextFormField(
-                        controller: txtEmail,
-                        key: Key('email'),
-                        textAlign: TextAlign.center,
-                        //textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          hintText: 'email address',
-                          //prefixIcon: Icon(Icons.phone_android),
-                          // labelText: 'mobile number',
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Enter Email Address';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 50, right: 50),
-                      child: new ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: categories.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final item = categories[index];
-                            return new Card(
-                              child: new Container(
-                                padding: new EdgeInsets.all(5),
-                                child: Column(
-                                  children: <Widget>[
-                                    new CheckboxListTile(
-                                        value: item['checked'] == 'true'
-                                            ? true
-                                            : false,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            item['checked'] = value.toString();
-                                            if (tempList.length == 0) {
-                                              tempList.add({
-                                                'BusinessID':
-                                                    item['categoryID'],
-                                              });
-                                            } else {
-                                              bool found = false;
-
-                                              for (int i = 0;
-                                                  i < tempList.length;
-                                                  i++) {
-                                                if (tempList[i]['BusinessID'] ==
-                                                    item['categoryID']) {
-                                                  tempList.removeWhere(
-                                                      (items) =>
-                                                          items['BusinessID'] ==
-                                                          item['categoryID']);
-                                                  i = tempList.length;
-                                                  found = true;
-                                                }
-                                              }
-                                              if (found == false) {
-                                                tempList.add({
-                                                  'BusinessID':
-                                                      item['categoryID'],
-                                                });
-                                              }
-                                            }
-                                            print(tempList);
-                                          });
-                                        },
-                                        title: new Text(item['categoryTitle']))
-                                  ],
-                                ),
+          child: Container(
+            color: lightClr,
+            width: MediaQuery.of(context).size.width,
+            constraints: new BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * (3 / 4),
+                  child: Column(
+                    children: <Widget>[
+                      FadeAnimation(
+                        1.5,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 20,
                               ),
-                            );
-                          }),
-                    )
-                  ],
+                              child: TextFormField(
+                                controller: txtBusinessName,
+                                key: Key('businessName'),
+                                textAlign: TextAlign.center,
+                                //textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                    enabledBorder: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0)),
+                                        borderSide:
+                                            new BorderSide(color: greyClr)),
+                                    filled: true,
+                                    fillColor: lightClr,
+                                    hintText: 'business name',
+                                    errorBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: redClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0))),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: pinkClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0))),
+                                    focusedBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: pinkClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0)))
+                                    //prefixIcon: Icon(Icons.phone_android),
+                                    // labelText: 'mobile number',
+                                    ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Business Name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 20,
+                              ),
+                              child: TextFormField(
+                                controller: txtOwnerName,
+                                key: Key('ownerName'),
+                                textAlign: TextAlign.center,
+                                //textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                    enabledBorder: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0)),
+                                        borderSide:
+                                            new BorderSide(color: greyClr)),
+                                    filled: true,
+                                    fillColor: lightClr,
+                                    hintText: 'owner name',
+                                    errorBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: redClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0))),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: pinkClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0))),
+                                    focusedBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: pinkClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0)))
+                                    //prefixIcon: Icon(Icons.phone_android),
+                                    // labelText: 'mobile number',
+                                    ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Owner Name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 20,
+                              ),
+                              child: TextFormField(
+                                controller: txtEmail,
+                                key: Key('email'),
+                                textAlign: TextAlign.center,
+                                //textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                    enabledBorder: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0)),
+                                        borderSide:
+                                            new BorderSide(color: greyClr)),
+                                    filled: true,
+                                    fillColor: lightClr,
+                                    hintText: 'email address',
+                                    errorBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: redClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0))),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: pinkClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0))),
+                                    focusedBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: pinkClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(40.0)))
+                                    //prefixIcon: Icon(Icons.phone_android),
+                                    // labelText: 'mobile number',
+                                    ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Email Address';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: new ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: categories.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final item = categories[index];
+                                    return new Card(
+                                      color: whiteClr,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      child: new Container(
+                                        padding: new EdgeInsets.all(5),
+                                        child: Column(
+                                          children: <Widget>[
+                                            new CheckboxListTile(
+                                                value: item['checked'] == 'true'
+                                                    ? true
+                                                    : false,
+                                                onChanged: (bool value) {
+                                                  setState(() {
+                                                    item['checked'] =
+                                                        value.toString();
+                                                    print(item['checked'] +
+                                                        ' ' +
+                                                        item['categoryTitle']);
+                                                  });
+                                                },
+                                                title: new Text(
+                                                    item['categoryTitle']))
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -329,18 +396,18 @@ class _BusinessInfo extends State<BusinessInfo> {
               shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(0),
               ),
-              splashColor: blackClr,
+              splashColor: greyClr,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
-                    child: Icon(Icons.arrow_back, color: greenClr),
+                    child: Icon(Icons.arrow_back, color: pinkClr),
                   ),
                   Text(
                     "Back",
                     style: TextStyle(
-                      color: greenClr,
+                      color: pinkClr,
                       fontSize: 20,
                       fontFamily: 'Abel',
                       fontWeight: FontWeight.bold,
@@ -365,7 +432,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                     decoration: BoxDecoration(
                         //color: blueClr,
                         shape: BoxShape.circle,
-                        border: Border.all(color: redClr)),
+                        border: Border.all(color: greyClr)),
                   ),
                   Container(
                     width: 15,
@@ -373,7 +440,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         //color: blueClr,
-                        border: Border.all(color: redClr)),
+                        border: Border.all(color: greyClr)),
                   ),
                   Container(
                     width: 15,
@@ -381,15 +448,15 @@ class _BusinessInfo extends State<BusinessInfo> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         //color: blueClr,
-                        border: Border.all(color: redClr)),
+                        border: Border.all(color: greyClr)),
                   ),
                   Container(
                     width: 15,
                     height: 15,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: redClr,
-                        border: Border.all(color: redClr)),
+                        color: greyClr,
+                        border: Border.all(color: greyClr)),
                   ),
                   Container(
                     width: 15,
@@ -397,7 +464,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         //color: blueClr,
-                        border: Border.all(color: redClr)),
+                        border: Border.all(color: greyClr)),
                   )
                 ],
               ),
@@ -407,14 +474,14 @@ class _BusinessInfo extends State<BusinessInfo> {
               shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(0),
               ),
-              splashColor: blackClr,
+              splashColor: greyClr,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Text(
                     "Next",
                     style: TextStyle(
-                      color: greenClr,
+                      color: pinkClr,
                       fontSize: 20,
                       fontFamily: 'Abel',
                       fontWeight: FontWeight.bold,
@@ -422,7 +489,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.arrow_forward, color: greenClr),
+                    child: Icon(Icons.arrow_forward, color: pinkClr),
                   )
                 ],
               ),
