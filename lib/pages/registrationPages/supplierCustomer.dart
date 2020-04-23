@@ -58,37 +58,45 @@ class _SupplierCustomer extends State<SupplierCustomer> {
   @override
   Widget build(BuildContext context) {
     //declaration
-    Color blackClr = Color(0xff141622);
-    Color greenClr = Color(0xff8cc540);
-    Color blueClr = Color(0xff408cc5);
-    Color bodyClr = Color(0xfff8f7f7);
+    Color blackClr = Color(0xff1D2028);
+
+    Color whiteClr = Color(0x0ffffffff);
+    Color lightClr = Color(0x0ffEEF2F5);
+    Color greyClr = Color(0x0ffB5BED0);
+    Color greenClr = Color(0x0ffA3C12E);
+    Color redClr = Color(0x0ffcf3f3d);
+
+    Color yellowClr = Color(0x0ffF8D247);
+    Color darkYellowClr = Color(0x0ffdfbd3f);
+    Color lightYellowClr = Color(0x0ffffde22);
 
     return Scaffold(
         body: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: bodyClr,
+            decoration: new BoxDecoration(
+              // color: yellowClr,
+              gradient: new LinearGradient(
+                  colors: [darkYellowClr, lightYellowClr, yellowClr],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Material(
-                  elevation: 10,
-                  child: FadeAnimation(
-                      1.0,
-                      Container(
-                        height: 80,
-                        alignment: Alignment.bottomCenter,
-                        color: blackClr,
-                        child: Text(
-                          'REGISTRATION',
-                          style: TextStyle(
-                              color: greenClr,
-                              fontSize: 40,
-                              fontFamily: 'Abel'),
-                        ),
-                      )),
-                ),
+                FadeAnimation(
+                    1.0,
+                    Container(
+                      height: 80,
+                      alignment: Alignment.bottomCenter,
+                      // color: pinkClr,
+                      child: Text(
+                        'REGISTRATION',
+                        style: TextStyle(
+                            color: blackClr, fontSize: 30, fontFamily: 'Anton'),
+                      ),
+                    )),
                 FadeAnimation(
                   1.5,
                   Column(
@@ -98,11 +106,11 @@ class _SupplierCustomer extends State<SupplierCustomer> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'WANT TO BECOME',
+                            'Want to Become',
                             style: TextStyle(
-                                color: blueClr,
-                                fontSize: 30,
-                                fontFamily: 'Abel',
+                                color: redClr,
+                                fontSize: 25,
+                                fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.bold),
                           )
                         ],
@@ -115,7 +123,7 @@ class _SupplierCustomer extends State<SupplierCustomer> {
                             Radio(
                                 value: 0,
                                 groupValue: selectedRadio,
-                                activeColor: Colors.green,
+                                activeColor: blackClr,
                                 onChanged: (val) {
                                   print('Radio $val');
                                   setSelectedRadio(val);
@@ -131,7 +139,7 @@ class _SupplierCustomer extends State<SupplierCustomer> {
                             Radio(
                                 value: 1,
                                 groupValue: selectedRadio,
-                                activeColor: Colors.green,
+                                activeColor: blackClr,
                                 onChanged: (val) {
                                   print('Radio $val');
                                   setSelectedRadio(val);
@@ -149,119 +157,123 @@ class _SupplierCustomer extends State<SupplierCustomer> {
                 ),
                 FadeAnimation(
                   2.0,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      FlatButton(
-                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(0),
-                        ),
-                        splashColor: blackClr,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Icon(Icons.arrow_back, color: greenClr),
-                            ),
-                            Text(
-                              "Back",
-                              style: TextStyle(
-                                color: greenClr,
-                                fontSize: 20,
-                                fontFamily: 'Abel',
-                                fontWeight: FontWeight.bold,
+                  Container(
+                    // color: whiteClr,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        FlatButton(
+                          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(0),
+                          ),
+                          splashColor: greyClr,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(Icons.arrow_back, color: blackClr),
                               ),
-                            )
-                          ],
+                              Text(
+                                "Back",
+                                style: TextStyle(
+                                  color: blackClr,
+                                  fontSize: 20,
+                                  fontFamily: 'Abel',
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
+                          onPressed: () {
+                            navigateToVerification(context);
+                          },
                         ),
-                        onPressed: () {
-                          navigateToVerification(context);
-                        },
-                      ),
-                      Container(
-                        width: 100,
-                        height: 30,
-                        //color: Colors.orangeAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  //color: blueClr,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: blueClr)),
-                            ),
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  //color: blueClr,
-                                  border: Border.all(color: blueClr)),
-                            ),
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: blueClr,
-                                  border: Border.all(color: blueClr)),
-                            ),
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  //color: blueClr,
-                                  border: Border.all(color: blueClr)),
-                            ),
-                            Container(
-                              width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  //color: blueClr,
-                                  border: Border.all(color: blueClr)),
-                            )
-                          ],
-                        ),
-                      ),
-                      FlatButton(
-                        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(0),
-                        ),
-                        splashColor: blackClr,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Text(
-                              "Next",
-                              style: TextStyle(
-                                color: greenClr,
-                                fontSize: 20,
-                                fontFamily: 'Abel',
-                                fontWeight: FontWeight.bold,
+                        Container(
+                          width: 100,
+                          height: 30,
+                          //color: Colors.orangeAccent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    //color: blueClr,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: redClr)),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Icon(Icons.arrow_forward, color: greenClr),
-                            )
-                          ],
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    //color: blueClr,
+                                    border: Border.all(color: redClr)),
+                              ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: redClr,
+                                    border: Border.all(color: redClr)),
+                              ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    //color: blueClr,
+                                    border: Border.all(color: redClr)),
+                              ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    //color: blueClr,
+                                    border: Border.all(color: redClr)),
+                              )
+                            ],
+                          ),
                         ),
-                        onPressed: () {
-                          print(mobileNumber);
-                          print(pwd);
-                          print(pin);
-                          registerUser();
-                        },
-                      )
-                    ],
+                        FlatButton(
+                          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(0),
+                          ),
+                          splashColor: greyClr,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Text(
+                                "Next",
+                                style: TextStyle(
+                                  color: blackClr,
+                                  fontSize: 20,
+                                  fontFamily: 'Abel',
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child:
+                                    Icon(Icons.arrow_forward, color: blackClr),
+                              )
+                            ],
+                          ),
+                          onPressed: () {
+                            print(mobileNumber);
+                            print(pwd);
+                            print(pin);
+                            registerUser();
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],

@@ -123,10 +123,18 @@ class _UserNamePassword extends State<UserNamePassword>
   @override
   Widget build(BuildContext context) {
     //declarations
-    Color blackClr = Color(0xff141622);
-    Color greenClr = Color(0xff8cc540);
-    Color blueClr = Color(0xff408cc5);
-    Color bodyClr = Color(0xfff8f7f7);
+    //declarations
+    Color blackClr = Color(0xff1D2028);
+
+    Color whiteClr = Color(0x0ffffffff);
+    Color lightClr = Color(0x0ffEEF2F5);
+    Color greyClr = Color(0x0ffB5BED0);
+    Color greenClr = Color(0x0ffA3C12E);
+    Color redClr = Color(0x0ffcf3f3d);
+
+    Color yellowClr = Color(0x0ffF8D247);
+    Color darkYellowClr = Color(0x0ffdfbd3f);
+    Color lightYellowClr = Color(0x0ffffde22);
 
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
@@ -152,219 +160,306 @@ class _UserNamePassword extends State<UserNamePassword>
           body: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              color: bodyClr,
+              decoration: new BoxDecoration(
+                // color: yellowClr,
+                gradient: new LinearGradient(
+                    colors: [darkYellowClr, lightYellowClr, yellowClr],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Material(
-                    elevation: 10,
-                    child: FadeAnimation(
-                        1.0,
-                        Container(
-                          height: 80,
-                          alignment: Alignment.bottomCenter,
-                          color: blackClr,
-                          child: Text(
-                            'REGISTRATION',
-                            style: TextStyle(
-                                color: greenClr,
-                                fontSize: 40,
-                                fontFamily: 'Abel'),
-                          ),
-                        )),
-                  ),
+                  FadeAnimation(
+                      1.0,
+                      Container(
+                        height: 80,
+                        alignment: Alignment.bottomCenter,
+                        // color: darkYellowClr,
+                        child: Text(
+                          'REGISTRATION',
+                          style: TextStyle(
+                              color: blackClr,
+                              fontSize: 30,
+                              fontFamily: 'Anton'),
+                        ),
+                      )),
                   FadeAnimation(
                       1.5,
-                      Padding(
-                        padding: const EdgeInsets.only(left: 50, right: 50),
-                        child: Container(
-                            height: 250,
-                            child: Column(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            width: MediaQuery.of(context).size.width * (3 / 4),
+                            child: Container(
+                                // height: 250,
+                                child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text('REGISTER YOUR MOBILE',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: blueClr,
-                                        fontSize: 30,
-                                        fontFamily: 'Abel',
-                                        fontWeight: FontWeight.bold)),
-                                TextFormField(
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 30),
+                                  child: Text('Your Credentials',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: redClr,
+                                          fontSize: 25,
+                                          fontFamily: 'Ubuntu',
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                TextField(
                                   controller: regMobile,
                                   maxLength: 10,
                                   key: Key('mobileNumber'),
                                   keyboardType: TextInputType.number,
-                                  //textAlign: TextAlign.center,
+                                  textInputAction: TextInputAction.next,
                                   decoration: InputDecoration(
-                                    hintText: '3001234567',
-                                    prefixIcon: Icon(Icons.phone_android),
-                                    errorText: validateRegMobile
-                                        ? 'Mobile is Required'
-                                        : null,
-                                    // labelText: 'mobile number',
-                                  ),
+                                      enabledBorder: new OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0)),
+                                          borderSide:
+                                              new BorderSide(color: whiteClr)),
+                                      filled: true,
+                                      fillColor: whiteClr,
+                                      hintText: 'moblie number',
+                                      prefixIcon: Icon(
+                                        Icons.phone_android,
+                                        color: Colors.grey,
+                                      ),
+                                      errorText: validateRegMobile
+                                          ? 'Mobile is Required'
+                                          : null,
+                                      errorBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: redClr),
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0))),
+                                      focusedErrorBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: blackClr),
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0))),
+                                      focusedBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: blackClr),
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0)))),
                                 ),
-                                TextFormField(
+                                TextField(
                                   controller: regPwd,
                                   key: Key('password'),
                                   obscureText: true,
+                                  maxLength: 15,
                                   //textAlign: TextAlign.center,
                                   decoration: InputDecoration(
-                                    hintText: 'password',
-                                    prefixIcon: Icon(Icons.lock_outline),
-                                    errorText: validateRegPwd
-                                        ? 'Password is Required'
-                                        : null,
-                                    // labelText: 'mobile number',
-                                  ),
+                                      enabledBorder: new OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0)),
+                                          borderSide:
+                                              new BorderSide(color: whiteClr)),
+                                      filled: true,
+                                      fillColor: whiteClr,
+                                      hintText: 'password',
+                                      prefixIcon: Icon(
+                                        Icons.lock_outline,
+                                        color: Colors.grey,
+                                      ),
+                                      errorText: validateRegPwd
+                                          ? 'Password is Required'
+                                          : null,
+                                      errorBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: redClr),
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0))),
+                                      focusedErrorBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: blackClr),
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0))),
+                                      focusedBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: blackClr),
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0)))
+                                      // labelText: 'mobile number',
+                                      ),
                                 ),
-                                TextFormField(
+                                TextField(
                                   controller: cnfrmPwd,
                                   key: Key('confirmPassword'),
                                   obscureText: true,
                                   //textAlign: TextAlign.center,
                                   decoration: InputDecoration(
-                                    hintText: 'confirm password',
-                                    prefixIcon: Icon(Icons.done),
-                                    errorText: validateCnfrmPwd
-                                        ? 'Confirm Password is Required'
-                                        : null,
-                                    // labelText: 'mobile number',
-                                  ),
+                                      enabledBorder: new OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0)),
+                                          borderSide:
+                                              new BorderSide(color: whiteClr)),
+                                      filled: true,
+                                      hintText: 'confirm password',
+                                      prefixIcon: Icon(Icons.done),
+                                      errorText: validateCnfrmPwd
+                                          ? 'Confirm Password is Required'
+                                          : null,
+                                      errorBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: redClr),
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0))),
+                                      focusedErrorBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: blackClr),
+                                          borderRadius: const BorderRadius.all(
+                                              const Radius.circular(40.0))),
+                                      fillColor: whiteClr,
+                                      focusedBorder: new OutlineInputBorder(
+                                          borderSide:
+                                              new BorderSide(color: blackClr),
+                                          borderRadius: const BorderRadius.all(const Radius.circular(40.0)))
+                                      // labelText: 'mobile number',
+                                      ),
                                 ),
                               ],
                             )),
+                          ),
+                        ],
                       )),
                   FadeAnimation(
                     2.0,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        FlatButton(
-                          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(0),
-                          ),
-                          splashColor: blackClr,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Icon(Icons.arrow_back, color: greenClr),
-                              ),
-                              Text(
-                                "Back",
-                                style: TextStyle(
-                                  color: greenClr,
-                                  fontSize: 20,
-                                  fontFamily: 'Abel',
-                                  fontWeight: FontWeight.bold,
+                    Container(
+                      // color: whiteClr,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          FlatButton(
+                            padding:
+                                EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(0),
+                            ),
+                            splashColor: greyClr,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child:
+                                      Icon(Icons.arrow_back, color: blackClr),
                                 ),
-                              )
-                            ],
+                                Text(
+                                  "Back",
+                                  style: TextStyle(
+                                    color: blackClr,
+                                    fontSize: 20,
+                                    fontFamily: 'Abel',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            ),
+                            onPressed: () {
+                              navigateToLogin(context);
+                            },
                           ),
-                          onPressed: () {
-                            navigateToLogin(context);
-                          },
-                        ),
-                        Container(
-                          width: 100,
-                          height: 30,
-                          //color: Colors.orangeAccent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Container(
-                                width: 15,
-                                height: 15,
-                                decoration: BoxDecoration(
-                                    color: blueClr,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: blueClr)),
-                              ),
-                              Container(
-                                width: 15,
-                                height: 15,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    //color: blueClr,
-                                    border: Border.all(color: blueClr)),
-                              ),
-                              Container(
-                                width: 15,
-                                height: 15,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    //color: blueClr,
-                                    border: Border.all(color: blueClr)),
-                              ),
-                              Container(
-                                width: 15,
-                                height: 15,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    //color: blueClr,
-                                    border: Border.all(color: blueClr)),
-                              ),
-                              Container(
-                                width: 15,
-                                height: 15,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    //color: blueClr,
-                                    border: Border.all(color: blueClr)),
-                              )
-                            ],
-                          ),
-                        ),
-                        FlatButton(
-                          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(0),
-                          ),
-                          splashColor: blackClr,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Text(
-                                "Next",
-                                style: TextStyle(
-                                  color: greenClr,
-                                  fontSize: 20,
-                                  fontFamily: 'Abel',
-                                  fontWeight: FontWeight.bold,
+                          Container(
+                            width: 100,
+                            height: 30,
+                            //color: Colors.orangeAccent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                      color: redClr,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: redClr)),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child:
-                                    Icon(Icons.arrow_forward, color: greenClr),
-                              )
-                            ],
+                                Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      //color: blueClr,
+                                      border: Border.all(color: redClr)),
+                                ),
+                                Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      //color: blueClr,
+                                      border: Border.all(color: redClr)),
+                                ),
+                                Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      //color: blueClr,
+                                      border: Border.all(color: redClr)),
+                                ),
+                                Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      //color: blueClr,
+                                      border: Border.all(color: redClr)),
+                                )
+                              ],
+                            ),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              regMobile.text.isEmpty
-                                  ? validateRegMobile = true
-                                  : validateRegMobile = false;
-                              regPwd.text.isEmpty
-                                  ? validateRegPwd = true
-                                  : validateRegPwd = false;
-                              cnfrmPwd.text.isEmpty
-                                  ? validateCnfrmPwd = true
-                                  : validateCnfrmPwd = false;
+                          FlatButton(
+                            padding:
+                                EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(0),
+                            ),
+                            splashColor: greyClr,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Text(
+                                  "Next",
+                                  style: TextStyle(
+                                    color: blackClr,
+                                    fontSize: 20,
+                                    fontFamily: 'Abel',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Icon(Icons.arrow_forward,
+                                      color: blackClr),
+                                )
+                              ],
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                regMobile.text.isEmpty
+                                    ? validateRegMobile = true
+                                    : validateRegMobile = false;
+                                regPwd.text.isEmpty
+                                    ? validateRegPwd = true
+                                    : validateRegPwd = false;
+                                cnfrmPwd.text.isEmpty
+                                    ? validateCnfrmPwd = true
+                                    : validateCnfrmPwd = false;
 
-                              if (regMobile.text.isNotEmpty &&
-                                  regPwd.text.isNotEmpty &&
-                                  cnfrmPwd.text.isNotEmpty) {
-                                genPin();
-                              }
-                            });
-                          },
-                        )
-                      ],
+                                if (regMobile.text.isNotEmpty &&
+                                    regPwd.text.isNotEmpty &&
+                                    cnfrmPwd.text.isNotEmpty) {
+                                  genPin();
+                                }
+                              });
+                            },
+                          )
+                        ],
+                      ),
                     ),
                   )
                 ],
