@@ -13,6 +13,7 @@ class ContactInfo extends StatefulWidget {
   final String ownerName;
   final String email;
   final int pin;
+  final List natureList;
 
   ContactInfo({
     @required this.mobileNumber,
@@ -22,6 +23,7 @@ class ContactInfo extends StatefulWidget {
     this.businessName,
     @required this.ownerName,
     @required this.email,
+    this.natureList,
   });
   @override
   _ContactInfo createState() => _ContactInfo(
@@ -32,6 +34,7 @@ class ContactInfo extends StatefulWidget {
         businessName,
         ownerName,
         email,
+        natureList,
       );
 }
 
@@ -43,6 +46,7 @@ class _ContactInfo extends State<ContactInfo> {
   String ownerName;
   String email;
   int pin;
+  List natureList;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController txtAddress = new TextEditingController();
@@ -57,6 +61,7 @@ class _ContactInfo extends State<ContactInfo> {
     this.businessName,
     this.ownerName,
     this.email,
+    this.natureList,
   );
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -82,6 +87,7 @@ class _ContactInfo extends State<ContactInfo> {
   void initState() {
     super.initState();
     this.getProvince();
+    print('natureList: $natureList');
   }
 
   Future<String> getProvince() async {
@@ -258,7 +264,7 @@ class _ContactInfo extends State<ContactInfo> {
           },
           body: jsonEncode(
             {
-              "UserName": ownerName,
+              "NameOfOwner": ownerName,
               "HashPassword": pwd,
               "CompanyName": businessName,
               "AppTypeID": int.parse(usr),
@@ -267,6 +273,7 @@ class _ContactInfo extends State<ContactInfo> {
               "Email": email,
               "TownID": int.parse(_town),
               "Address": txtAddress.text,
+              "BusinessNatureIDs": jsonEncode(natureList),
               "Nearby": '-',
             },
           ),
@@ -274,7 +281,8 @@ class _ContactInfo extends State<ContactInfo> {
 
         pr.hide();
         final Map responseJson = json.decode(response.body);
-        if (responseJson["rows"].length != 0) {
+        print(responseJson["msg"]);
+        if (responseJson["msg"] == "Success") {
           userID = responseJson["rows"][0]["userID"];
           userName = responseJson["rows"][0]["userName"];
           appTypeID = responseJson["rows"][0]["appTypeID"];
@@ -293,7 +301,7 @@ class _ContactInfo extends State<ContactInfo> {
 
           AlertDialog alert = AlertDialog(
             title: Text("Error!"),
-            content: Text("Already Registered"),
+            content: Text(responseJson["msg"]),
             actions: [
               okButton,
             ],
@@ -694,7 +702,7 @@ class _ContactInfo extends State<ContactInfo> {
                       print(email);
                       print(_town);
                       print(txtAddress.text);
-
+                      print(natureList);
                       registerContact();
                     },
                   )
@@ -722,6 +730,13 @@ class _ContactInfo extends State<ContactInfo> {
   void navigateToSuccess(BuildContext context) {
     Routes.sailor.navigate(
       '/registerSuccess',
+      params: {
+        'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
+        'townID': townID,
+      },
     );
   }
 }

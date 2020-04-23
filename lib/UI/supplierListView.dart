@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/models/supplierModel.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../main.dart';
 
 class SupplierListView extends StatefulWidget {
@@ -8,15 +10,23 @@ class SupplierListView extends StatefulWidget {
   final int userID;
   final int townID;
   final String searchText;
+  final List supplierList;
+
   SupplierListView({
     @required this.value,
     @required this.searchText,
     @required this.userID,
     @required this.townID,
+    @required this.supplierList,
   });
   @override
   _SupplierListViewState createState() => _SupplierListViewState(
-      this.value, this.searchText, this.userID, this.townID);
+        this.value,
+        this.searchText,
+        this.userID,
+        this.townID,
+        this.supplierList,
+      );
 }
 
 class _SupplierListViewState extends State<SupplierListView> {
@@ -24,38 +34,43 @@ class _SupplierListViewState extends State<SupplierListView> {
   int userID;
   int townID;
   String searchText;
+  List supplierList;
 
   _SupplierListViewState(
     this.value,
     this.searchText,
     this.userID,
     this.townID,
+    this.supplierList,
   );
 
-  final List<SupplierModel> supplierList = [
-    SupplierModel(1, "Save Mart", "G.T Road Branch G-15, Islamabad", 1, true),
-    SupplierModel(1, "Madina Cash & Carry", "G-9 Markaz, Islamabad", 1, true),
-    SupplierModel(1, "Habib Meat Shop", "Abpara Market, Islamabad", 4, true),
-    SupplierModel(1, "Fresh Chicken Shop",
-        "Sunday Bazaar near Peshawar Morre, Islamabad", 4, true),
-    SupplierModel(1, "Khan Veges", "Abdullah Road, Islamabad", 2, true),
-    SupplierModel(
-        1, "Meri Fruite Shop", "Karachi Compnay Bus Stop, Islamabad", 3, true),
-    SupplierModel(
-        1, "Rana Fresh Friutes", "Karachi Company, Islamabad", 4, true),
-    SupplierModel(
-        1, "Islamabad Cash & Carry", "G-9 Markaz, Islamabad", 1, true),
-    SupplierModel(
-        1, "Khans Mutton Beaf Chicken", "G-10 Markaz, Islamabad", 4, true),
-    SupplierModel(
-        1, "Chaudhary Vegetables", "G-14/4 Street # 11, Islamabad", 2, true),
-    SupplierModel(1, "Green Land Groceries", "F-11 Markaz, Islamabad", 1, true),
-    SupplierModel(1, "Shaan Traders", "G-9 Markaz, Islamabad", 1, true),
-    SupplierModel(1, "Home Traders", "G-9 Markaz, Islamabad", 1, true),
-    SupplierModel(1, "Roshan Mart", "G-15 Markaz, Islamabad", 1, true),
-  ];
+  // List supplierList = [];
 
-  List<SupplierModel> filteredSupplier = [];
+  // final List<SupplierModel> supplierList = [
+  //   SupplierModel(1, "Save Mart", "G.T Road Branch G-15, Islamabad", 1, true),
+  //   SupplierModel(1, "Madina Cash & Carry", "G-9 Markaz, Islamabad", 1, true),
+  //   SupplierModel(1, "Habib Meat Shop", "Abpara Market, Islamabad", 4, true),
+  //   SupplierModel(1, "Fresh Chicken Shop",
+  //       "Sunday Bazaar near Peshawar Morre, Islamabad", 4, true),
+  //   SupplierModel(1, "Khan Veges", "Abdullah Road, Islamabad", 2, true),
+  //   SupplierModel(
+  //       1, "Meri Fruite Shop", "Karachi Compnay Bus Stop, Islamabad", 3, true),
+  //   SupplierModel(
+  //       1, "Rana Fresh Friutes", "Karachi Company, Islamabad", 4, true),
+  //   SupplierModel(
+  //       1, "Islamabad Cash & Carry", "G-9 Markaz, Islamabad", 1, true),
+  //   SupplierModel(
+  //       1, "Khans Mutton Beaf Chicken", "G-10 Markaz, Islamabad", 4, true),
+  //   SupplierModel(
+  //       1, "Chaudhary Vegetables", "G-14/4 Street # 11, Islamabad", 2, true),
+  //   SupplierModel(1, "Green Land Groceries", "F-11 Markaz, Islamabad", 1, true),
+  //   SupplierModel(1, "Shaan Traders", "G-9 Markaz, Islamabad", 1, true),
+  //   SupplierModel(1, "Home Traders", "G-9 Markaz, Islamabad", 1, true),
+  //   SupplierModel(1, "Roshan Mart", "G-15 Markaz, Islamabad", 1, true),
+  // ];
+
+  // List<SupplierModel> filteredSupplier = [];
+  List filteredSupplier = [];
   ProgressDialog pr;
 
   Color blackClr = Color(0xff2d2d2d);
@@ -69,49 +84,97 @@ class _SupplierListViewState extends State<SupplierListView> {
   @override
   void initState() {
     super.initState();
-
-    // if (searchText != '') {
-    //   filteredSupplier = supplierList
-    //       .where((supplier) =>
-    //           supplier.category == value &&
-    //           supplier.title.toLowerCase().contains(searchText.toLowerCase()))
-    //       .toList();
-    // } else {
-    //   filteredSupplier =
-    //       supplierList.where((supplier) => supplier.category == value).toList();
-    // }
+    // getMerchants();
+    if (searchText != '') {
+      filteredSupplier = supplierList
+          .where((supplier) =>
+              supplier["category"] == value &&
+              supplier["title"]
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()))
+          .toList();
+    } else {
+      filteredSupplier = supplierList
+          .where((supplier) => supplier["category"] == value)
+          .toList();
+    }
     print(userID);
     print(townID);
   }
 
-  Future<String> getMerchants() async {
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-    try {
-      pr.show();
-    } catch (e) {
-      pr.hide();
-      AlertDialog alert = AlertDialog(
-        title: Text("Error!"),
-        content: Text(e.toString()),
-        actions: [
-          okButton,
-        ],
-      );
-      // show the dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-    }
-    // http://95.217.147.105:2001/api/getmerchantintown?TownID=1
-  }
+  // Future<String> getMerchants() async {
+  //   Widget okButton = FlatButton(
+  //     child: Text("OK"),
+  //     onPressed: () {
+  //       Navigator.pop(context);
+  //     },
+  //   );
+  //   try {
+  //     // pr.show();
+
+  //     var response = await http.get(
+  //         "http://95.217.147.105:2001/api/getmerchantintown?TownID=" +
+  //             townID.toString(),
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         });
+  //     var responseJson = json.decode(response.body);
+
+  //     for (int i = 0; i < responseJson.length; i++) {
+  //       supplierList.add({
+  //         'id': responseJson[i]["merchantID"],
+  //         'title': responseJson[i]["companyName"],
+  //         'address': responseJson[i]["townName"],
+  //         'category': responseJson[i]["businessID"],
+  //         'active': true,
+  //       });
+  //     }
+
+  //     print(supplierList.length);
+
+  //     // filteredSupplier = [];
+  //     // for (int i = 0; i < responseJson.length; i++) {
+  //     //   if (value == responseJson[i]["businessID"]) {
+  //     //     filteredSupplier.add({
+  //     //       'id': responseJson[i]["merchantID"],
+  //     //       'title': responseJson[i]["companyName"],
+  //     //       'address': responseJson[i]["townName"],
+  //     //       'category': responseJson[i]["businessID"],
+  //     //       'active': true,
+  //     //     });
+  //     //   }
+  //     // }
+
+  //     filteredSupplier = supplierList
+  //         .where((supplier) =>
+  //             supplier["category"] == value &&
+  //             supplier['title']
+  //                 .toLowerCase()
+  //                 .contains(searchText.toLowerCase()))
+  //         .toList();
+
+  //     print(filteredSupplier);
+
+  //     // pr.hide();
+  //   } catch (e) {
+  //     // pr.hide();
+  //     AlertDialog alert = AlertDialog(
+  //       title: Text("Error!"),
+  //       content: Text(e.toString()),
+  //       actions: [
+  //         okButton,
+  //       ],
+  //     );
+  //     // show the dialog
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return alert;
+  //       },
+  //     );
+  //   }
+  //   // http://95.217.147.105:2001/api/getmerchantintown?TownID=1
+  // }
 
   void searchSupplier(String str) {
     // filteredSupplier = supplierList.where((supplier) =>
@@ -137,7 +200,7 @@ class _SupplierListViewState extends State<SupplierListView> {
     final supplier = filteredSupplier[index];
     return GestureDetector(
       onTap: () {
-        print(supplier.title);
+        print(supplier["title"]);
         navigateToItems(context);
       },
       child: Card(
@@ -148,7 +211,7 @@ class _SupplierListViewState extends State<SupplierListView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(supplier.title,
+                Text(supplier["title"],
                     style: TextStyle(
                         color: blackClr,
                         fontFamily: 'Baloo',
@@ -164,7 +227,7 @@ class _SupplierListViewState extends State<SupplierListView> {
             ),
             Row(
               children: <Widget>[
-                Text(supplier.address,
+                Text(supplier["address"],
                     style: TextStyle(
                         color: blackClr, fontFamily: 'Baloo', fontSize: 16))
               ],

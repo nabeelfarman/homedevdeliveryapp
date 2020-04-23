@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/pages/customerPages/shoppingCart.dart';
 import 'package:homemobileapp/pages/loginPage.dart';
-import 'package:homemobileapp/pages/mainOTPVerification.dart';
 import 'package:homemobileapp/pages/newOrder.dart';
 import 'package:homemobileapp/pages/registrationPages/BusinessInfo.dart';
 import 'package:homemobileapp/pages/registrationPages/contactInfo.dart';
@@ -236,6 +235,7 @@ class Routes {
             businessName: params.param('businessName'),
             ownerName: params.param('ownerName'),
             email: params.param('email'),
+            natureList: params.param('natureList'),
           );
         },
         params: [
@@ -246,6 +246,7 @@ class Routes {
           SailorParam<String>(name: 'businessName'),
           SailorParam<String>(name: 'ownerName', isRequired: true),
           SailorParam<String>(name: 'email', isRequired: true),
+          SailorParam(name: 'natureList'),
         ],
       ),
       SailorRoute(
@@ -270,8 +271,15 @@ class Routes {
       SailorRoute(
         name: '/newOrder',
         builder: (context, args, params) {
-          return NewOrderPage();
+          return NewOrderPage(
+            userID: params.param<int>('userID'),
+            townID: params.param('townID'),
+          );
         },
+        params: [
+          SailorParam<int>(name: 'userID', isRequired: true),
+          SailorParam<String>(name: 'townID', isRequired: true),
+        ],
       ),
       SailorRoute(
         name: '/sideBarLayout',
@@ -302,6 +310,12 @@ class Routes {
         name: '/shoppingCart',
         builder: (context, args, params) {
           return ShoppingCart();
+        },
+      ),
+      SailorRoute(
+        name: '/forgotPassword',
+        builder: (context, args, params) {
+          return ResetPassword();
         },
       ),
     ]);

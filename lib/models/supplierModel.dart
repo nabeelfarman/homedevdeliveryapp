@@ -1,8 +1,8 @@
 class SupplierModel {
-  final double id;
+  final int id;
   final String title;
   final String address;
-  final double category;
+  final int category;
   final bool active;
 
   SupplierModel(this.id, this.title, this.address, this.category, this.active);

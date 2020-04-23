@@ -51,7 +51,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
         },
       );
 
-      // print(responseJson["data"]["userID"]);
+      print(responseJson["msg"]);
       if (responseJson["rows"].length != 0) {
         // showNotification();
         pr.hide();
@@ -74,7 +74,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
           title: Text("Error!"),
-          content: Text("Invalid Login Name & Password"),
+          content: Text(responseJson["msg"]),
           actions: [
             okButton,
           ],
@@ -369,7 +369,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
   }
 
   void navigateToForgot(BuildContext context) {
-    Routes.sailor.navigate('/verification');
+    Routes.sailor.navigate('/forgotPassword');
   }
 
   void navigateToSideBarLayout(BuildContext context) {
