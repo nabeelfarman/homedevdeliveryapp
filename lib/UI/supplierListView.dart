@@ -35,6 +35,7 @@ class _SupplierListViewState extends State<SupplierListView> {
   int townID;
   String searchText;
   List supplierList;
+  int supplierID;
 
   _SupplierListViewState(
     this.value,
@@ -44,32 +45,6 @@ class _SupplierListViewState extends State<SupplierListView> {
     this.supplierList,
   );
 
-  // List supplierList = [];
-
-  // final List<SupplierModel> supplierList = [
-  //   SupplierModel(1, "Save Mart", "G.T Road Branch G-15, Islamabad", 1, true),
-  //   SupplierModel(1, "Madina Cash & Carry", "G-9 Markaz, Islamabad", 1, true),
-  //   SupplierModel(1, "Habib Meat Shop", "Abpara Market, Islamabad", 4, true),
-  //   SupplierModel(1, "Fresh Chicken Shop",
-  //       "Sunday Bazaar near Peshawar Morre, Islamabad", 4, true),
-  //   SupplierModel(1, "Khan Veges", "Abdullah Road, Islamabad", 2, true),
-  //   SupplierModel(
-  //       1, "Meri Fruite Shop", "Karachi Compnay Bus Stop, Islamabad", 3, true),
-  //   SupplierModel(
-  //       1, "Rana Fresh Friutes", "Karachi Company, Islamabad", 4, true),
-  //   SupplierModel(
-  //       1, "Islamabad Cash & Carry", "G-9 Markaz, Islamabad", 1, true),
-  //   SupplierModel(
-  //       1, "Khans Mutton Beaf Chicken", "G-10 Markaz, Islamabad", 4, true),
-  //   SupplierModel(
-  //       1, "Chaudhary Vegetables", "G-14/4 Street # 11, Islamabad", 2, true),
-  //   SupplierModel(1, "Green Land Groceries", "F-11 Markaz, Islamabad", 1, true),
-  //   SupplierModel(1, "Shaan Traders", "G-9 Markaz, Islamabad", 1, true),
-  //   SupplierModel(1, "Home Traders", "G-9 Markaz, Islamabad", 1, true),
-  //   SupplierModel(1, "Roshan Mart", "G-15 Markaz, Islamabad", 1, true),
-  // ];
-
-  // List<SupplierModel> filteredSupplier = [];
   List filteredSupplier = [];
   ProgressDialog pr;
 
@@ -200,7 +175,10 @@ class _SupplierListViewState extends State<SupplierListView> {
     final supplier = filteredSupplier[index];
     return GestureDetector(
       onTap: () {
-        print(supplier["title"]);
+        supplierID = supplier["id"];
+        // print(value);
+        // print(supplierID);
+        // print(userID);
         navigateToItems(context);
       },
       child: Card(
@@ -239,6 +217,13 @@ class _SupplierListViewState extends State<SupplierListView> {
   }
 
   void navigateToItems(BuildContext context) {
-    Routes.sailor.navigate('/item');
+    Routes.sailor.navigate(
+      '/item',
+      params: {
+        'supplierID': supplierID,
+        'userID': userID,
+        'businessID': value,
+      },
+    );
   }
 }

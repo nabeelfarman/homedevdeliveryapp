@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/pages/customerPages/itemsPage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:intl/intl.dart';
 
 import '../../main.dart';
 
 class ShoppingCart extends StatefulWidget {
+  final int customerID;
   @override
-  _ShoppingCartState createState() => _ShoppingCartState();
+  ShoppingCart({@required this.customerID});
+  @override
+  _ShoppingCartState createState() => _ShoppingCartState(this.customerID);
 }
 
 class _ShoppingCartState extends State<ShoppingCart>
@@ -20,54 +25,47 @@ class _ShoppingCartState extends State<ShoppingCart>
   Color purpleClr = Color(0x0ffd183fd);
   Color greenClr = Color(0x0ff8ee269);
   Color redClr = Color(0x0fff0513c);
+  int customerID;
 
-  List cart_items = [
-    {
-      'itemCode': '21',
-      'itemTitle': 'Pespsi 1.5 Ltr',
-      'price': '150',
-      'unit': 'piece',
-      'quantity': '10'
-    },
-    {
-      'itemCode': '22',
-      'itemTitle': 'Dalada Banaspati',
-      'price': '180',
-      'unit': 'liter',
-      'quantity': '5'
-    },
-    {
-      'itemCode': '23',
-      'itemTitle': 'Sensodyn Toothpaste',
-      'price': '230',
-      'unit': 'piece',
-      'quantity': '1'
-    },
-    {
-      'itemCode': '24',
-      'itemTitle': 'Surf Excel 1kg',
-      'price': '530',
-      'unit': '1 kg',
-      'quantity': '3'
-    }
-  ];
+  _ShoppingCartState(this.customerID);
+
+  List cart_items = [];
 
   List cartItems = List();
-  double totalAmount = 0;
+  double totalAmount = 0.0;
   final formatter = new NumberFormat('##,###.##');
 
   @override
   void initState() {
     super.initState();
     this.getCartItems();
-    this.shoppingSum();
   }
 
   @override
   Future<String> getCartItems() async {
     try {
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getcartprod?CustomerID=" +
+              customerID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      for (int i = 0; i < responseJson.length; i++) {
+        cart_items.add({
+          'itemCode': responseJson[i]["productProfileStoreID"],
+          'itemTitle': responseJson[i]["productName"],
+          'price': responseJson[i]["salePrice"].toString(),
+          'unit': responseJson[i]["measurementUnit"],
+          'quantity': responseJson[i]["qty"].toString(),
+        });
+      }
+
       setState(() {
         cartItems = cart_items;
+
+        this.shoppingSum();
       });
       return 'success';
     } catch (e) {
@@ -76,11 +74,14 @@ class _ShoppingCartState extends State<ShoppingCart>
   }
 
   void shoppingSum() {
-    totalAmount = 0;
+    totalAmount = 0.0;
     try {
       for (int i = 0; i < cartItems.length; i++) {
         var item = cartItems[i];
-        totalAmount += int.parse(item['price']) * int.parse(item['quantity']);
+        totalAmount +=
+            double.parse(item['price']) * double.parse(item['quantity']);
+
+        print(totalAmount);
       }
     } catch (e) {
       print(e);

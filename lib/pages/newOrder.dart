@@ -63,6 +63,7 @@ class _NewOrderPageState extends State<NewOrderPage>
   void initState() {
     super.initState();
     getMerchants();
+    print(supplierList.length);
 
     _tabController =
         new TabController(length: categoryList.length, vsync: this);
@@ -103,6 +104,8 @@ class _NewOrderPageState extends State<NewOrderPage>
       }
 
       print(supplierList.length);
+      print(userID);
+      print(townID);
 
       // pr.hide();
     } catch (e) {

@@ -303,14 +303,28 @@ class Routes {
       SailorRoute(
         name: '/item',
         builder: (context, args, params) {
-          return ItemsPage();
+          return ItemsPage(
+            supplierID: params.param<int>('supplierID'),
+            userID: params.param<int>('userID'),
+            businessID: params.param<int>('businessID'),
+          );
         },
+        params: [
+          SailorParam<int>(name: 'supplierID', isRequired: true),
+          SailorParam<int>(name: 'userID', isRequired: true),
+          SailorParam<int>(name: 'businessID', isRequired: true),
+        ],
       ),
       SailorRoute(
         name: '/shoppingCart',
         builder: (context, args, params) {
-          return ShoppingCart();
+          return ShoppingCart(
+            customerID: params.param<int>('customerID'),
+          );
         },
+        params: [
+          SailorParam<int>(name: 'customerID', isRequired: true),
+        ],
       ),
       SailorRoute(
         name: '/forgotPassword',

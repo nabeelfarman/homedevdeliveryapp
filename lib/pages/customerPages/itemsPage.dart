@@ -1,19 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:progress_dialog/progress_dialog.dart';
+import 'dart:convert';
 import '../../main.dart';
 
 class ItemsPage extends StatefulWidget {
-  @override
-  ItemsPage();
+  final int supplierID;
+  final int userID;
+  final int businessID;
 
   @override
-  _ItemsPageState createState() => _ItemsPageState();
+  ItemsPage({
+    @required this.supplierID,
+    @required this.userID,
+    @required this.businessID,
+  });
+
+  @override
+  _ItemsPageState createState() => _ItemsPageState(
+        this.supplierID,
+        this.userID,
+        this.businessID,
+      );
 }
 
 class _ItemsPageState extends State<ItemsPage>
     with SingleTickerProviderStateMixin {
+  int supplierID;
+  int userID;
+  int businessID;
+
+  _ItemsPageState(
+    this.supplierID,
+    this.userID,
+    this.businessID,
+  );
+
   Color blackClr = Color(0xff2d2d2d);
   // Color yellowClr = Color(0xfff7d73a);
   Color whiteClr = Color(0x0ffffffff);
@@ -25,101 +49,23 @@ class _ItemsPageState extends State<ItemsPage>
   bool isSearching = false;
 
   String pageName = 'ItemsPage';
+  String productID;
+  String qty;
+  String salePrice;
 
-  List items_data = [
-    {
-      'itemCode': '21',
-      'itemTitle': 'Pespsi 1.5 Ltr',
-      'price': '150',
-      'unit': 'piece',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '22',
-      'itemTitle': 'Dalada Banaspati',
-      'price': '180',
-      'unit': 'liter',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '23',
-      'itemTitle': 'Sensodyn Toothpaste',
-      'price': '230',
-      'unit': 'piece',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '24',
-      'itemTitle': 'Surf Excel 1kg',
-      'price': '530',
-      'unit': '1 kg',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '25',
-      'itemTitle': 'Safe Guard Soap',
-      'price': '60',
-      'unit': 'piece',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '26',
-      'itemTitle': 'Lays Chips Small',
-      'price': '20',
-      'unit': 'piece',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '27',
-      'itemTitle': 'Dawn Bread',
-      'price': '85',
-      'unit': 'pack',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '28',
-      'itemTitle': 'Rice Kernal Banaspati',
-      'price': '280',
-      'unit': 'kg',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '29',
-      'itemTitle': 'Daal Mash',
-      'price': '140',
-      'unit': 'kg',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '30',
-      'itemTitle': 'Tissue Roll',
-      'price': '45',
-      'unit': 'piece',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '31',
-      'itemTitle': 'Tomato Katchup',
-      'price': '150',
-      'unit': 'bottle',
-      'quantity': '0'
-    },
-    {
-      'itemCode': '32',
-      'itemTitle': 'Head & Shoulders Small',
-      'price': '210',
-      'unit': 'piece',
-      'quantity': '0'
-    }
-  ];
+  List items_data = [];
 
   List filteredItems = List();
 
   List tempList = [];
+  ProgressDialog pr;
 
   @override
   void initState() {
     super.initState();
+
+    print("value: $businessID");
+    print("supplier: $supplierID");
     this.getItems();
     // print(items_data.toList());
   }
@@ -142,11 +88,179 @@ class _ItemsPageState extends State<ItemsPage>
 
   Future<String> getItems() async {
     try {
-      // var resBody = json.decode(items_data.);
+      showProgressDialog(context, "Please Wait");
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getmerchantproducts?MerchantID=" +
+              supplierID.toString() +
+              "&BusinessID=" +
+              businessID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      for (int i = 0; i < responseJson.length; i++) {
+        items_data.add({
+          'itemCode': responseJson[i]["productProfileStoreID"],
+          'itemTitle': responseJson[i]["productName"],
+          'price': responseJson[i]["salePrice"].toString(),
+          'unit': responseJson[i]["measurementUnit"],
+          'quantity': responseJson[i]["qty"].toString(),
+        });
+      }
+
       setState(() {
         filteredItems = items_data;
       });
       return 'success';
+    } catch (e) {
+      print(e);
+      pr.hide();
+    }
+  }
+
+  Future<String> addToCart() async {
+    try {
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+      pr.show();
+
+      http.Response response = await http.post(
+        'http://95.217.147.105:2001/api/addtocart',
+        headers: <String, String>{
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "productProfileStoreID": productID,
+            "CustomerID": userID,
+            "MerchantID": supplierID,
+            "Qty": 1,
+            "SalePrice": salePrice,
+            "Remarks": "-"
+          },
+        ),
+      );
+
+      final Map responseJson = json.decode(response.body);
+
+      if (responseJson["msg"] == "Success") {
+        pr.hide();
+        print('Success');
+        // navigateToShoppingCart(context);
+      } else {
+        pr.hide();
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      pr.hide();
+      print(e);
+    }
+  }
+
+  Future<String> removeToCart() async {
+    try {
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+      pr.show();
+
+      http.Response response = await http.post(
+        'http://95.217.147.105:2001/api/delfromcart',
+        headers: <String, String>{
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "productProfileStoreID": productID,
+            "CustomerID": userID,
+            // "MerchantID": supplierID,
+          },
+        ),
+      );
+
+      final Map responseJson = json.decode(response.body);
+
+      if (responseJson["msg"] == "Success") {
+        pr.hide();
+        print('Success');
+        // navigateToShoppingCart(context);
+      } else {
+        pr.hide();
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      pr.hide();
+      print(e);
+    }
+  }
+
+  static showProgressDialog(BuildContext context, String title) {
+    try {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              content: Flex(
+                direction: Axis.horizontal,
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15),
+                  ),
+                  Flexible(
+                      flex: 8,
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      )),
+                ],
+              ),
+            );
+          });
     } catch (e) {
       print(e);
     }
@@ -154,6 +268,24 @@ class _ItemsPageState extends State<ItemsPage>
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
       appBar: new AppBar(
         centerTitle: true,
@@ -271,6 +403,10 @@ class _ItemsPageState extends State<ItemsPage>
 
                           if (qty > 0) {
                             item['quantity'] = (qty - 1).toString();
+
+                            productID = item['itemCode'].toString();
+
+                            removeToCart();
                           }
                         });
                       },
@@ -296,36 +432,11 @@ class _ItemsPageState extends State<ItemsPage>
                           var qty = int.parse(item['quantity']);
                           if (qty < 500) {
                             item['quantity'] = (qty + 1).toString();
-                            if (tempList.length == 0) {
-                              tempList.add({
-                                'iTitle': item['itemTitle'],
-                                'iQty': item['quantity'],
-                              });
-                            } else {
-                              bool found = false;
-                              for (int i = 0; i < tempList.length; i++) {
-                                if (tempList[i]['iTitle'] ==
-                                    item['itemTitle']) {
-                                  String itemsTitle = item['itemTitle'];
-                                  tempList.removeWhere(
-                                      (items) => items['iTitle'] == itemsTitle);
-                                  tempList.add({
-                                    'iTitle': item['itemTitle'],
-                                    'iQty': item['quantity'],
-                                  });
-                                  i = tempList.length;
-                                  found = true;
-                                }
-                              }
-                              if (found == false) {
-                                tempList.add({
-                                  'iTitle': item['itemTitle'],
-                                  'iQty': item['quantity'],
-                                });
-                              }
-                            }
 
-                            print(tempList);
+                            productID = item['itemCode'].toString();
+                            salePrice = item['price'].toString();
+
+                            addToCart();
                           }
                         });
                       },
@@ -346,7 +457,12 @@ class _ItemsPageState extends State<ItemsPage>
   }
 
   void navigateToShoppingCart(BuildContext context) {
-    Routes.sailor.navigate('/shoppingCart');
+    Routes.sailor.navigate(
+      '/shoppingCart',
+      params: {
+        'customerID': userID,
+      },
+    );
   }
 
   void navigateToOrderPage(BuildContext context) {
