@@ -326,10 +326,17 @@ class _ContactInfo extends State<ContactInfo> {
   }
 
   //declarations
-  Color blackClr = Color(0xff141622);
-  Color greenClr = Color(0xff8cc540);
-  Color blueClr = Color(0xff408cc5);
-  Color bodyClr = Color(0xfff8f7f7);
+  Color blackClr = Color(0xff1D2028);
+
+  Color whiteClr = Color(0x0ffffffff);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   @override
   Widget build(BuildContext context) {
@@ -352,367 +359,405 @@ class _ContactInfo extends State<ContactInfo> {
     );
 
     return Scaffold(
-        body: Form(
-      key: _formKey,
-      // autovalidate: true,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        color: bodyClr,
-        child: Column(
+      appBar: new AppBar(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: darkYellowClr,
+          title: Text('REGISTRATION',
+              style: TextStyle(
+                  color: blackClr, fontFamily: 'Anton', fontSize: 25))),
+      body: Form(
+        key: _formKey,
+        // autovalidate: true,
+        child: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            // height: MediaQuery.of(context).size.height,
+            constraints: new BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height),
+            decoration: new BoxDecoration(
+              // color: yellowClr,
+              gradient: new LinearGradient(
+                  colors: [darkYellowClr, lightYellowClr, yellowClr],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                FadeAnimation(
+                  1.5,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width * (3 / 4),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Text('Contact Information',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: redClr,
+                                      fontSize: 25,
+                                      fontFamily: 'Ubuntu',
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            new FormField<String>(
+                              builder: (FormFieldState<String> state) {
+                                return InputDecorator(
+                                  decoration: InputDecoration(
+                                    // icon: const Icon(Icons.color_lens),
+                                    // labelText: 'Select Province',
+                                    errorText:
+                                        state.hasError ? state.errorText : null,
+                                  ),
+                                  isEmpty: _province == '',
+                                  child: new DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      isExpanded: true,
+                                      items: province_data.map((item) {
+                                        return DropdownMenuItem(
+                                          value: item['provinceID'].toString(),
+                                          child: new Text(item['provinceName']),
+                                        );
+                                      }).toList(),
+                                      hint: new Text('select province'),
+                                      onChanged: (newVal) {
+                                        setState(() {
+                                          _province = newVal;
+
+                                          district_data = List();
+                                          tehsil_data = List();
+                                          town_data = List();
+
+                                          _district = null;
+                                          _tehsil = null;
+                                          _town = null;
+
+                                          this.getDistrict(_province);
+                                        });
+                                      },
+                                      value: _province,
+                                    ),
+                                  ),
+                                );
+                              },
+                              validator: (val) {
+                                val = _province;
+                                print(val);
+                                if (val == "" || val == null) {
+                                  return 'Please Select Province';
+                                }
+                                // return val != "" ? null : 'Please Select Province';
+                                return null;
+                              },
+                            ),
+                            new FormField<String>(
+                              builder: (FormFieldState<String> state) {
+                                return InputDecorator(
+                                  decoration: InputDecoration(
+                                    // icon: const Icon(Icons.color_lens),
+                                    // labelText: 'Select Province',
+                                    errorText:
+                                        state.hasError ? state.errorText : null,
+                                  ),
+                                  isEmpty: _district == '',
+                                  child: new DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                    isExpanded: true,
+                                    items: district_data.map((item) {
+                                      return new DropdownMenuItem(
+                                        child: new Text(item['districtName']),
+                                        value: item['districtID'].toString(),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newVal) {
+                                      setState(() {
+                                        _district = newVal;
+
+                                        tehsil_data = List();
+                                        town_data = List();
+
+                                        _tehsil = null;
+                                        _town = null;
+
+                                        this.getTehsil(_district);
+                                      });
+                                    },
+                                    value: _district,
+                                    hint: new Text('select district'),
+                                  )),
+                                );
+                              },
+                              validator: (val) {
+                                val = _district;
+                                print(val);
+                                if (val == "" || val == null) {
+                                  return 'Please Select District';
+                                }
+                                // return val != "" ? null : 'Please Select Province';
+                                return null;
+                              },
+                            ),
+                            new FormField<String>(
+                              builder: (FormFieldState<String> state) {
+                                return InputDecorator(
+                                  decoration: InputDecoration(
+                                    // icon: const Icon(Icons.color_lens),
+                                    // labelText: 'Select Province',
+                                    errorText:
+                                        state.hasError ? state.errorText : null,
+                                  ),
+                                  isEmpty: _tehsil == '',
+                                  child: new DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                    isExpanded: true,
+                                    items: tehsil_data.map((item) {
+                                      return new DropdownMenuItem(
+                                        child: new Text(item['tehsilName']),
+                                        value: item['tehsilID'].toString(),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newVal) {
+                                      setState(() {
+                                        _tehsil = newVal;
+                                        this.getTown(_tehsil);
+                                      });
+                                    },
+                                    value: _tehsil,
+                                    hint: new Text('select tehsil'),
+                                  )),
+                                );
+                              },
+                              validator: (val) {
+                                val = _tehsil;
+                                print(val);
+                                if (val == "" || val == null) {
+                                  return 'Please Select Tehsil';
+                                }
+                                // return val != "" ? null : 'Please Select Province';
+                                return null;
+                              },
+                            ),
+                            new FormField<String>(
+                              builder: (FormFieldState<String> state) {
+                                return InputDecorator(
+                                  decoration: InputDecoration(
+                                    // icon: const Icon(Icons.color_lens),
+                                    // labelText: 'Select Province',
+                                    errorText:
+                                        state.hasError ? state.errorText : null,
+                                  ),
+                                  isEmpty: _town == '',
+                                  child: new DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                    isExpanded: true,
+                                    items: town_data.map((item) {
+                                      return new DropdownMenuItem(
+                                        child: new Text(item['townName']),
+                                        value: item['townID'].toString(),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newVal) {
+                                      setState(() {
+                                        _town = newVal;
+                                      });
+                                    },
+                                    value: _town,
+                                    hint: new Text('select town'),
+                                  )),
+                                );
+                              },
+                              validator: (val) {
+                                val = _town;
+                                print(val);
+                                if (val == "" || val == null) {
+                                  return 'Please Select Town';
+                                }
+                                // return val != "" ? null : 'Please Select Province';
+                                return null;
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: TextFormField(
+                                controller: txtAddress,
+                                key: Key('contactAddress'),
+                                maxLines: 4,
+                                decoration: InputDecoration(
+                                    enabledBorder: new OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(0)),
+                                        borderSide:
+                                            new BorderSide(color: whiteClr)),
+                                    filled: true,
+                                    fillColor: whiteClr,
+                                    hintMaxLines: 5,
+                                    hintText: 'contact address',
+                                    errorBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: redClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(0))),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: blackClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(0))),
+                                    focusedBorder: new OutlineInputBorder(
+                                        borderSide:
+                                            new BorderSide(color: blackClr),
+                                        borderRadius: const BorderRadius.all(
+                                            const Radius.circular(0)))),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Contact Address';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        color: yellowClr,
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Material(
-              elevation: 10,
-              child: FadeAnimation(
-                  1.0,
-                  Container(
-                    height: 80,
-                    alignment: Alignment.bottomCenter,
-                    color: blackClr,
-                    child: Text(
-                      'Registration',
-                      style: TextStyle(
-                          color: greenClr, fontSize: 40, fontFamily: 'Abel'),
-                    ),
-                  )),
-            ),
-            FadeAnimation(
-              1.5,
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text('Contact Information',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: blueClr,
-                          fontSize: 30,
-                          fontFamily: 'Abel',
-                          fontWeight: FontWeight.bold)),
-                  new FormField<String>(
-                    builder: (FormFieldState<String> state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          // icon: const Icon(Icons.color_lens),
-                          // labelText: 'Select Province',
-                          errorText: state.hasError ? state.errorText : null,
-                        ),
-                        isEmpty: _province == '',
-                        child: new DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                            isExpanded: true,
-                            items: province_data.map((item) {
-                              return DropdownMenuItem(
-                                value: item['provinceID'].toString(),
-                                child: new Text(item['provinceName']),
-                              );
-                            }).toList(),
-                            hint: new Text('select province'),
-                            onChanged: (newVal) {
-                              setState(() {
-                                _province = newVal;
-
-                                district_data = List();
-                                tehsil_data = List();
-                                town_data = List();
-
-                                _district = null;
-                                _tehsil = null;
-                                _town = null;
-
-                                this.getDistrict(_province);
-                              });
-                            },
-                            value: _province,
-                          ),
-                        ),
-                      );
-                    },
-                    validator: (val) {
-                      val = _province;
-                      print(val);
-                      if (val == "" || val == null) {
-                        return 'Please Select Province';
-                      }
-                      // return val != "" ? null : 'Please Select Province';
-                      return null;
-                    },
-                  ),
-                  new FormField<String>(
-                    builder: (FormFieldState<String> state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          // icon: const Icon(Icons.color_lens),
-                          // labelText: 'Select Province',
-                          errorText: state.hasError ? state.errorText : null,
-                        ),
-                        isEmpty: _district == '',
-                        child: new DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                          isExpanded: true,
-                          items: district_data.map((item) {
-                            return new DropdownMenuItem(
-                              child: new Text(item['districtName']),
-                              value: item['districtID'].toString(),
-                            );
-                          }).toList(),
-                          onChanged: (newVal) {
-                            setState(() {
-                              _district = newVal;
-
-                              tehsil_data = List();
-                              town_data = List();
-
-                              _tehsil = null;
-                              _town = null;
-
-                              this.getTehsil(_district);
-                            });
-                          },
-                          value: _district,
-                          hint: new Text('select district'),
-                        )),
-                      );
-                    },
-                    validator: (val) {
-                      val = _district;
-                      print(val);
-                      if (val == "" || val == null) {
-                        return 'Please Select District';
-                      }
-                      // return val != "" ? null : 'Please Select Province';
-                      return null;
-                    },
-                  ),
-                  new FormField<String>(
-                    builder: (FormFieldState<String> state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          // icon: const Icon(Icons.color_lens),
-                          // labelText: 'Select Province',
-                          errorText: state.hasError ? state.errorText : null,
-                        ),
-                        isEmpty: _tehsil == '',
-                        child: new DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                          isExpanded: true,
-                          items: tehsil_data.map((item) {
-                            return new DropdownMenuItem(
-                              child: new Text(item['tehsilName']),
-                              value: item['tehsilID'].toString(),
-                            );
-                          }).toList(),
-                          onChanged: (newVal) {
-                            setState(() {
-                              _tehsil = newVal;
-                              this.getTown(_tehsil);
-                            });
-                          },
-                          value: _tehsil,
-                          hint: new Text('select tehsil'),
-                        )),
-                      );
-                    },
-                    validator: (val) {
-                      val = _tehsil;
-                      print(val);
-                      if (val == "" || val == null) {
-                        return 'Please Select Tehsil';
-                      }
-                      // return val != "" ? null : 'Please Select Province';
-                      return null;
-                    },
-                  ),
-                  new FormField<String>(
-                    builder: (FormFieldState<String> state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          // icon: const Icon(Icons.color_lens),
-                          // labelText: 'Select Province',
-                          errorText: state.hasError ? state.errorText : null,
-                        ),
-                        isEmpty: _town == '',
-                        child: new DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                          isExpanded: true,
-                          items: town_data.map((item) {
-                            return new DropdownMenuItem(
-                              child: new Text(item['townName']),
-                              value: item['townID'].toString(),
-                            );
-                          }).toList(),
-                          onChanged: (newVal) {
-                            setState(() {
-                              _town = newVal;
-                            });
-                          },
-                          value: _town,
-                          hint: new Text('select town'),
-                        )),
-                      );
-                    },
-                    validator: (val) {
-                      val = _town;
-                      print(val);
-                      if (val == "" || val == null) {
-                        return 'Please Select Town';
-                      }
-                      // return val != "" ? null : 'Please Select Province';
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 50, right: 50),
-                    child: TextFormField(
-                      controller: txtAddress,
-                      key: Key('contactAddress'),
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        hintMaxLines: 4,
-                        hintText: 'contact address',
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter Contact Address';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
+            FlatButton(
+              padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(0),
               ),
-            ),
-            FadeAnimation(
-              2.0,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              splashColor: greyClr,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  FlatButton(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(0),
-                    ),
-                    splashColor: blackClr,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Icon(Icons.arrow_back, color: greenClr),
-                        ),
-                        Text(
-                          "Back",
-                          style: TextStyle(
-                            color: greenClr,
-                            fontSize: 20,
-                            fontFamily: 'Abel',
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                    onPressed: () {
-                      getProvince();
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Icon(Icons.arrow_back, color: blackClr),
                   ),
-                  Container(
-                    width: 100,
-                    height: 30,
-                    //color: Colors.orangeAccent,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              //color: blueClr,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: blueClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: blueClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: blueClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              //color: blueClr,
-                              border: Border.all(color: blueClr)),
-                        ),
-                        Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: blueClr,
-                              border: Border.all(color: blueClr)),
-                        )
-                      ],
+                  Text(
+                    "Back",
+                    style: TextStyle(
+                      color: blackClr,
+                      fontSize: 20,
+                      fontFamily: 'Abel',
+                      fontWeight: FontWeight.bold,
                     ),
-                  ),
-                  FlatButton(
-                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(0),
-                    ),
-                    splashColor: blackClr,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Text(
-                          "Next",
-                          style: TextStyle(
-                            color: greenClr,
-                            fontSize: 20,
-                            fontFamily: 'Abel',
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Icon(Icons.arrow_forward, color: greenClr),
-                        )
-                      ],
-                    ),
-                    onPressed: () {
-                      // print(_district);
-                      // print(_province);
-                      print(ownerName);
-                      print(pwd);
-                      print(usr);
-                      print(mobileNumber);
-                      print(email);
-                      print(_town);
-                      print(txtAddress.text);
-                      print(natureList);
-                      registerContact();
-                    },
                   )
                 ],
               ),
+              onPressed: () {
+                getProvince();
+              },
+            ),
+            Container(
+              width: 100,
+              height: 30,
+              //color: Colors.orangeAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        //color: blueClr,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: redClr)),
+                  ),
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        //color: blueClr,
+                        border: Border.all(color: redClr)),
+                  ),
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        //color: blueClr,
+                        border: Border.all(color: redClr)),
+                  ),
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        //color: blueClr,
+                        border: Border.all(color: redClr)),
+                  ),
+                  Container(
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: redClr,
+                        border: Border.all(color: redClr)),
+                  )
+                ],
+              ),
+            ),
+            FlatButton(
+              padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(0),
+              ),
+              splashColor: blackClr,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text(
+                    "Next",
+                    style: TextStyle(
+                      color: blackClr,
+                      fontSize: 20,
+                      fontFamily: 'Abel',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Icon(Icons.arrow_forward, color: blackClr),
+                  )
+                ],
+              ),
+              onPressed: () {
+                // print(_district);
+                // print(_province);
+                print(ownerName);
+                print(pwd);
+                print(usr);
+                print(mobileNumber);
+                print(email);
+                print(_town);
+                print(txtAddress.text);
+                print(natureList);
+                registerContact();
+              },
             )
           ],
         ),
       ),
-    ));
+    );
   }
 
   void navigateToBusiness(BuildContext context) {
