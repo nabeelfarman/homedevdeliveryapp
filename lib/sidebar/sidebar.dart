@@ -59,13 +59,17 @@ class _SideBarState extends State<SideBar>
   Stream<bool> isSideBarOpenedStream;
   StreamSink<bool> isSideBarOpenedSink;
 
-  Color blackClr = Color(0xff2d2d2d);
-  // Color yellowClr = Color(0xfff7d73a);
+  Color blackClr = Color(0xff1D2028);
+
   Color whiteClr = Color(0x0ffffffff);
-  Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
-  Color greenClr = Color(0x0ff8ee269);
-  Color redClr = Color(0x0fff0513c);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   // final bool isSidebarOpened = true;
 
@@ -131,7 +135,7 @@ class _SideBarState extends State<SideBar>
                           gradient: LinearGradient(
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft,
-                              colors: [redClr, greenClr])),
+                              colors: [blackClr, blackClr])),
                       child: Column(
                         children: <Widget>[
                           SizedBox(

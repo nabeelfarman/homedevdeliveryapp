@@ -30,13 +30,16 @@ class BusinessInfo extends StatefulWidget {
 class _BusinessInfo extends State<BusinessInfo> {
   //declarations
   Color blackClr = Color(0xff1D2028);
-  Color pinkClr = Color(0xffFF9C81);
+
   Color whiteClr = Color(0x0ffffffff);
   Color lightClr = Color(0x0ffEEF2F5);
   Color greyClr = Color(0x0ffB5BED0);
-  Color greenClr = Color(0x0ff3CB54B);
-  Color redClr = Color(0x0ffE72C2D);
-  Color blueClr = Color(0x0ff0858D3);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   TextEditingController txtBusinessName = new TextEditingController();
   TextEditingController txtOwnerName = new TextEditingController();
@@ -177,16 +180,22 @@ class _BusinessInfo extends State<BusinessInfo> {
       appBar: new AppBar(
           centerTitle: true,
           elevation: 0,
-          backgroundColor: pinkClr,
+          backgroundColor: darkYellowClr,
           title: Text('Business Information',
               style: TextStyle(
-                  color: whiteClr, fontFamily: 'Anton', fontSize: 25))),
+                  color: blackClr, fontFamily: 'Anton', fontSize: 25))),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
           // color: whiteClr,
           child: Container(
-            color: lightClr,
+            decoration: new BoxDecoration(
+              // color: yellowClr,
+              gradient: new LinearGradient(
+                  colors: [darkYellowClr, lightYellowClr, yellowClr],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+            ),
             width: MediaQuery.of(context).size.width,
             constraints: new BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height),
@@ -218,9 +227,9 @@ class _BusinessInfo extends State<BusinessInfo> {
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0)),
                                         borderSide:
-                                            new BorderSide(color: greyClr)),
+                                            new BorderSide(color: whiteClr)),
                                     filled: true,
-                                    fillColor: lightClr,
+                                    fillColor: whiteClr,
                                     hintText: 'business name',
                                     errorBorder: new OutlineInputBorder(
                                         borderSide:
@@ -229,12 +238,12 @@ class _BusinessInfo extends State<BusinessInfo> {
                                             const Radius.circular(40.0))),
                                     focusedErrorBorder: new OutlineInputBorder(
                                         borderSide:
-                                            new BorderSide(color: pinkClr),
+                                            new BorderSide(color: blackClr),
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0))),
                                     focusedBorder: new OutlineInputBorder(
                                         borderSide:
-                                            new BorderSide(color: pinkClr),
+                                            new BorderSide(color: blackClr),
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0)))
                                     //prefixIcon: Icon(Icons.phone_android),
@@ -262,9 +271,9 @@ class _BusinessInfo extends State<BusinessInfo> {
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0)),
                                         borderSide:
-                                            new BorderSide(color: greyClr)),
+                                            new BorderSide(color: whiteClr)),
                                     filled: true,
-                                    fillColor: lightClr,
+                                    fillColor: whiteClr,
                                     hintText: 'owner name',
                                     errorBorder: new OutlineInputBorder(
                                         borderSide:
@@ -273,12 +282,12 @@ class _BusinessInfo extends State<BusinessInfo> {
                                             const Radius.circular(40.0))),
                                     focusedErrorBorder: new OutlineInputBorder(
                                         borderSide:
-                                            new BorderSide(color: pinkClr),
+                                            new BorderSide(color: blackClr),
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0))),
                                     focusedBorder: new OutlineInputBorder(
                                         borderSide:
-                                            new BorderSide(color: pinkClr),
+                                            new BorderSide(color: blackClr),
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0)))
                                     //prefixIcon: Icon(Icons.phone_android),
@@ -306,9 +315,9 @@ class _BusinessInfo extends State<BusinessInfo> {
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0)),
                                         borderSide:
-                                            new BorderSide(color: greyClr)),
+                                            new BorderSide(color: whiteClr)),
                                     filled: true,
-                                    fillColor: lightClr,
+                                    fillColor: whiteClr,
                                     hintText: 'email address',
                                     errorBorder: new OutlineInputBorder(
                                         borderSide:
@@ -317,12 +326,12 @@ class _BusinessInfo extends State<BusinessInfo> {
                                             const Radius.circular(40.0))),
                                     focusedErrorBorder: new OutlineInputBorder(
                                         borderSide:
-                                            new BorderSide(color: pinkClr),
+                                            new BorderSide(color: blackClr),
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0))),
                                     focusedBorder: new OutlineInputBorder(
                                         borderSide:
-                                            new BorderSide(color: pinkClr),
+                                            new BorderSide(color: blackClr),
                                         borderRadius: const BorderRadius.all(
                                             const Radius.circular(40.0)))
                                     //prefixIcon: Icon(Icons.phone_android),
@@ -387,7 +396,7 @@ class _BusinessInfo extends State<BusinessInfo> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: whiteClr,
+        color: yellowClr,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -402,12 +411,12 @@ class _BusinessInfo extends State<BusinessInfo> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
-                    child: Icon(Icons.arrow_back, color: pinkClr),
+                    child: Icon(Icons.arrow_back, color: blackClr),
                   ),
                   Text(
                     "Back",
                     style: TextStyle(
-                      color: pinkClr,
+                      color: blackClr,
                       fontSize: 20,
                       fontFamily: 'Abel',
                       fontWeight: FontWeight.bold,
@@ -432,7 +441,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                     decoration: BoxDecoration(
                         //color: blueClr,
                         shape: BoxShape.circle,
-                        border: Border.all(color: greyClr)),
+                        border: Border.all(color: redClr)),
                   ),
                   Container(
                     width: 15,
@@ -440,7 +449,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         //color: blueClr,
-                        border: Border.all(color: greyClr)),
+                        border: Border.all(color: redClr)),
                   ),
                   Container(
                     width: 15,
@@ -448,15 +457,15 @@ class _BusinessInfo extends State<BusinessInfo> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         //color: blueClr,
-                        border: Border.all(color: greyClr)),
+                        border: Border.all(color: redClr)),
                   ),
                   Container(
                     width: 15,
                     height: 15,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: greyClr,
-                        border: Border.all(color: greyClr)),
+                        color: redClr,
+                        border: Border.all(color: redClr)),
                   ),
                   Container(
                     width: 15,
@@ -464,7 +473,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         //color: blueClr,
-                        border: Border.all(color: greyClr)),
+                        border: Border.all(color: redClr)),
                   )
                 ],
               ),
@@ -481,7 +490,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                   Text(
                     "Next",
                     style: TextStyle(
-                      color: pinkClr,
+                      color: blackClr,
                       fontSize: 20,
                       fontFamily: 'Abel',
                       fontWeight: FontWeight.bold,
@@ -489,7 +498,7 @@ class _BusinessInfo extends State<BusinessInfo> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.arrow_forward, color: pinkClr),
+                    child: Icon(Icons.arrow_forward, color: blackClr),
                   )
                 ],
               ),
