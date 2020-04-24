@@ -36,7 +36,6 @@ class _NewOrderPageState extends State<NewOrderPage>
 
   //declaration
   String pageName = 'newOrder';
-  List tempList = [];
   List supplierList = [];
   ProgressDialog pr;
 
@@ -289,7 +288,6 @@ class _NewOrderPageState extends State<NewOrderPage>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomBar(
         pageName,
-        tempList,
       ),
     );
   }

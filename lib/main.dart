@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:homemobileapp/pages/customerPages/customerOrderDetails.dart';
+import 'package:homemobileapp/pages/customerPages/customerOrders.dart';
 import 'package:homemobileapp/pages/customerPages/shoppingCart.dart';
 import 'package:homemobileapp/pages/loginPage.dart';
 import 'package:homemobileapp/pages/newOrder.dart';
@@ -172,8 +174,15 @@ class Routes {
       SailorRoute(
         name: '/customerHome',
         builder: (context, args, params) {
-          return CustomerHome();
+          return CustomerHome(
+            userID: params.param<int>('userID'),
+            townID: params.param<int>('townID'),
+          );
         },
+        params: [
+          SailorParam<int>(name: 'userID', isRequired: true),
+          SailorParam<String>(name: 'townID', isRequired: true),
+        ],
       ),
       SailorRoute(
         name: '/supplier',
@@ -273,12 +282,12 @@ class Routes {
         builder: (context, args, params) {
           return NewOrderPage(
             userID: params.param<int>('userID'),
-            townID: params.param('townID'),
+            townID: params.param<int>('townID'),
           );
         },
         params: [
           SailorParam<int>(name: 'userID', isRequired: true),
-          SailorParam<String>(name: 'townID', isRequired: true),
+          SailorParam<int>(name: 'townID', isRequired: true),
         ],
       ),
       SailorRoute(
@@ -331,6 +340,34 @@ class Routes {
         builder: (context, args, params) {
           return ResetPassword();
         },
+      ),
+      SailorRoute(
+        name: '/customerOrder',
+        builder: (context, args, params) {
+          return CustomerOrders(
+            userID: params.param<int>('userID'),
+            townID: params.param<int>('townID'),
+          );
+        },
+        params: [
+          SailorParam<int>(name: 'userID', isRequired: true),
+          SailorParam<int>(name: 'townID', isRequired: true),
+        ],
+      ),
+      SailorRoute(
+        name: '/orderDetail',
+        builder: (context, args, params) {
+          return CustomerOrderDetail(
+            orderNo: params.param<String>('orderNo'),
+            supplier: params.param<String>('supplier'),
+            address: params.param<String>('address'),
+          );
+        },
+        params: [
+          SailorParam<String>(name: 'orderNo', isRequired: true),
+          SailorParam<String>(name: 'supplier', isRequired: true),
+          SailorParam<String>(name: 'address', isRequired: true),
+        ],
       ),
     ]);
   }

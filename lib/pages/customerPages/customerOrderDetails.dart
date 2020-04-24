@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class CustomerOrderDetail extends StatefulWidget {
-  const CustomerOrderDetail(
-      {Key key,
-      this.orderNo,
-      this.supplier,
-      this.address,
-      this.orderStatus,
-      this.cartItems})
-      : super(key: key);
-
-  @override
-  _CustomerOrderDetailState createState() => _CustomerOrderDetailState();
   final String orderNo;
   final String supplier;
   final String address;
-  final List orderStatus;
-  final List cartItems;
+
+  @override
+  CustomerOrderDetail({
+    @required this.orderNo,
+    @required this.supplier,
+    @required this.address,
+  });
+
+  @override
+  _CustomerOrderDetailState createState() => _CustomerOrderDetailState(
+        this.orderNo,
+        this.supplier,
+        this.address,
+      );
 }
 
 class _CustomerOrderDetailState extends State<CustomerOrderDetail>
@@ -31,65 +34,87 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
   Color greenClr = Color(0x0ff8ee269);
   Color redClr = Color(0x0fff0513c);
 
-  String orderNo = '2120';
-  String supplier = 'Save Mart';
-  String address = 'G.T Road, near G-15, Islamabad';
+  String orderNo;
+  String supplier;
+  String address;
   final formatter = new NumberFormat('##,###.##');
   double totalAmount = 0;
 
-  List orderStatus = [
-    {
-      'orderState': 'place order',
-      'deliveryTime': '10:00',
-      'stateTime': '12:00 pm'
-    },
-    {
-      'orderState': 'supplier estimates',
-      'deliveryTime': '20:00',
-      'stateTime': '12:05 pm'
-    },
-    {
-      'orderState': 'acknowledgement',
-      'deliveryTime': '-',
-      'stateTime': '12:10 pm'
-    }
-  ];
+  @override
+  _CustomerOrderDetailState(
+    this.orderNo,
+    this.supplier,
+    this.address,
+  );
 
-  List cartItems = [
-    {
-      'itemCode': '21',
-      'itemTitle': 'Pespsi 1.5 Ltr',
-      'price': '150',
-      'unit': 'piece',
-      'quantity': '10'
-    },
-    {
-      'itemCode': '22',
-      'itemTitle': 'Dalada Banaspati',
-      'price': '180',
-      'unit': 'liter',
-      'quantity': '5'
-    },
-    {
-      'itemCode': '23',
-      'itemTitle': 'Sensodyn Toothpaste',
-      'price': '230',
-      'unit': 'piece',
-      'quantity': '1'
-    },
-    {
-      'itemCode': '24',
-      'itemTitle': 'Surf Excel 1kg',
-      'price': '530',
-      'unit': '1 kg',
-      'quantity': '3'
-    }
-  ];
+  List orderStatus = [];
+  // List orderStatus = [
+  //   {
+  //     'orderState': 'place order',
+  //     'deliveryTime': '10:00',
+  //     'stateTime': '12:00 pm'
+  //   },
+  //   {
+  //     'orderState': 'supplier estimates',
+  //     'deliveryTime': '20:00',
+  //     'stateTime': '12:05 pm'
+  //   },
+  //   {
+  //     'orderState': 'acknowledgement',
+  //     'deliveryTime': '-',
+  //     'stateTime': '12:10 pm'
+  //   }
+  // ];
+
+  List cartItems = [];
 
   @override
   void initState() {
     super.initState();
-    this.shoppingSum();
+    getOrderDetail();
+  }
+
+  Future<String> getOrderDetail() async {
+    try {
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getorderdetail?OrderID=" +
+              orderNo.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      List tempList = [];
+      for (int i = 0; i < responseJson["aRows"].length; i++) {
+        var oDate = responseJson["pRows"][i]["gendate"];
+        String formatTime = "";
+        formatTime = new DateFormat("hh:mm:ss").format(oDate).toString();
+        orderStatus.add({
+          'orderState': responseJson["aRows"][i]["orderStatus"].toString(),
+          'deliveryTime': "-",
+          'stateTime': formatTime,
+        });
+      }
+      for (int i = 0; i < responseJson["pRows"].length; i++) {
+        tempList.add({
+          'itemCode':
+              responseJson["pRows"][i]["productProfileStoreID"].toString(),
+          'itemTitle': responseJson["pRows"][i]["productName"],
+          'price': responseJson["pRows"][i]["salePrice"].toString(),
+          'unit': responseJson["pRows"][i]["measurementUnit"],
+          'quantity': responseJson["pRows"][i]["qty"].toString(),
+        });
+      }
+
+      setState(() {
+        cartItems = tempList;
+
+        this.shoppingSum();
+      });
+      return 'success';
+    } catch (e) {
+      print(e);
+    }
   }
 
   void shoppingSum() {
@@ -97,7 +122,8 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
     try {
       for (int i = 0; i < cartItems.length; i++) {
         var item = cartItems[i];
-        totalAmount += int.parse(item['price']) * int.parse(item['quantity']);
+        totalAmount +=
+            double.parse(item['price']) * double.parse(item['quantity']);
       }
     } catch (e) {
       print(e);

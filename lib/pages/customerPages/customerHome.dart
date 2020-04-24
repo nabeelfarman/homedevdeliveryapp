@@ -4,15 +4,38 @@ import 'package:homemobileapp/UI/home_card.dart';
 import 'package:homemobileapp/UI/image_carousel.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 
+import '../../main.dart';
+
 class CustomerHome extends StatefulWidget with NavigationStates {
-  @override
-  CustomerHome();
+  final int userID;
+  final int townID;
 
   @override
-  _CustomerHomeState createState() => _CustomerHomeState();
+  CustomerHome({
+    @required this.userID,
+    @required this.townID,
+  });
+
+  @override
+  _CustomerHomeState createState() => _CustomerHomeState(
+        this.userID,
+        this.townID,
+      );
 }
 
 class _CustomerHomeState extends State<CustomerHome> {
+  int userID;
+  int townID;
+
+  @override
+  _CustomerHomeState(this.userID, this.townID);
+
+  @override
+  void initState() {
+    super.initState();
+    print(userID);
+  }
+
   //declaration
   Color blackClr = Color(0xff2d2d2d);
   // Color yellowClr = Color(0xfff7d73a);
@@ -63,13 +86,18 @@ class _CustomerHomeState extends State<CustomerHome> {
                         cardColor: redClr,
                       ),
                       onTap: () {
-                        print('New Order');
+                        navigateToNewOrder(context);
                       },
                     ),
-                    HomeCard(
-                      icon: Icons.history,
-                      iconTitle: 'History',
-                      cardColor: greenClr,
+                    GestureDetector(
+                      child: HomeCard(
+                        icon: Icons.history,
+                        iconTitle: 'History',
+                        cardColor: greenClr,
+                      ),
+                      onTap: () {
+                        navigateToCustomerOrder(context);
+                      },
                     ),
                     HomeCard(
                       icon: Icons.slow_motion_video,
@@ -87,5 +115,25 @@ class _CustomerHomeState extends State<CustomerHome> {
             ],
           ),
         ));
+  }
+
+  void navigateToNewOrder(BuildContext context) {
+    Routes.sailor.navigate(
+      '/newOrder',
+      params: {
+        'userID': userID,
+        'townID': townID,
+      },
+    );
+  }
+
+  void navigateToCustomerOrder(BuildContext context) {
+    Routes.sailor.navigate(
+      '/customerOrder',
+      params: {
+        'userID': userID,
+        'townID': townID,
+      },
+    );
   }
 }

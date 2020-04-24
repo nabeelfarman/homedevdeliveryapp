@@ -57,7 +57,6 @@ class _ItemsPageState extends State<ItemsPage>
 
   List filteredItems = List();
 
-  List tempList = [];
   ProgressDialog pr;
 
   @override
@@ -88,7 +87,7 @@ class _ItemsPageState extends State<ItemsPage>
 
   Future<String> getItems() async {
     try {
-      showProgressDialog(context, "Please Wait");
+      // showProgressDialog(context, "Please Wait");
       var response = await http.get(
           "http://95.217.147.105:2001/api/getmerchantproducts?MerchantID=" +
               supplierID.toString() +
@@ -360,7 +359,6 @@ class _ItemsPageState extends State<ItemsPage>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomBar(
         pageName,
-        tempList,
       ),
     );
   }

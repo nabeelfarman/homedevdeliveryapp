@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../../main.dart';
 
 class CustomerOrders extends StatefulWidget {
+  final int userID;
+  final int townID;
+
   @override
-  _CustomerOrdersState createState() => _CustomerOrdersState();
+  CustomerOrders({
+    @required this.userID,
+    @required this.townID,
+  });
+
+  @override
+  _CustomerOrdersState createState() => _CustomerOrdersState(
+        this.userID,
+        this.townID,
+      );
 }
 
 class _CustomerOrdersState extends State<CustomerOrders>
@@ -19,44 +35,26 @@ class _CustomerOrdersState extends State<CustomerOrders>
   Color redClr = Color(0x0fff0513c);
 
   String pageName = 'customerOrder';
-  List tempList = [];
+  int userID;
+  int townID;
+  String orderNo;
+  String supplier;
+  String address;
 
-  List customer_orders = [
-    {
-      'orderNo': '1',
-      'supplier': 'Save Mart',
-      'address': 'G.T Road, G-15, Islamabad',
-      'totalAmount': '1500',
-      'orderStatus': 'pending'
-    },
-    {
-      'orderNo': '2',
-      'supplier': 'Madina Cash & Carry',
-      'address': 'G-9 Markaz, Islamabad',
-      'totalAmount': '20530',
-      'orderStatus': 'Rjected'
-    },
-    {
-      'orderNo': '3',
-      'supplier': 'Punjab Cash & Carry',
-      'address': 'G-9 Markaz, Islamabad',
-      'totalAmount': '10365',
-      'orderStatus': 'completed'
-    },
-    {
-      'orderNo': '4',
-      'supplier': 'Shaan Fruits',
-      'address': 'G-14 Markaz, Islamabad',
-      'totalAmount': '1500',
-      'orderStatus': 'completed'
-    }
-  ];
+  _CustomerOrdersState(
+    this.userID,
+    this.townID,
+  );
+
+  List customer_orders = [];
 
   List customerOrdersList = List();
   final formatter = new NumberFormat('##,###.##');
   bool isSearching = false;
   Color foreColor;
   Color bgColor;
+
+  ProgressDialog pr;
 
   @override
   void initState() {
@@ -82,17 +80,86 @@ class _CustomerOrdersState extends State<CustomerOrders>
 
   Future<String> getCustomerOrders() async {
     try {
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getcusorders?CustomerID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+
+      // pr.show();
+      var responseJson = json.decode(response.body);
+
+      for (int i = 0; i < responseJson.length; i++) {
+        String orderStatus = "";
+        if (responseJson[i]["oStatus"] == 1 &&
+            responseJson[i]["cStatus"] == 0 &&
+            responseJson[i]["dStatus"] == 0) {
+          orderStatus = "pending";
+        } else if (responseJson[i]["oStatus"] == 2 &&
+            responseJson[i]["cStatus"] == 0 &&
+            responseJson[i]["dStatus"] == 0) {
+          orderStatus = "Cancel";
+        } else if (responseJson[i]["oStatus"] == 1 &&
+            responseJson[i]["cStatus"] == 1 &&
+            responseJson[i]["dStatus"] == 0) {
+          orderStatus = "confirm";
+        } else if (responseJson[i]["oStatus"] == 1 &&
+            responseJson[i]["cStatus"] == 2 &&
+            responseJson[i]["dStatus"] == 0) {
+          orderStatus = "rejected";
+        } else if (responseJson[i]["oStatus"] == 1 &&
+            responseJson[i]["cStatus"] == 1 &&
+            responseJson[i]["dStatus"] == 1) {
+          orderStatus = "completed";
+        }
+
+        customer_orders.add({
+          'orderNo': responseJson[i]["orderID"].toString(),
+          'customerID': responseJson[i]["customerID"].toString(),
+          'merchantID': responseJson[i]["merchantID"].toString(),
+          'supplier': responseJson[i]["companyName"],
+          'address': responseJson[i]["address"],
+          'totalAmount': responseJson[i]["totalAmount"].toString(),
+          'orderStatus': orderStatus,
+        });
+      }
+      pr.hide();
+
       setState(() {
+        // pr.hide();
+
         customerOrdersList = customer_orders;
       });
+
       return 'success';
     } catch (e) {
+      pr.hide();
+
       print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
       appBar: new AppBar(
         centerTitle: true,
@@ -160,7 +227,6 @@ class _CustomerOrdersState extends State<CustomerOrders>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomBar(
         pageName,
-        tempList,
       ),
     );
   }
@@ -262,18 +328,36 @@ class _CustomerOrdersState extends State<CustomerOrders>
                                 ),
                               ),
                     GestureDetector(
-                        child: Text("Details...",
-                            style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: redClr,
-                                fontSize: 18,
-                                fontFamily: 'Baloo')),
-                        onTap: () {})
+                      child: Text("Details...",
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: redClr,
+                              fontSize: 18,
+                              fontFamily: 'Baloo')),
+                      onTap: () {
+                        orderNo = item["orderNo"];
+                        supplier = item["supplier"];
+                        address = item["address"];
+
+                        navigateToOrderDetail(context);
+                      },
+                    )
                   ],
                 )
               ],
             ),
           )),
+    );
+  }
+
+  void navigateToOrderDetail(BuildContext context) {
+    Routes.sailor.navigate(
+      '/orderDetail',
+      params: {
+        'orderNo': orderNo,
+        'supplier': supplier,
+        'address': address,
+      },
     );
   }
 }

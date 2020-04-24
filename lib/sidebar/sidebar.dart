@@ -84,6 +84,7 @@ class _SideBarState extends State<SideBar>
     print(userName);
     print(appTypeID);
     print(email);
+    print(townID);
   }
 
   @override
@@ -172,8 +173,12 @@ class _SideBarState extends State<SideBar>
                             ),
                             onTap: () {
                               onIconPressed();
+                              print(userID);
                               BlocProvider.of<NavigationBloc>(context)
-                                  .add(customerHome());
+                                  .add(customerHome(
+                                userID: userID,
+                                townID: townID,
+                              ));
                             },
                           ),
                           GestureDetector(

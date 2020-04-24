@@ -73,6 +73,67 @@ class _ShoppingCartState extends State<ShoppingCart>
     }
   }
 
+  Future<String> genOrder() async {
+    try {
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+      // pr.show();
+
+      var now = new DateTime.now();
+      // print(now);
+      String currentDate = new DateFormat("yyyy-MM-dd").format(now).toString();
+      print(currentDate);
+      print(customerID);
+
+      http.Response response = await http.post(
+        'http://95.217.147.105:2001/api/genorder',
+        headers: <String, String>{
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "ProfileID": customerID,
+            "OrderDate": currentDate,
+          },
+        ),
+      );
+
+      final Map responseJson = json.decode(response.body);
+
+      if (responseJson["msg"] == "Success") {
+        // pr.hide();
+        print('Success');
+      } else {
+        // pr.hide();
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      // pr.hide();
+      print(e);
+    }
+  }
+
   void shoppingSum() {
     totalAmount = 0.0;
     try {
@@ -153,7 +214,9 @@ class _ShoppingCartState extends State<ShoppingCart>
                 color: redClr,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
-                onPressed: () {},
+                onPressed: () {
+                  genOrder();
+                },
                 child: Text(
                   'Check Out',
                   textAlign: TextAlign.center,

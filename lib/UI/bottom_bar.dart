@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
   String pageName;
-  List tempList;
 
   @override
-  BottomBar(@required this.pageName, @required this.tempList);
+  BottomBar(
+    @required this.pageName,
+  );
 
   @override
   _BottomBar createState() => _BottomBar(
         pageName,
-        tempList,
       );
 }
 
 class _BottomBar extends State<BottomBar> {
   String pageName;
-  List tempList;
 
   @override
   _BottomBar(
     this.pageName,
-    this.tempList,
   );
 
   @override
@@ -55,13 +53,7 @@ class _BottomBar extends State<BottomBar> {
                             ),
                             onTap: () {
                               if (pageName == "ItemsPage") {
-                                if (tempList.length == 0) {
-                                  print('No item Selected');
-                                } else {
-                                  for (int i = 0; i < tempList.length; i++) {
-                                    print(tempList[i]['iTitle']);
-                                  }
-                                }
+                                print(pageName);
                               } else {
                                 print(pageName);
                               }

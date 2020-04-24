@@ -13,6 +13,14 @@ abstract class NavigationEvents extends Equatable {
 }
 
 class customerHome extends NavigationEvents {
+  final int userID;
+  final int townID;
+
+  customerHome({
+    @required this.userID,
+    @required this.townID,
+  }) : super([userID]);
+
   @override
   String toString() => 'customerHome';
 }
@@ -33,13 +41,28 @@ class newOrder extends NavigationEvents {
 abstract class NavigationStates {}
 
 class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
+  int userID;
+  int townID;
+
   @override
-  NavigationStates get initialState => CustomerHome();
+  NavigationBloc(
+    this.userID,
+    this.townID,
+  );
+
+  @override
+  NavigationStates get initialState => CustomerHome(
+        userID: userID,
+        townID: townID,
+      );
 
   @override
   Stream<NavigationStates> mapEventToState(NavigationEvents event) async* {
     if (event is customerHome) {
-      yield CustomerHome();
+      yield CustomerHome(
+        userID: event.userID,
+        townID: event.townID,
+      );
     }
     if (event is newOrder) {
       yield NewOrderPage(
