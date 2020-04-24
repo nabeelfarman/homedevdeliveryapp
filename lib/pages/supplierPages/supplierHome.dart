@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/UI/image_carousel.dart';
 import 'package:homemobileapp/UI/supplier_home_card.dart';
+import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 
-class SupplierHome extends StatefulWidget {
+class SupplierHome extends StatefulWidget with NavigationStates {
+  final int userID;
+  final int townID;
+
   @override
-  _SupplierHomeState createState() => _SupplierHomeState();
+  SupplierHome({@required this.userID, @required this.townID});
+
+  @override
+  _SupplierHomeState createState() =>
+      _SupplierHomeState(this.userID, this.townID);
 }
 
 class _SupplierHomeState extends State<SupplierHome> {
+  int userID;
+  int townID;
+
+  @override
+  _SupplierHomeState(this.userID, this.townID);
+
   //declaration
   Color blackClr = Color(0xff2d2d2d);
   // Color yellowClr = Color(0xfff7d73a);

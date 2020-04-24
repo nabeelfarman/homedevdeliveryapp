@@ -17,10 +17,8 @@ class CustomerHome extends StatefulWidget with NavigationStates {
   });
 
   @override
-  _CustomerHomeState createState() => _CustomerHomeState(
-        this.userID,
-        this.townID,
-      );
+  _CustomerHomeState createState() =>
+      _CustomerHomeState(this.userID, this.townID);
 }
 
 class _CustomerHomeState extends State<CustomerHome> {

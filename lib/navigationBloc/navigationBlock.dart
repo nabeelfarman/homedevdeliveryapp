@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:homemobileapp/pages/customerPages/customerHome.dart';
 import 'package:homemobileapp/main.dart';
 import 'package:homemobileapp/pages/newOrder.dart';
+import 'package:homemobileapp/pages/supplierPages/supplierHome.dart';
 
 abstract class NavigationEvents extends Equatable {
   // CustomerHomeClickedEvent,
@@ -25,6 +26,19 @@ class customerHome extends NavigationEvents {
   String toString() => 'customerHome';
 }
 
+class supplierHome extends NavigationEvents {
+  final int userID;
+  final int townID;
+
+  supplierHome({
+    @required this.userID,
+    @required this.townID,
+  }) : super([userID]);
+
+  @override
+  String toString() => 'supplierHome';
+}
+
 class newOrder extends NavigationEvents {
   final int userID;
   final int townID;
@@ -43,12 +57,10 @@ abstract class NavigationStates {}
 class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
   int userID;
   int townID;
+  int appTypeID;
 
   @override
-  NavigationBloc(
-    this.userID,
-    this.townID,
-  );
+  NavigationBloc(this.userID, this.townID);
 
   @override
   NavigationStates get initialState => CustomerHome(
@@ -66,6 +78,12 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
     }
     if (event is newOrder) {
       yield NewOrderPage(
+        userID: event.userID,
+        townID: event.townID,
+      );
+    }
+    if (event is supplierHome) {
+      yield SupplierHome(
         userID: event.userID,
         townID: event.townID,
       );

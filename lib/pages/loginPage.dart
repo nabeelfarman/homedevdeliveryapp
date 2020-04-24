@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/main.dart';
+import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:progress_dialog/progress_dialog.dart';
