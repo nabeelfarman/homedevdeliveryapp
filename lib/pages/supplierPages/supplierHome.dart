@@ -49,58 +49,61 @@ class _SupplierHomeState extends State<SupplierHome> {
             style:
                 TextStyle(color: blackClr, fontFamily: 'Anton', fontSize: 25)),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: new BoxDecoration(
-          // color: yellowClr,
-          gradient: new LinearGradient(
-              colors: [darkYellowClr, lightYellowClr, yellowClr],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height * (2 / 7),
-              child: ImageCarousel(),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * (3.7 / 7),
-              child: GridView.count(
-                crossAxisCount: 2,
-                children: <Widget>[
-                  GestureDetector(
-                    child: SupplierHomeCard(
-                      icon: Icons.storage,
-                      iconTitle: 'Inventory',
-                      cardColor: redClr,
-                    ),
-                    onTap: () {
-                      navigateToInventory(context);
-                    },
-                  ),
-                  SupplierHomeCard(
-                    icon: Icons.assignment,
-                    iconTitle: 'Orders',
-                    cardColor: greenClr,
-                  ),
-                  SupplierHomeCard(
-                    icon: Icons.slow_motion_video,
-                    iconTitle: 'in-Process',
-                    cardColor: greenClr,
-                  ),
-                  SupplierHomeCard(
-                    icon: Icons.airport_shuttle,
-                    iconTitle: 'Delivery',
-                    cardColor: redClr,
-                  )
-                ],
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          constraints: new BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height - 100),
+          decoration: new BoxDecoration(
+            // color: yellowClr,
+            gradient: new LinearGradient(
+                colors: [darkYellowClr, lightYellowClr, yellowClr],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Container(
+                height: MediaQuery.of(context).size.height * (2 / 7),
+                child: ImageCarousel(),
               ),
-            )
-          ],
+              Container(
+                height: MediaQuery.of(context).size.height * (3.7 / 7),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  children: <Widget>[
+                    GestureDetector(
+                      child: SupplierHomeCard(
+                        icon: Icons.storage,
+                        iconTitle: 'Inventory',
+                        cardColor: redClr,
+                      ),
+                      onTap: () {
+                        navigateToInventory(context);
+                      },
+                    ),
+                    SupplierHomeCard(
+                      icon: Icons.assignment,
+                      iconTitle: 'Orders',
+                      cardColor: greenClr,
+                    ),
+                    SupplierHomeCard(
+                      icon: Icons.slow_motion_video,
+                      iconTitle: 'in-Process',
+                      cardColor: greenClr,
+                    ),
+                    SupplierHomeCard(
+                      icon: Icons.airport_shuttle,
+                      iconTitle: 'Delivery',
+                      cardColor: redClr,
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
