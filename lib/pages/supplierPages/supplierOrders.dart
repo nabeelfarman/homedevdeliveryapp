@@ -2,10 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/supplier_bottom_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../../main.dart';
 
 class SupplierOrders extends StatefulWidget {
+  final int userID;
+  final int townID;
+
   @override
-  _SupplierOrdersState createState() => _SupplierOrdersState();
+  SupplierOrders({
+    @required this.userID,
+    @required this.townID,
+  });
+
+  @override
+  _SupplierOrdersState createState() =>
+      _SupplierOrdersState(this.userID, this.townID);
 }
 
 class _SupplierOrdersState extends State<SupplierOrders>
@@ -18,36 +31,46 @@ class _SupplierOrdersState extends State<SupplierOrders>
   Color greenClr = Color(0x0ff8ee269);
   Color redClr = Color(0x0fff0513c);
 
-  List supplier_orders = [
-    {
-      'orderNo': '1',
-      'customer': 'Haroon Qadeer',
-      'address': 'G.T Road, G-15, Islamabad',
-      'totalAmount': '1500',
-      'orderStatus': 'pending'
-    },
-    {
-      'orderNo': '2',
-      'customer': 'Imran Ejaz',
-      'address': 'G-9 Markaz, Islamabad',
-      'totalAmount': '20530',
-      'orderStatus': 'Rjected'
-    },
-    {
-      'orderNo': '3',
-      'customer': 'Nabeel Ahmed Khan',
-      'address': 'G-9 Markaz, Islamabad',
-      'totalAmount': '10365',
-      'orderStatus': 'completed'
-    },
-    {
-      'orderNo': '4',
-      'customer': 'Adnan Ali',
-      'address': 'G-14 Markaz, Islamabad',
-      'totalAmount': '1500',
-      'orderStatus': 'completed'
-    }
-  ];
+  int userID;
+  int townID;
+  String orderNo;
+  String supplier;
+  String address;
+
+  _SupplierOrdersState(this.userID, this.townID);
+
+  List supplier_orders = [];
+
+  // List supplier_orders = [
+  //   {
+  //     'orderNo': '1',
+  //     'customer': 'Haroon Qadeer',
+  //     'address': 'G.T Road, G-15, Islamabad',
+  //     'totalAmount': '1500',
+  //     'orderStatus': 'pending'
+  //   },
+  //   {
+  //     'orderNo': '2',
+  //     'customer': 'Imran Ejaz',
+  //     'address': 'G-9 Markaz, Islamabad',
+  //     'totalAmount': '20530',
+  //     'orderStatus': 'Rjected'
+  //   },
+  //   {
+  //     'orderNo': '3',
+  //     'customer': 'Nabeel Ahmed Khan',
+  //     'address': 'G-9 Markaz, Islamabad',
+  //     'totalAmount': '10365',
+  //     'orderStatus': 'completed'
+  //   },
+  //   {
+  //     'orderNo': '4',
+  //     'customer': 'Adnan Ali',
+  //     'address': 'G-14 Markaz, Islamabad',
+  //     'totalAmount': '1500',
+  //     'orderStatus': 'completed'
+  //   }
+  // ];
 
   List supplierOrdersList = List();
   final formatter = new NumberFormat('##,###.##');
@@ -79,6 +102,53 @@ class _SupplierOrdersState extends State<SupplierOrders>
 
   Future<String> getSupplierOrders() async {
     try {
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getsuporders?MerchantID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+
+      // pr.show();
+      var responseJson = json.decode(response.body);
+
+      for (int i = 0; i < responseJson.length; i++) {
+        String orderStatus = "";
+        if (responseJson[i]["oStatus"] == 1 &&
+            responseJson[i]["cStatus"] == 0 &&
+            responseJson[i]["dStatus"] == 0) {
+          orderStatus = "pending";
+        } else if (responseJson[i]["oStatus"] == 2 &&
+            responseJson[i]["cStatus"] == 0 &&
+            responseJson[i]["dStatus"] == 0) {
+          orderStatus = "Cancel";
+        } else if (responseJson[i]["oStatus"] == 1 &&
+            responseJson[i]["cStatus"] == 1 &&
+            responseJson[i]["dStatus"] == 0) {
+          orderStatus = "confirm";
+        } else if (responseJson[i]["oStatus"] == 1 &&
+            responseJson[i]["cStatus"] == 2 &&
+            responseJson[i]["dStatus"] == 0) {
+          orderStatus = "rejected";
+        } else if (responseJson[i]["oStatus"] == 1 &&
+            responseJson[i]["cStatus"] == 1 &&
+            responseJson[i]["dStatus"] == 1) {
+          orderStatus = "completed";
+        }
+
+        supplier_orders.add({
+          'orderNo': responseJson[i]["orderID"].toString(),
+          'customerID': responseJson[i]["customerID"].toString(),
+          'merchantID': responseJson[i]["merchantID"].toString(),
+          'customer': responseJson[i]["customerName"],
+          'address': responseJson[i]["address"],
+          'totalAmount': responseJson[i]["totalAmount"].toString(),
+          'orderStatus': orderStatus,
+        });
+      }
+
+      // pr.hide();
+
       setState(() {
         supplierOrdersList = supplier_orders;
       });
@@ -262,12 +332,29 @@ class _SupplierOrdersState extends State<SupplierOrders>
                                 color: redClr,
                                 fontSize: 18,
                                 fontFamily: 'Baloo')),
-                        onTap: () {})
+                        onTap: () {
+                          orderNo = item["orderNo"];
+                          supplier = item["customer"];
+                          address = item["address"];
+
+                          navigateToSupplierOrderDetail(context);
+                        })
                   ],
                 )
               ],
             ),
           )),
+    );
+  }
+
+  void navigateToSupplierOrderDetail(BuildContext context) {
+    Routes.sailor.navigate(
+      '/supplierOrderDetail',
+      params: {
+        'orderNo': orderNo,
+        'customer': supplier,
+        'address': address,
+      },
     );
   }
 }

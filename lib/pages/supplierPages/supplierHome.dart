@@ -3,6 +3,8 @@ import 'package:homemobileapp/UI/image_carousel.dart';
 import 'package:homemobileapp/UI/supplier_home_card.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 
+import '../../main.dart';
+
 class SupplierHome extends StatefulWidget with NavigationStates {
   final int userID;
   final int townID;
@@ -71,10 +73,15 @@ class _SupplierHomeState extends State<SupplierHome> {
                       iconTitle: 'Inventory',
                       cardColor: redClr,
                     ),
-                    SupplierHomeCard(
-                      icon: Icons.assignment,
-                      iconTitle: 'Orders',
-                      cardColor: greenClr,
+                    GestureDetector(
+                      child: SupplierHomeCard(
+                        icon: Icons.assignment,
+                        iconTitle: 'Orders',
+                        cardColor: greenClr,
+                      ),
+                      onTap: () {
+                        navigateToSupplierOrder(context);
+                      },
                     ),
                     SupplierHomeCard(
                       icon: Icons.slow_motion_video,
@@ -92,5 +99,15 @@ class _SupplierHomeState extends State<SupplierHome> {
             ],
           ),
         ));
+  }
+
+  void navigateToSupplierOrder(BuildContext context) {
+    Routes.sailor.navigate(
+      '/supplierOrder',
+      params: {
+        'userID': userID,
+        'townID': townID,
+      },
+    );
   }
 }

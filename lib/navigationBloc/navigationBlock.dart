@@ -63,7 +63,7 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
   NavigationBloc(this.userID, this.townID);
 
   @override
-  NavigationStates get initialState => CustomerHome(
+  NavigationStates get initialState => SupplierHome(
         userID: userID,
         townID: townID,
       );
