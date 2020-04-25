@@ -63,10 +63,19 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
   NavigationBloc(this.userID, this.townID);
 
   @override
-  NavigationStates get initialState => CustomerHome(
+  NavigationStates get initialState {
+    if (appTypeID == 1) {
+      return CustomerHome(
         userID: userID,
         townID: townID,
       );
+    } else {
+      return SupplierHome(
+        userID: userID,
+        townID: townID,
+      );
+    }
+  }
 
   @override
   Stream<NavigationStates> mapEventToState(NavigationEvents event) async* {

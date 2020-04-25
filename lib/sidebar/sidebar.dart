@@ -149,18 +149,19 @@ class _SideBarState extends State<SideBar>
                                       .toUpperCase() +
                                   userName.trimRight().substring(1),
                               style: TextStyle(
-                                  color: greenClr,
+                                  color: redClr,
+                                  // fontFamily: 'Lato',
                                   fontSize: 25,
                                   fontWeight: FontWeight.w800),
                             ),
                             subtitle: Text(email,
                                 style:
-                                    TextStyle(color: whiteClr, fontSize: 16)),
+                                    TextStyle(color: lightClr, fontSize: 16)),
                             leading: CircleAvatar(
                               child: Icon(Icons.shopping_basket,
                                   color: Colors.white),
                               radius: 40,
-                              backgroundColor: greenClr,
+                              backgroundColor: redClr,
                             ),
                           ),
                           Divider(
@@ -225,9 +226,9 @@ class _SideBarState extends State<SideBar>
                             alignment: Alignment.centerLeft,
                             width: 35,
                             height: 110,
-                            color: redClr,
+                            color: blackClr,
                             child: AnimatedIcon(
-                              color: whiteClr,
+                              color: yellowClr,
                               progress: _animationController.view,
                               icon: AnimatedIcons.menu_close,
                               size: 25,

@@ -22,38 +22,28 @@ class HomeCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
-        // color: cardColor,
+        color: whiteClr,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: InkWell(
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.4),
-                      spreadRadius: 3.0,
-                      blurRadius: 5.0)
-                ],
-                color: whiteClr),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  icon,
-                  color: redClr,
-                  size: 60.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(iconTitle,
-                      style: TextStyle(
-                          color: blackClr,
-                          fontSize: 20.0,
-                          fontFamily: 'Baloo',
-                          fontWeight: FontWeight.w500)),
-                )
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                icon,
+                color: redClr,
+                size: 60.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(iconTitle,
+                    style: TextStyle(
+                        color: blackClr,
+                        fontSize: 20.0,
+                        fontFamily: 'Baloo',
+                        fontWeight: FontWeight.w500)),
+              )
+            ],
           ),
         ),
       ),

@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 
 class SupplierBottomBar extends StatelessWidget {
+  Color blackClr = Color(0xff1D2028);
+
+  Color whiteClr = Color(0x0ffffffff);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 6.0,
-        color: Colors.transparent,
+        color: yellowClr,
         elevation: 9.0,
         clipBehavior: Clip.antiAlias,
         child: Container(
@@ -15,7 +26,7 @@ class SupplierBottomBar extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25.0),
                     topRight: Radius.circular(25.0)),
-                color: Colors.white),
+                color: blackClr),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -25,7 +36,7 @@ class SupplierBottomBar extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Icon(Icons.arrow_back, color: Color(0xFFEF7532)),
+                          Icon(Icons.arrow_back, color: lightYellowClr),
                           // Icon(Icons.person_outline, color: Color(0xFF676E79))
                         ],
                       )),

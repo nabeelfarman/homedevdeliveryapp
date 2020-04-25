@@ -8,10 +8,17 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color blackClr = Color(0xff2d2d2d);
-    Color whiteClr = Color(0xffffffff);
-    Color redClr = Color(0x0fff0513c);
-    Color greenClr = Color(0x0ff8ee269);
+    Color blackClr = Color(0xff1D2028);
+
+    Color whiteClr = Color(0x0ffffffff);
+    Color lightClr = Color(0x0ffEEF2F5);
+    Color greyClr = Color(0x0ffB5BED0);
+    Color greenClr = Color(0x0ffA3C12E);
+    Color redClr = Color(0x0ffcf3f3d);
+
+    Color yellowClr = Color(0x0ffF8D247);
+    Color darkYellowClr = Color(0x0ffdfbd3f);
+    Color lightYellowClr = Color(0x0ffffde22);
 
     return Padding(
       padding: const EdgeInsets.only(left: 32, top: 16, bottom: 16),
@@ -19,7 +26,7 @@ class MenuItem extends StatelessWidget {
         children: <Widget>[
           Icon(
             icon,
-            color: whiteClr,
+            color: lightClr,
             size: 30,
           ),
           SizedBox(
@@ -29,7 +36,7 @@ class MenuItem extends StatelessWidget {
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 22,
-                  color: whiteClr,
+                  color: yellowClr,
                   fontFamily: 'Baloo'))
         ],
       ),
