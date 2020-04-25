@@ -12,6 +12,8 @@ import 'package:homemobileapp/pages/registrationPages/registrationSuccess.dart';
 import 'package:homemobileapp/pages/registrationPages/userNamePassword.dart';
 import 'package:homemobileapp/pages/resetPassword.dart';
 import 'package:homemobileapp/pages/customerPages/customerHome.dart';
+import 'package:homemobileapp/pages/supplierPages/supplierOrderDetails.dart';
+import 'package:homemobileapp/pages/supplierPages/supplierOrders.dart';
 import 'package:homemobileapp/sidebar/sidebar_layout.dart';
 //import './UI/CustomLoginInput.dart';
 // import './Animation/FadeinAnimation.dart';
@@ -355,6 +357,19 @@ class Routes {
         ],
       ),
       SailorRoute(
+        name: '/supplierOrder',
+        builder: (context, args, params) {
+          return SupplierOrders(
+            userID: params.param<int>('userID'),
+            townID: params.param<int>('townID'),
+          );
+        },
+        params: [
+          SailorParam<int>(name: 'userID', isRequired: true),
+          SailorParam<int>(name: 'townID', isRequired: true),
+        ],
+      ),
+      SailorRoute(
         name: '/orderDetail',
         builder: (context, args, params) {
           return CustomerOrderDetail(
@@ -366,6 +381,21 @@ class Routes {
         params: [
           SailorParam<String>(name: 'orderNo', isRequired: true),
           SailorParam<String>(name: 'supplier', isRequired: true),
+          SailorParam<String>(name: 'address', isRequired: true),
+        ],
+      ),
+      SailorRoute(
+        name: '/supplierOrderDetail',
+        builder: (context, args, params) {
+          return SupplierOrderDetails(
+            orderNo: params.param<String>('orderNo'),
+            customer: params.param<String>('customer'),
+            address: params.param<String>('address'),
+          );
+        },
+        params: [
+          SailorParam<String>(name: 'orderNo', isRequired: true),
+          SailorParam<String>(name: 'customer', isRequired: true),
           SailorParam<String>(name: 'address', isRequired: true),
         ],
       ),

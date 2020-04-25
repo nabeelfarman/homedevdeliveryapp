@@ -4,6 +4,8 @@ import 'package:homemobileapp/UI/supplier_bottom_bar.dart';
 import 'package:homemobileapp/UI/supplier_home_card.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 
+import '../../main.dart';
+
 class SupplierHome extends StatefulWidget with NavigationStates {
   final int userID;
   final int townID;
@@ -107,6 +109,16 @@ class _SupplierHomeState extends State<SupplierHome> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       backgroundColor: yellowClr,
       bottomNavigationBar: SupplierBottomBar(),
+    );
+  }
+
+  void navigateToSupplierOrder(BuildContext context) {
+    Routes.sailor.navigate(
+      '/supplierOrder',
+      params: {
+        'userID': userID,
+        'townID': townID,
+      },
     );
   }
 }
