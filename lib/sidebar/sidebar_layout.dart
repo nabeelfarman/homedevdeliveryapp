@@ -58,6 +58,7 @@ class _SideBarLayout extends State<SideBarLayout> {
       create: (context) => NavigationBloc(
         userID,
         townID,
+        appTypeID,
       ),
       child: Stack(
         children: <Widget>[

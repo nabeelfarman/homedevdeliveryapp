@@ -60,7 +60,11 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
   int appTypeID;
 
   @override
-  NavigationBloc(this.userID, this.townID);
+  NavigationBloc(
+    this.userID,
+    this.townID,
+    this.appTypeID,
+  );
 
   @override
   NavigationStates get initialState {
