@@ -29,6 +29,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
   Color lightClr = Color(0x0fffdebe7);
   Color purpleClr = Color(0x0ffd183fd);
   Color greenClr = Color(0x0ff8ee269);
+  Color orangeClr = Color(0x0ffFFA500);
   Color redClr = Color(0x0fff0513c);
 
   int userID;
@@ -36,41 +37,11 @@ class _SupplierOrdersState extends State<SupplierOrders>
   String orderNo;
   String supplier;
   String address;
+  String status;
 
   _SupplierOrdersState(this.userID, this.townID);
 
   List supplier_orders = [];
-
-  // List supplier_orders = [
-  //   {
-  //     'orderNo': '1',
-  //     'customer': 'Haroon Qadeer',
-  //     'address': 'G.T Road, G-15, Islamabad',
-  //     'totalAmount': '1500',
-  //     'orderStatus': 'pending'
-  //   },
-  //   {
-  //     'orderNo': '2',
-  //     'customer': 'Imran Ejaz',
-  //     'address': 'G-9 Markaz, Islamabad',
-  //     'totalAmount': '20530',
-  //     'orderStatus': 'Rjected'
-  //   },
-  //   {
-  //     'orderNo': '3',
-  //     'customer': 'Nabeel Ahmed Khan',
-  //     'address': 'G-9 Markaz, Islamabad',
-  //     'totalAmount': '10365',
-  //     'orderStatus': 'completed'
-  //   },
-  //   {
-  //     'orderNo': '4',
-  //     'customer': 'Adnan Ali',
-  //     'address': 'G-14 Markaz, Islamabad',
-  //     'totalAmount': '1500',
-  //     'orderStatus': 'completed'
-  //   }
-  // ];
 
   List supplierOrdersList = List();
   final formatter = new NumberFormat('##,###.##');
@@ -121,7 +92,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
         } else if (responseJson[i]["oStatus"] == 2 &&
             responseJson[i]["cStatus"] == 0 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "Cancel";
+          orderStatus = "cancel";
         } else if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 1 &&
             responseJson[i]["dStatus"] == 0) {
@@ -308,23 +279,41 @@ class _SupplierOrdersState extends State<SupplierOrders>
                                   ),
                                 ),
                               )
-                            : Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: redClr),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Text(
-                                    item['orderStatus'],
-                                    style: TextStyle(
-                                        color: whiteClr,
-                                        fontFamily: 'Baloo',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500),
+                            : item['orderStatus'] == 'confirm'
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: orangeClr),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Text(
+                                        item['orderStatus'],
+                                        style: TextStyle(
+                                            color: blackClr,
+                                            fontFamily: 'Baloo',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: redClr),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Text(
+                                        item['orderStatus'],
+                                        style: TextStyle(
+                                            color: whiteClr,
+                                            fontFamily: 'Baloo',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
                     GestureDetector(
                         child: Text("Details...",
                             style: TextStyle(
@@ -336,7 +325,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
                           orderNo = item["orderNo"];
                           supplier = item["customer"];
                           address = item["address"];
-
+                          status = item['orderStatus'];
                           navigateToSupplierOrderDetail(context);
                         })
                   ],
@@ -354,6 +343,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
         'orderNo': orderNo,
         'customer': supplier,
         'address': address,
+        'status': status,
       },
     );
   }

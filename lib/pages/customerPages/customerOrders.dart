@@ -32,6 +32,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
   Color lightClr = Color(0x0fffdebe7);
   Color purpleClr = Color(0x0ffd183fd);
   Color greenClr = Color(0x0ff8ee269);
+  Color orangeClr = Color(0x0ffFFA500);
   Color redClr = Color(0x0fff0513c);
 
   String pageName = 'customerOrder';
@@ -40,6 +41,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
   String orderNo;
   String supplier;
   String address;
+  String status;
 
   _CustomerOrdersState(
     this.userID,
@@ -99,7 +101,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
         } else if (responseJson[i]["oStatus"] == 2 &&
             responseJson[i]["cStatus"] == 0 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "Cancel";
+          orderStatus = "cancel";
         } else if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 1 &&
             responseJson[i]["dStatus"] == 0) {
@@ -310,23 +312,41 @@ class _CustomerOrdersState extends State<CustomerOrders>
                                   ),
                                 ),
                               )
-                            : Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: redClr),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20),
-                                  child: Text(
-                                    item['orderStatus'],
-                                    style: TextStyle(
-                                        color: whiteClr,
-                                        fontFamily: 'Baloo',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500),
+                            : item['orderStatus'] == 'confirm'
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: orangeClr),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Text(
+                                        item['orderStatus'],
+                                        style: TextStyle(
+                                            color: blackClr,
+                                            fontFamily: 'Baloo',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: redClr),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Text(
+                                        item['orderStatus'],
+                                        style: TextStyle(
+                                            color: whiteClr,
+                                            fontFamily: 'Baloo',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
                     GestureDetector(
                       child: Text("Details...",
                           style: TextStyle(
@@ -338,6 +358,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
                         orderNo = item["orderNo"];
                         supplier = item["supplier"];
                         address = item["address"];
+                        status = item["orderStatus"];
 
                         navigateToOrderDetail(context);
                       },
@@ -357,6 +378,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
         'orderNo': orderNo,
         'supplier': supplier,
         'address': address,
+        'status': status,
       },
     );
   }

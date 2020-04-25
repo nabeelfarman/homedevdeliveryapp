@@ -3,6 +3,8 @@ import 'package:homemobileapp/UI/image_carousel.dart';
 import 'package:homemobileapp/UI/supplier_bottom_bar.dart';
 import 'package:homemobileapp/UI/supplier_home_card.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
+import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import '../../main.dart';
 
@@ -84,10 +86,15 @@ class _SupplierHomeState extends State<SupplierHome> {
                         navigateToInventory(context);
                       },
                     ),
-                    SupplierHomeCard(
-                      icon: Icons.assignment,
-                      iconTitle: 'Orders',
-                      cardColor: greenClr,
+                    GestureDetector(
+                      child: SupplierHomeCard(
+                        icon: Icons.assignment,
+                        iconTitle: 'Orders',
+                        cardColor: greenClr,
+                      ),
+                      onTap: () {
+                        navigateToSupplierOrder(context);
+                      },
                     ),
                     SupplierHomeCard(
                       icon: Icons.slow_motion_video,

@@ -8,12 +8,14 @@ class SupplierOrderDetails extends StatefulWidget {
   final String orderNo;
   final String customer;
   final String address;
+  final String status;
 
   @override
   SupplierOrderDetails({
     @required this.orderNo,
     @required this.customer,
     @required this.address,
+    @required this.status,
   });
 
   @override
@@ -21,6 +23,7 @@ class SupplierOrderDetails extends StatefulWidget {
         this.orderNo,
         this.customer,
         this.address,
+        this.status,
       );
 }
 
@@ -37,69 +40,43 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
   String orderNo;
   String customer;
   String address;
+  String status;
+  String statusText;
   final formatter = new NumberFormat('##,###.##');
   double totalAmount = 0;
+  bool _isBtnDisabled;
 
   _SupplierOrderDetailsState(
     this.orderNo,
     this.customer,
     this.address,
+    this.status,
   );
 
   List orderStatus = [];
-  // List orderStatus = [
-  //   {
-  //     'orderState': 'place order',
-  //     'deliveryTime': '10:00',
-  //     'stateTime': '12:00 pm'
-  //   },
-  //   {
-  //     'orderState': 'supplier estimates',
-  //     'deliveryTime': '20:00',
-  //     'stateTime': '12:05 pm'
-  //   },
-  //   {
-  //     'orderState': 'acknowledgement',
-  //     'deliveryTime': '-',
-  //     'stateTime': '12:10 pm'
-  //   }
-  // ];
 
   List cartItems = [];
-  // List cartItems = [
-  //   {
-  //     'itemCode': '21',
-  //     'itemTitle': 'Pespsi 1.5 Ltr',
-  //     'price': '150',
-  //     'unit': 'piece',
-  //     'quantity': '10'
-  //   },
-  //   {
-  //     'itemCode': '22',
-  //     'itemTitle': 'Dalada Banaspati',
-  //     'price': '180',
-  //     'unit': 'liter',
-  //     'quantity': '5'
-  //   },
-  //   {
-  //     'itemCode': '23',
-  //     'itemTitle': 'Sensodyn Toothpaste',
-  //     'price': '230',
-  //     'unit': 'piece',
-  //     'quantity': '1'
-  //   },
-  //   {
-  //     'itemCode': '24',
-  //     'itemTitle': 'Surf Excel 1kg',
-  //     'price': '530',
-  //     'unit': '1 kg',
-  //     'quantity': '3'
-  //   }
-  // ];
 
   @override
   void initState() {
     super.initState();
+
+    print(status);
+
+    if (status == "confirm") {
+      statusText = "Order already confirmed";
+    } else if (status == "rejected") {
+      statusText = "Order already rejected";
+    } else if (status == "cancel") {
+      statusText = "Order already canceled";
+    }
+
+    if (status == "pending") {
+      _isBtnDisabled = true;
+    } else {
+      _isBtnDisabled = false;
+    }
+
     getOrderDetail();
   }
 
@@ -115,17 +92,21 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
 
       List tempList = [];
       for (int i = 0; i < responseJson["aRows"].length; i++) {
-        var oDate = responseJson["pRows"][i]["gendate"];
+        String oDate = responseJson["aRows"][i]["gendate"];
 
-        String dateWithT = oDate.substring(0, 8) + 'T' + oDate.substring(8);
+        String date = oDate.substring(0, 9);
+        String time;
+        if (responseJson["aRows"][i]["gendate"].length == 21) {
+          time = oDate.substring(10, 21);
+        } else {
+          time = oDate.substring(10, 20);
+        }
 
-        DateTime dateTime = DateTime.parse(dateWithT);
-        var dt = new DateFormat("yyyy-dd-MM").format(dateTime);
-        var tm = new DateFormat("hh:mm:ss").format(dateTime);
+        print(time);
         orderStatus.add({
           'orderState': responseJson["aRows"][i]["orderStatus"].toString(),
           'deliveryTime': "-",
-          'stateTime': tm,
+          'stateTime': time,
         });
       }
       for (int i = 0; i < responseJson["pRows"].length; i++) {
@@ -148,6 +129,140 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<String> acceptCustomerOrder() async {
+    try {
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+
+      http.Response response = await http.post(
+        'http://95.217.147.105:2001/api/confirmorder',
+        headers: <String, String>{
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "OrderId": orderNo,
+          },
+        ),
+      );
+
+      final Map responseJson = json.decode(response.body);
+
+      if (responseJson["msg"] == "Success") {
+        // pr.hide();
+        print('Success');
+
+        _isBtnDisabled = false;
+      } else {
+        // pr.hide();
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<String> rejectCustomerOrder() async {
+    try {
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+
+      http.Response response = await http.post(
+        'http://95.217.147.105:2001/api/rejectbysuporder',
+        headers: <String, String>{
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "OrderId": orderNo,
+          },
+        ),
+      );
+
+      final Map responseJson = json.decode(response.body);
+
+      if (responseJson["msg"] == "Success") {
+        // pr.hide();
+        print('Success');
+
+        _isBtnDisabled = false;
+      } else {
+        // pr.hide();
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void orderResponse(String title) {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+        // navigateToHome(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Error!"),
+      content: Text(title),
+      actions: [
+        okButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   void shoppingSum() {
@@ -250,7 +365,16 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         RaisedButton(
-                          onPressed: () => {},
+                          onPressed: () => {
+                            if (_isBtnDisabled == true)
+                              {
+                                rejectCustomerOrder(),
+                              }
+                            else
+                              {
+                                orderResponse(statusText),
+                              }
+                          },
                           elevation: 5,
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               20, 5, 20, 5),
@@ -266,7 +390,16 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
                           ),
                         ),
                         RaisedButton(
-                          onPressed: () => {},
+                          onPressed: () => {
+                            if (_isBtnDisabled == true)
+                              {
+                                acceptCustomerOrder(),
+                              }
+                            else
+                              {
+                                orderResponse(statusText),
+                              }
+                          },
                           elevation: 5,
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               20, 5, 20, 5),

@@ -377,12 +377,14 @@ class Routes {
             orderNo: params.param<String>('orderNo'),
             supplier: params.param<String>('supplier'),
             address: params.param<String>('address'),
+            status: params.param<String>('status'),
           );
         },
         params: [
           SailorParam<String>(name: 'orderNo', isRequired: true),
           SailorParam<String>(name: 'supplier', isRequired: true),
           SailorParam<String>(name: 'address', isRequired: true),
+          SailorParam<String>(name: 'status', isRequired: true),
         ],
       ),
       SailorRoute(
@@ -392,12 +394,14 @@ class Routes {
             orderNo: params.param<String>('orderNo'),
             customer: params.param<String>('customer'),
             address: params.param<String>('address'),
+            status: params.param<String>('status'),
           );
         },
         params: [
           SailorParam<String>(name: 'orderNo', isRequired: true),
           SailorParam<String>(name: 'customer', isRequired: true),
           SailorParam<String>(name: 'address', isRequired: true),
+          SailorParam<String>(name: 'status', isRequired: true),
         ],
       ),
       SailorRoute(
