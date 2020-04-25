@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class SupplierOrderDetails extends StatefulWidget {
+  final String pageName;
   final String orderNo;
   final String customer;
   final String address;
@@ -12,6 +13,7 @@ class SupplierOrderDetails extends StatefulWidget {
 
   @override
   SupplierOrderDetails({
+    @required this.pageName,
     @required this.orderNo,
     @required this.customer,
     @required this.address,
@@ -20,6 +22,7 @@ class SupplierOrderDetails extends StatefulWidget {
 
   @override
   _SupplierOrderDetailsState createState() => _SupplierOrderDetailsState(
+        this.pageName,
         this.orderNo,
         this.customer,
         this.address,
@@ -37,6 +40,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
   Color greenClr = Color(0x0ff8ee269);
   Color redClr = Color(0x0fff0513c);
 
+  String pageName;
   String orderNo;
   String customer;
   String address;
@@ -47,6 +51,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
   bool _isBtnDisabled;
 
   _SupplierOrderDetailsState(
+    this.pageName,
     this.orderNo,
     this.customer,
     this.address,
@@ -61,14 +66,16 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
   void initState() {
     super.initState();
 
-    print(status);
+    print(pageName);
 
-    if (status == "confirm") {
+    if (status == "confirm" && pageName == "Orders") {
       statusText = "Order already confirmed";
     } else if (status == "rejected") {
       statusText = "Order already rejected";
     } else if (status == "cancel") {
       statusText = "Order already canceled";
+    } else if (status == "completed") {
+      statusText = "Order already completed";
     }
 
     if (status == "pending") {
@@ -143,6 +150,60 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
 
       http.Response response = await http.post(
         'http://95.217.147.105:2001/api/confirmorder',
+        headers: <String, String>{
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "OrderId": orderNo,
+          },
+        ),
+      );
+
+      final Map responseJson = json.decode(response.body);
+
+      if (responseJson["msg"] == "Success") {
+        // pr.hide();
+        print('Success');
+
+        _isBtnDisabled = false;
+      } else {
+        // pr.hide();
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<String> deliverCustomerOrder() async {
+    try {
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+
+      http.Response response = await http.post(
+        'http://95.217.147.105:2001/api/deliverbysup',
         headers: <String, String>{
           "Accept": "application/json",
           "content-type": "application/json"
@@ -391,14 +452,32 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
                         ),
                         RaisedButton(
                           onPressed: () => {
-                            if (_isBtnDisabled == true)
+                            if (pageName == "Orders")
                               {
-                                acceptCustomerOrder(),
+                                if (_isBtnDisabled == true)
+                                  {
+                                    acceptCustomerOrder(),
+                                  }
+                                else
+                                  {
+                                    orderResponse(statusText),
+                                  }
                               }
-                            else
+                            else if (pageName == "inProcess")
                               {
-                                orderResponse(statusText),
-                              }
+                                if (status == "confirm")
+                                  {
+                                    _isBtnDisabled = true,
+                                  },
+                                if (_isBtnDisabled == true)
+                                  {
+                                    deliverCustomerOrder(),
+                                  }
+                                else
+                                  {
+                                    orderResponse(statusText),
+                                  }
+                              },
                           },
                           elevation: 5,
                           padding: const EdgeInsetsDirectional.fromSTEB(

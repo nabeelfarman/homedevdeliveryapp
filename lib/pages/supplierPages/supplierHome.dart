@@ -21,6 +21,7 @@ class SupplierHome extends StatefulWidget with NavigationStates {
 }
 
 class _SupplierHomeState extends State<SupplierHome> {
+  String pageName;
   int userID;
   int townID;
 
@@ -93,18 +94,31 @@ class _SupplierHomeState extends State<SupplierHome> {
                         cardColor: greenClr,
                       ),
                       onTap: () {
+                        pageName = "Orders";
                         navigateToSupplierOrder(context);
                       },
                     ),
-                    SupplierHomeCard(
-                      icon: Icons.slow_motion_video,
-                      iconTitle: 'in-Process',
-                      cardColor: greenClr,
+                    GestureDetector(
+                      child: SupplierHomeCard(
+                        icon: Icons.slow_motion_video,
+                        iconTitle: 'in-Process',
+                        cardColor: greenClr,
+                      ),
+                      onTap: () {
+                        pageName = "inProcess";
+                        navigateToSupplierOrder(context);
+                      },
                     ),
-                    SupplierHomeCard(
-                      icon: Icons.airport_shuttle,
-                      iconTitle: 'Delivery',
-                      cardColor: redClr,
+                    GestureDetector(
+                      child: SupplierHomeCard(
+                        icon: Icons.airport_shuttle,
+                        iconTitle: 'Delivery',
+                        cardColor: redClr,
+                      ),
+                      onTap: () {
+                        pageName = "Delivery";
+                        navigateToSupplierOrder(context);
+                      },
                     )
                   ],
                 ),
@@ -131,6 +145,7 @@ class _SupplierHomeState extends State<SupplierHome> {
     Routes.sailor.navigate(
       '/supplierOrder',
       params: {
+        'pageName': pageName,
         'userID': userID,
         'townID': townID,
       },

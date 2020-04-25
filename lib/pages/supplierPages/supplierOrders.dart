@@ -7,18 +7,23 @@ import 'dart:convert';
 import '../../main.dart';
 
 class SupplierOrders extends StatefulWidget {
+  final String pageName;
   final int userID;
   final int townID;
 
   @override
   SupplierOrders({
+    @required this.pageName,
     @required this.userID,
     @required this.townID,
   });
 
   @override
-  _SupplierOrdersState createState() =>
-      _SupplierOrdersState(this.userID, this.townID);
+  _SupplierOrdersState createState() => _SupplierOrdersState(
+        this.pageName,
+        this.userID,
+        this.townID,
+      );
 }
 
 class _SupplierOrdersState extends State<SupplierOrders>
@@ -32,6 +37,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
   Color orangeClr = Color(0x0ffFFA500);
   Color redClr = Color(0x0fff0513c);
 
+  String pageName;
   int userID;
   int townID;
   String orderNo;
@@ -39,7 +45,11 @@ class _SupplierOrdersState extends State<SupplierOrders>
   String address;
   String status;
 
-  _SupplierOrdersState(this.userID, this.townID);
+  _SupplierOrdersState(
+    this.pageName,
+    this.userID,
+    this.townID,
+  );
 
   List supplier_orders = [];
 
@@ -52,6 +62,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
   @override
   void initState() {
     super.initState();
+
     this.getSupplierOrders();
   }
 
@@ -107,15 +118,37 @@ class _SupplierOrdersState extends State<SupplierOrders>
           orderStatus = "completed";
         }
 
-        supplier_orders.add({
-          'orderNo': responseJson[i]["orderID"].toString(),
-          'customerID': responseJson[i]["customerID"].toString(),
-          'merchantID': responseJson[i]["merchantID"].toString(),
-          'customer': responseJson[i]["customerName"],
-          'address': responseJson[i]["address"],
-          'totalAmount': responseJson[i]["totalAmount"].toString(),
-          'orderStatus': orderStatus,
-        });
+        if (pageName == "inProcess" && orderStatus == "confirm") {
+          supplier_orders.add({
+            'orderNo': responseJson[i]["orderID"].toString(),
+            'customerID': responseJson[i]["customerID"].toString(),
+            'merchantID': responseJson[i]["merchantID"].toString(),
+            'customer': responseJson[i]["customerName"],
+            'address': responseJson[i]["address"],
+            'totalAmount': responseJson[i]["totalAmount"].toString(),
+            'orderStatus': orderStatus,
+          });
+        } else if (pageName == "Delivery" && orderStatus == "completed") {
+          supplier_orders.add({
+            'orderNo': responseJson[i]["orderID"].toString(),
+            'customerID': responseJson[i]["customerID"].toString(),
+            'merchantID': responseJson[i]["merchantID"].toString(),
+            'customer': responseJson[i]["customerName"],
+            'address': responseJson[i]["address"],
+            'totalAmount': responseJson[i]["totalAmount"].toString(),
+            'orderStatus': orderStatus,
+          });
+        } else if (pageName == "Orders") {
+          supplier_orders.add({
+            'orderNo': responseJson[i]["orderID"].toString(),
+            'customerID': responseJson[i]["customerID"].toString(),
+            'merchantID': responseJson[i]["merchantID"].toString(),
+            'customer': responseJson[i]["customerName"],
+            'address': responseJson[i]["address"],
+            'totalAmount': responseJson[i]["totalAmount"].toString(),
+            'orderStatus': orderStatus,
+          });
+        }
       }
 
       // pr.hide();
@@ -340,6 +373,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
     Routes.sailor.navigate(
       '/supplierOrderDetail',
       params: {
+        'pageName': pageName,
         'orderNo': orderNo,
         'customer': supplier,
         'address': address,

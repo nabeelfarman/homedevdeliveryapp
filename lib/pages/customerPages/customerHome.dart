@@ -22,6 +22,7 @@ class CustomerHome extends StatefulWidget with NavigationStates {
 }
 
 class _CustomerHomeState extends State<CustomerHome> {
+  String pageName;
   int userID;
   int townID;
 
@@ -94,18 +95,31 @@ class _CustomerHomeState extends State<CustomerHome> {
                         cardColor: greenClr,
                       ),
                       onTap: () {
+                        pageName = "History";
                         navigateToCustomerOrder(context);
                       },
                     ),
-                    HomeCard(
-                      icon: Icons.slow_motion_video,
-                      iconTitle: 'in-Process',
-                      cardColor: greenClr,
+                    GestureDetector(
+                      child: HomeCard(
+                        icon: Icons.slow_motion_video,
+                        iconTitle: 'in-Process',
+                        cardColor: greenClr,
+                      ),
+                      onTap: () {
+                        pageName = "inProcess";
+                        navigateToCustomerOrder(context);
+                      },
                     ),
-                    HomeCard(
-                      icon: Icons.airport_shuttle,
-                      iconTitle: 'Delivery',
-                      cardColor: redClr,
+                    GestureDetector(
+                      child: HomeCard(
+                        icon: Icons.airport_shuttle,
+                        iconTitle: 'Delivery',
+                        cardColor: redClr,
+                      ),
+                      onTap: () {
+                        pageName = "Delivery";
+                        navigateToCustomerOrder(context);
+                      },
                     )
                   ],
                 ),
@@ -129,6 +143,7 @@ class _CustomerHomeState extends State<CustomerHome> {
     Routes.sailor.navigate(
       '/customerOrder',
       params: {
+        'pageName': pageName,
         'userID': userID,
         'townID': townID,
       },

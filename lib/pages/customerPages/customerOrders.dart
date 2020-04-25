@@ -8,17 +8,20 @@ import 'dart:convert';
 import '../../main.dart';
 
 class CustomerOrders extends StatefulWidget {
+  final String pageName;
   final int userID;
   final int townID;
 
   @override
   CustomerOrders({
+    @required this.pageName,
     @required this.userID,
     @required this.townID,
   });
 
   @override
   _CustomerOrdersState createState() => _CustomerOrdersState(
+        this.pageName,
         this.userID,
         this.townID,
       );
@@ -35,7 +38,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
   Color orangeClr = Color(0x0ffFFA500);
   Color redClr = Color(0x0fff0513c);
 
-  String pageName = 'customerOrder';
+  String pageName;
   int userID;
   int townID;
   String orderNo;
@@ -44,6 +47,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
   String status;
 
   _CustomerOrdersState(
+    this.pageName,
     this.userID,
     this.townID,
   );
@@ -115,16 +119,37 @@ class _CustomerOrdersState extends State<CustomerOrders>
             responseJson[i]["dStatus"] == 1) {
           orderStatus = "completed";
         }
-
-        customer_orders.add({
-          'orderNo': responseJson[i]["orderID"].toString(),
-          'customerID': responseJson[i]["customerID"].toString(),
-          'merchantID': responseJson[i]["merchantID"].toString(),
-          'supplier': responseJson[i]["companyName"],
-          'address': responseJson[i]["address"],
-          'totalAmount': responseJson[i]["totalAmount"].toString(),
-          'orderStatus': orderStatus,
-        });
+        if (pageName == "inProcess" && orderStatus == "confirm") {
+          customer_orders.add({
+            'orderNo': responseJson[i]["orderID"].toString(),
+            'customerID': responseJson[i]["customerID"].toString(),
+            'merchantID': responseJson[i]["merchantID"].toString(),
+            'supplier': responseJson[i]["companyName"],
+            'address': responseJson[i]["address"],
+            'totalAmount': responseJson[i]["totalAmount"].toString(),
+            'orderStatus': orderStatus,
+          });
+        } else if (pageName == "Delivery" && orderStatus == "completed") {
+          customer_orders.add({
+            'orderNo': responseJson[i]["orderID"].toString(),
+            'customerID': responseJson[i]["customerID"].toString(),
+            'merchantID': responseJson[i]["merchantID"].toString(),
+            'supplier': responseJson[i]["companyName"],
+            'address': responseJson[i]["address"],
+            'totalAmount': responseJson[i]["totalAmount"].toString(),
+            'orderStatus': orderStatus,
+          });
+        } else if (pageName == "History") {
+          customer_orders.add({
+            'orderNo': responseJson[i]["orderID"].toString(),
+            'customerID': responseJson[i]["customerID"].toString(),
+            'merchantID': responseJson[i]["merchantID"].toString(),
+            'supplier': responseJson[i]["companyName"],
+            'address': responseJson[i]["address"],
+            'totalAmount': responseJson[i]["totalAmount"].toString(),
+            'orderStatus': orderStatus,
+          });
+        }
       }
       pr.hide();
 
@@ -375,6 +400,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
     Routes.sailor.navigate(
       '/orderDetail',
       params: {
+        'pageName': pageName,
         'orderNo': orderNo,
         'supplier': supplier,
         'address': address,

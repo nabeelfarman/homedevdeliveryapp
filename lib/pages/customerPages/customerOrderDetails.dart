@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CustomerOrderDetail extends StatefulWidget {
+  final String pageName;
   final String orderNo;
   final String supplier;
   final String address;
@@ -12,6 +13,7 @@ class CustomerOrderDetail extends StatefulWidget {
 
   @override
   CustomerOrderDetail({
+    @required this.pageName,
     @required this.orderNo,
     @required this.supplier,
     @required this.address,
@@ -20,7 +22,12 @@ class CustomerOrderDetail extends StatefulWidget {
 
   @override
   _CustomerOrderDetailState createState() => _CustomerOrderDetailState(
-      this.orderNo, this.supplier, this.address, this.status);
+        this.pageName,
+        this.orderNo,
+        this.supplier,
+        this.address,
+        this.status,
+      );
 }
 
 class _CustomerOrderDetailState extends State<CustomerOrderDetail>
@@ -33,6 +40,7 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
   Color greenClr = Color(0x0ff8ee269);
   Color redClr = Color(0x0fff0513c);
 
+  String pageName;
   String orderNo;
   String supplier;
   String address;
@@ -44,6 +52,7 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
 
   @override
   _CustomerOrderDetailState(
+    this.pageName,
     this.orderNo,
     this.supplier,
     this.address,
@@ -66,6 +75,8 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
       statusText = "Order already rejected";
     } else if (status == "cancel") {
       statusText = "Order already canceled";
+    } else if (status == "completed") {
+      statusText = "Order already completed";
     }
 
     if (status == "pending") {
