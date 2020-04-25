@@ -12,6 +12,7 @@ import 'package:homemobileapp/pages/registrationPages/registrationSuccess.dart';
 import 'package:homemobileapp/pages/registrationPages/userNamePassword.dart';
 import 'package:homemobileapp/pages/resetPassword.dart';
 import 'package:homemobileapp/pages/customerPages/customerHome.dart';
+import 'package:homemobileapp/pages/supplierPages/inventory.dart';
 import 'package:homemobileapp/pages/supplierPages/supplierOrderDetails.dart';
 import 'package:homemobileapp/pages/supplierPages/supplierOrders.dart';
 import 'package:homemobileapp/sidebar/sidebar_layout.dart';
@@ -398,6 +399,12 @@ class Routes {
           SailorParam<String>(name: 'customer', isRequired: true),
           SailorParam<String>(name: 'address', isRequired: true),
         ],
+      ),
+      SailorRoute(
+        name: '/inventory',
+        builder: (context, args, params) {
+          return InventoryPage();
+        },
       ),
     ]);
   }

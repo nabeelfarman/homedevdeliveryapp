@@ -72,10 +72,15 @@ class _SupplierHomeState extends State<SupplierHome> {
               child: GridView.count(
                 crossAxisCount: 2,
                 children: <Widget>[
-                  SupplierHomeCard(
-                    icon: Icons.storage,
-                    iconTitle: 'Inventory',
-                    cardColor: redClr,
+                  GestureDetector(
+                    child: SupplierHomeCard(
+                      icon: Icons.storage,
+                      iconTitle: 'Inventory',
+                      cardColor: redClr,
+                    ),
+                    onTap: () {
+                      navigateToInventory(context);
+                    },
                   ),
                   SupplierHomeCard(
                     icon: Icons.assignment,
@@ -119,6 +124,12 @@ class _SupplierHomeState extends State<SupplierHome> {
         'userID': userID,
         'townID': townID,
       },
+    );
+  }
+
+  void navigateToInventory(BuildContext context) {
+    Routes.sailor.navigate(
+      '/inventory',
     );
   }
 }
