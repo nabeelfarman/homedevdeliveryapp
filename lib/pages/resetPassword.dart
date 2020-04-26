@@ -109,10 +109,17 @@ class _ResetPassword extends State<ResetPassword> {
   }
 
   //declaration
-  Color blackClr = Color(0xff141622);
-  Color greenClr = Color(0xff8cc540);
-  Color blueClr = Color(0xff408cc5);
-  Color bodyClr = Color(0xfff8f7f7);
+  Color blackClr = Color(0xff1D2028);
+
+  Color whiteClr = Color(0x0ffffffff);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   @override
   Widget build(BuildContext context) {
@@ -138,118 +145,186 @@ class _ResetPassword extends State<ResetPassword> {
         body: Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      color: bodyClr,
+      decoration: new BoxDecoration(
+        // color: yellowClr,
+        gradient: new LinearGradient(
+            colors: [darkYellowClr, lightYellowClr, yellowClr],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Material(
-            elevation: 10,
-            child: FadeAnimation(
-                1.0,
-                Container(
-                  height: 80,
-                  alignment: Alignment.bottomCenter,
-                  color: blackClr,
-                  child: Text(
-                    'Reset Password',
-                    style: TextStyle(
-                        color: greenClr, fontSize: 40, fontFamily: 'Abel'),
-                  ),
-                )),
-          ),
+          FadeAnimation(
+              1.0,
+              Container(
+                // height: 80,
+                padding: const EdgeInsets.only(top: 30),
+                alignment: Alignment.bottomCenter,
+                // color: blackClr,
+                child: Text(
+                  'RESET PASSWORD',
+                  style: TextStyle(
+                      color: blackClr, fontSize: 25, fontFamily: 'Anton'),
+                ),
+              )),
           FadeAnimation(
             1.5,
-            Padding(
-              padding: const EdgeInsets.only(left: 50, right: 50),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: mobile,
-                      maxLength: 10,
-                      key: Key('userName'),
-                      keyboardType: TextInputType.number,
-                      //textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        hintText: '3001234567',
-                        prefixIcon: Icon(Icons.phone_android),
-                        errorText:
-                            validateMobile ? 'Mobile Number is Required' : null,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: pwd,
-                      key: Key('password'),
-                      obscureText: true,
-                      //textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        hintText: 'password',
-                        prefixIcon: Icon(Icons.lock_outline),
-                        errorText: validatePwd ? 'Password is Required' : null,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: cnfrmPwd,
-                      key: Key('confirmPassword'),
-                      obscureText: true,
-                      //textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        hintText: 'confirm password',
-                        prefixIcon: Icon(Icons.done),
-                        errorText:
-                            validatePwd ? 'Confirm Password is Required' : null,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      elevation: 10,
-                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(10),
-                      ),
-                      color: greenClr,
-                      splashColor: blackClr,
-                      child: Text(
-                        "Reset Password",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: 'Abel',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * (3 / 4),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: mobile,
+                          maxLength: 10,
+                          key: Key('userName'),
+                          keyboardType: TextInputType.number,
+                          //textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                              enabledBorder: new OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)),
+                                  borderSide: new BorderSide(color: whiteClr)),
+                              filled: true,
+                              fillColor: whiteClr,
+                              hintText: 'mobile number',
+                              prefixIcon: Icon(
+                                Icons.phone_android,
+                                color: Colors.grey,
+                              ),
+                              errorText: validateMobile
+                                  ? 'Mobile Number is Required'
+                                  : null,
+                              errorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: redClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              focusedErrorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              focusedBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)))),
                         ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          mobile.text.isEmpty
-                              ? validateMobile = true
-                              : validateMobile = false;
-                          pwd.text.isEmpty
-                              ? validatePwd = true
-                              : validatePwd = false;
-                          cnfrmPwd.text.isEmpty
-                              ? validateCnfrmPwd = true
-                              : validateCnfrmPwd = false;
-                          if (mobile.text.isNotEmpty &&
-                              pwd.text.isNotEmpty &&
-                              cnfrmPwd.text.isNotEmpty) {
-                            resetPassword();
-                          }
-                        });
-                      },
-                    ),
-                  )
-                ],
-              ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: pwd,
+                          key: Key('password'),
+                          maxLength: 15,
+                          obscureText: true,
+                          //textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                              enabledBorder: new OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)),
+                                  borderSide: new BorderSide(color: whiteClr)),
+                              filled: true,
+                              fillColor: whiteClr,
+                              hintText: 'password',
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: Colors.grey,
+                              ),
+                              errorText:
+                                  validatePwd ? 'Password is Required' : null,
+                              errorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: redClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              focusedErrorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              focusedBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)))),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: cnfrmPwd,
+                          key: Key('confirmPassword'),
+                          maxLength: 15,
+                          obscureText: true,
+                          //textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                              enabledBorder: new OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)),
+                                  borderSide: new BorderSide(color: whiteClr)),
+                              filled: true,
+                              fillColor: whiteClr,
+                              hintText: 'confirm password',
+                              prefixIcon: Icon(Icons.done),
+                              errorText: validatePwd
+                                  ? 'Confirm Password is Required'
+                                  : null,
+                              errorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: redClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              focusedErrorBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0))),
+                              focusedBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: blackClr),
+                                  borderRadius: const BorderRadius.all(
+                                      const Radius.circular(40.0)))),
+                        ),
+                      ),
+                      RaisedButton(
+                        elevation: 5,
+                        padding: EdgeInsets.fromLTRB(50.0, 5.0, 50.0, 5.0),
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(20),
+                        ),
+                        color: redClr,
+                        splashColor: greyClr,
+                        child: Text(
+                          "Reset Password",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Baloo',
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            mobile.text.isEmpty
+                                ? validateMobile = true
+                                : validateMobile = false;
+                            pwd.text.isEmpty
+                                ? validatePwd = true
+                                : validatePwd = false;
+                            cnfrmPwd.text.isEmpty
+                                ? validateCnfrmPwd = true
+                                : validateCnfrmPwd = false;
+                            if (mobile.text.isNotEmpty &&
+                                pwd.text.isNotEmpty &&
+                                cnfrmPwd.text.isNotEmpty) {
+                              resetPassword();
+                            }
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           FadeAnimation(
@@ -262,18 +337,18 @@ class _ResetPassword extends State<ResetPassword> {
                   shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(0),
                   ),
-                  splashColor: blackClr,
+                  splashColor: greyClr,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
-                        child: Icon(Icons.arrow_back, color: greenClr),
+                        child: Icon(Icons.arrow_back, color: blackClr),
                       ),
                       Text(
                         "Back",
                         style: TextStyle(
-                          color: greenClr,
+                          color: blackClr,
                           fontSize: 20,
                           fontFamily: 'Abel',
                           fontWeight: FontWeight.bold,
