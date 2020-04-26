@@ -241,6 +241,13 @@ class _CustomerOrdersState extends State<CustomerOrders>
           Container(
             height: MediaQuery.of(context).size.height - 160.0,
             width: double.infinity,
+            decoration: new BoxDecoration(
+              // color: yellowClr,
+              gradient: new LinearGradient(
+                  colors: [darkYellowClr, lightYellowClr, yellowClr],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+            ),
             child: new ListView.builder(
               itemCount: customerOrdersList.length,
               itemBuilder: (BuildContext context, int index) =>

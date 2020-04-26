@@ -32,13 +32,17 @@ class SupplierOrderDetails extends StatefulWidget {
 
 class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
     with SingleTickerProviderStateMixin {
-  Color blackClr = Color(0xff2d2d2d);
-  // Color yellowClr = Color(0xfff7d73a);
+  Color blackClr = Color(0xff1D2028);
+
   Color whiteClr = Color(0x0ffffffff);
-  Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
-  Color greenClr = Color(0x0ff8ee269);
-  Color redClr = Color(0x0fff0513c);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   String pageName;
   String orderNo;
@@ -344,210 +348,222 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
       appBar: new AppBar(
           centerTitle: true,
           elevation: 0,
-          backgroundColor: whiteClr,
+          backgroundColor: darkYellowClr,
           title: Text('Order No. ' + orderNo + ' Detail',
               style: TextStyle(
-                  color: blackClr, fontFamily: 'Josefin', fontSize: 25))),
+                  color: blackClr, fontFamily: 'Anton', fontSize: 25))),
       body: SingleChildScrollView(
-          child: Column(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(top: 10),
-            width: double.infinity,
-            child: Text(
-              customer,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: redClr,
-                  fontFamily: 'Baloo',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700),
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            child: Text(
-              address,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: new ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: orderStatus.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    buildOrderStatusCard(context, index),
+          child: Container(
+        decoration: new BoxDecoration(
+          // color: yellowClr,
+          gradient: new LinearGradient(
+              colors: [darkYellowClr, lightYellowClr, yellowClr],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter),
+        ),
+        width: MediaQuery.of(context).size.width,
+        constraints:
+            new BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.only(top: 10),
+              width: double.infinity,
+              child: Text(
+                customer,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: redClr,
+                    fontFamily: 'Baloo',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700),
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-            width: double.infinity,
-            child: FadeAnimation(
-              1.0,
-              Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: TextFormField(
-                          key: Key('EstimatedTime'),
-                          decoration: InputDecoration(
-                              hintText: '',
-                              prefixIcon: Icon(
-                                Icons.watch_later,
-                                color: redClr,
-                              )),
-                          maxLength: 3,
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                      Text(
-                        'time in minutes for delivery',
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Baloo',
-                            fontSize: 17),
-                      )
-                    ],
-                  ),
-                  TextFormField(
-                    key: Key('Remarks'),
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                        hintText: 'comments and remarks', hintMaxLines: 4),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Container(
+              width: double.infinity,
+              child: Text(
+                address,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: orderStatus.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      buildOrderStatusCard(context, index),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              width: double.infinity,
+              child: FadeAnimation(
+                1.0,
+                Column(
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        RaisedButton(
-                          onPressed: () => {
-                            if (_isBtnDisabled == true)
-                              {
-                                rejectCustomerOrder(),
-                              }
-                            else
-                              {
-                                orderResponse(statusText),
-                              }
-                          },
-                          elevation: 5,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              20, 5, 20, 5),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10)),
-                          color: redClr,
-                          child: Text(
-                            'Reject',
-                            style: TextStyle(
-                                color: whiteClr,
-                                fontFamily: 'Baloo',
-                                fontSize: 20),
+                        Flexible(
+                          child: TextFormField(
+                            key: Key('EstimatedTime'),
+                            decoration: InputDecoration(
+                                hintText: '',
+                                prefixIcon: Icon(
+                                  Icons.watch_later,
+                                  color: redClr,
+                                )),
+                            maxLength: 3,
+                            keyboardType: TextInputType.number,
                           ),
                         ),
-                        RaisedButton(
-                          onPressed: () => {
-                            if (pageName == "Orders")
-                              {
-                                if (_isBtnDisabled == true)
-                                  {
-                                    acceptCustomerOrder(),
-                                  }
-                                else
-                                  {
-                                    orderResponse(statusText),
-                                  }
-                              }
-                            else if (pageName == "inProcess")
-                              {
-                                if (status == "confirm")
-                                  {
-                                    _isBtnDisabled = true,
-                                  },
-                                if (_isBtnDisabled == true)
-                                  {
-                                    deliverCustomerOrder(),
-                                  }
-                                else
-                                  {
-                                    orderResponse(statusText),
-                                  }
-                              },
-                          },
-                          elevation: 5,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              20, 5, 20, 5),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10)),
-                          color: greenClr,
-                          child: Text(
-                            'Accept',
-                            style: TextStyle(
-                                color: whiteClr,
-                                fontFamily: 'Baloo',
-                                fontSize: 20),
-                          ),
+                        Text(
+                          'time in minutes for delivery',
+                          style: TextStyle(
+                              color: Colors.black45,
+                              fontFamily: 'Baloo',
+                              fontSize: 17),
                         )
                       ],
                     ),
-                  )
+                    TextFormField(
+                      key: Key('Remarks'),
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                          hintText: 'comments and remarks', hintMaxLines: 4),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          RaisedButton(
+                            onPressed: () => {
+                              if (_isBtnDisabled == true)
+                                {
+                                  rejectCustomerOrder(),
+                                }
+                              else
+                                {
+                                  orderResponse(statusText),
+                                }
+                            },
+                            elevation: 5,
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                20, 5, 20, 5),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(10)),
+                            color: redClr,
+                            child: Text(
+                              'Reject',
+                              style: TextStyle(
+                                  color: whiteClr,
+                                  fontFamily: 'Baloo',
+                                  fontSize: 20),
+                            ),
+                          ),
+                          RaisedButton(
+                            onPressed: () => {
+                              if (pageName == "Orders")
+                                {
+                                  if (_isBtnDisabled == true)
+                                    {
+                                      acceptCustomerOrder(),
+                                    }
+                                  else
+                                    {
+                                      orderResponse(statusText),
+                                    }
+                                }
+                              else if (pageName == "inProcess")
+                                {
+                                  if (status == "confirm")
+                                    {
+                                      _isBtnDisabled = true,
+                                    },
+                                  if (_isBtnDisabled == true)
+                                    {
+                                      deliverCustomerOrder(),
+                                    }
+                                  else
+                                    {
+                                      orderResponse(statusText),
+                                    }
+                                },
+                            },
+                            elevation: 5,
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                20, 5, 20, 5),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(10)),
+                            color: blackClr,
+                            child: Text(
+                              'Accept',
+                              style: TextStyle(
+                                  color: whiteClr,
+                                  fontFamily: 'Baloo',
+                                  fontSize: 20),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              height: 30,
+              thickness: 0.5,
+              color: blackClr.withOpacity(0.5),
+            ),
+            Text('Shopping Cart',
+                style: TextStyle(
+                    color: redClr,
+                    fontFamily: 'Baloo',
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600)),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: cartItems.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      buildItemCard(context, index),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 10, left: 20, right: 20, bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Total Amount',
+                    style: TextStyle(
+                        fontFamily: 'Baloo',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 17),
+                  ),
+                  Text(
+                    'Rs. ' + formatter.format(totalAmount).toString(),
+                    style: TextStyle(
+                        fontFamily: 'Lato',
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20,
+                        color: redClr),
+                  ),
                 ],
               ),
-            ),
-          ),
-          Divider(
-            height: 30,
-            thickness: 0.5,
-            color: blackClr.withOpacity(0.5),
-          ),
-          Text('Shopping Cart',
-              style: TextStyle(
-                  color: redClr,
-                  fontFamily: 'Baloo',
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600)),
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: new ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: cartItems.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    buildItemCard(context, index),
-              ),
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Total Amount',
-                  style: TextStyle(
-                      fontFamily: 'Baloo',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 17),
-                ),
-                Text(
-                  'Rs. ' + formatter.format(totalAmount).toString(),
-                  style: TextStyle(
-                      fontFamily: 'Lato',
-                      fontWeight: FontWeight.w800,
-                      fontSize: 20,
-                      color: redClr),
-                ),
-              ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       )),
     );
   }
@@ -557,6 +573,9 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
     return FadeAnimation(
         0.5,
         Card(
+          color: whiteClr,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
               padding: const EdgeInsets.all(8),
               child: Column(
@@ -597,43 +616,48 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
     return FadeAnimation(
       1.5,
       Card(
+          color: whiteClr,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.all(8),
+            child: Column(
               children: <Widget>[
-                Text(item['itemTitle'],
-                    style: TextStyle(
-                        color: blackClr,
-                        fontFamily: 'Baloo',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800)),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Rs. ' + item['price'] + ' per item',
-                    style: TextStyle(
-                        color: blackClr, fontFamily: 'Baloo', fontSize: 18)),
-                Text(
-                  'Rs. ' +
-                      formatter
-                          .format(double.parse(item['price']) *
-                              double.parse(item['quantity']))
-                          .toString(),
-                  style: TextStyle(
-                      fontFamily: 'Ubuntu',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(item['itemTitle'],
+                        style: TextStyle(
+                            color: blackClr,
+                            fontFamily: 'Baloo',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Rs. ' + item['price'] + ' per item',
+                        style: TextStyle(
+                            color: blackClr,
+                            fontFamily: 'Baloo',
+                            fontSize: 18)),
+                    Text(
+                      'Rs. ' +
+                          formatter
+                              .format(double.parse(item['price']) *
+                                  double.parse(item['quantity']))
+                              .toString(),
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-        ),
-      )),
+            ),
+          )),
     );
   }
 }

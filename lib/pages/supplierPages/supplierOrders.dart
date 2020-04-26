@@ -28,14 +28,17 @@ class SupplierOrders extends StatefulWidget {
 
 class _SupplierOrdersState extends State<SupplierOrders>
     with SingleTickerProviderStateMixin {
-  Color blackClr = Color(0xff2d2d2d);
-  // Color yellowClr = Color(0xfff7d73a);
+  Color blackClr = Color(0xff1D2028);
+
   Color whiteClr = Color(0x0ffffffff);
-  Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
-  Color greenClr = Color(0x0ff8ee269);
-  Color orangeClr = Color(0x0ffFFA500);
-  Color redClr = Color(0x0fff0513c);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   String pageName;
   int userID;
@@ -168,7 +171,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
       appBar: new AppBar(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: whiteClr,
+        backgroundColor: darkYellowClr,
         title: !isSearching
             ? Text('Your Orders',
                 style: TextStyle(
@@ -213,7 +216,14 @@ class _SupplierOrdersState extends State<SupplierOrders>
       body: ListView(
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height - 160.0,
+            height: MediaQuery.of(context).size.height - 50.0,
+            decoration: new BoxDecoration(
+              // color: yellowClr,
+              gradient: new LinearGradient(
+                  colors: [darkYellowClr, lightYellowClr, yellowClr],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+            ),
             width: double.infinity,
             child: new ListView.builder(
               itemCount: supplierOrdersList.length,
@@ -225,10 +235,11 @@ class _SupplierOrdersState extends State<SupplierOrders>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: redClr,
-        child: Icon(Icons.notifications),
+        backgroundColor: blackClr,
+        child: Icon(Icons.notifications, color: lightYellowClr),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      backgroundColor: lightYellowClr,
       bottomNavigationBar: SupplierBottomBar(),
     );
   }
@@ -240,6 +251,8 @@ class _SupplierOrdersState extends State<SupplierOrders>
       1.5,
       Card(
           color: whiteClr,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -316,7 +329,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
                                 ? Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        color: orangeClr),
+                                        color: Colors.orange),
                                     child: Padding(
                                       padding: const EdgeInsets.only(
                                           left: 20, right: 20),
