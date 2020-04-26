@@ -12,16 +12,8 @@ class SupplierHomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     //declaration
     Color blackClr = Color(0xff1D2028);
-
     Color whiteClr = Color(0x0ffffffff);
-    Color lightClr = Color(0x0ffEEF2F5);
-    Color greyClr = Color(0x0ffB5BED0);
-    Color greenClr = Color(0x0ffA3C12E);
     Color redClr = Color(0x0ffcf3f3d);
-
-    Color yellowClr = Color(0x0ffF8D247);
-    Color darkYellowClr = Color(0x0ffdfbd3f);
-    Color lightYellowClr = Color(0x0ffffde22);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

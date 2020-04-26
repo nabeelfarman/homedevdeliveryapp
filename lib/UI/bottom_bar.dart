@@ -15,6 +15,18 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBar extends State<BottomBar> {
+  Color blackClr = Color(0xff1D2028);
+
+  Color whiteClr = Color(0x0ffffffff);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
+
   String pageName;
 
   @override
@@ -27,7 +39,7 @@ class _BottomBar extends State<BottomBar> {
     return BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 6.0,
-        color: Colors.transparent,
+        color: yellowClr,
         elevation: 9.0,
         clipBehavior: Clip.antiAlias,
         child: Container(
@@ -36,7 +48,7 @@ class _BottomBar extends State<BottomBar> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25.0),
                     topRight: Radius.circular(25.0)),
-                color: Colors.white),
+                color: blackClr),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -49,7 +61,7 @@ class _BottomBar extends State<BottomBar> {
                           GestureDetector(
                             child: Icon(
                               Icons.arrow_back,
-                              color: Color(0xFFEF7532),
+                              color: lightYellowClr,
                             ),
                             onTap: () {
                               if (pageName == "ItemsPage") {
@@ -69,8 +81,7 @@ class _BottomBar extends State<BottomBar> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           // Icon(Icons.search, color: Color(0xFF676E79)),
-                          Icon(Icons.notifications_none,
-                              color: Color(0xFF676E79))
+                          Icon(Icons.notifications_none, color: Colors.grey)
                         ],
                       )),
                 ])));

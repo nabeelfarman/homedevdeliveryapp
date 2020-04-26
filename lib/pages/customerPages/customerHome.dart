@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
+import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/UI/home_card.dart';
 import 'package:homemobileapp/UI/image_carousel.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
@@ -36,45 +37,50 @@ class _CustomerHomeState extends State<CustomerHome> {
   }
 
   //declaration
-  Color blackClr = Color(0xff2d2d2d);
-  // Color yellowClr = Color(0xfff7d73a);
+  Color blackClr = Color(0xff1D2028);
+
   Color whiteClr = Color(0x0ffffffff);
-  Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
-  Color greenClr = Color(0x0ff8ee269);
-  Color redClr = Color(0x0fff0513c);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: new AppBar(
-          elevation: 0,
-          backgroundColor: whiteClr,
-          title: Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: Text('Home Delivery',
-                style: TextStyle(color: blackClr, fontFamily: 'Josefin')),
-          ),
-          actions: <Widget>[
-            new IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {},
-                color: redClr)
-          ],
-        ),
-        body: Container(
+      appBar: new AppBar(
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: darkYellowClr,
+        title: Text('Home Delivery',
+            style:
+                TextStyle(color: blackClr, fontFamily: 'Anton', fontSize: 25)),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: lightClr,
+          constraints: new BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height - 100),
+          decoration: new BoxDecoration(
+            // color: yellowClr,
+            gradient: new LinearGradient(
+                colors: [darkYellowClr, lightYellowClr, yellowClr],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
-                height: 190,
+                height: MediaQuery.of(context).size.height * (2 / 7),
                 child: ImageCarousel(),
               ),
               Container(
-                height: MediaQuery.of(context).size.height - 270,
+                height: MediaQuery.of(context).size.height * (3.7 / 7),
                 child: GridView.count(
                   crossAxisCount: 2,
                   children: <Widget>[
@@ -126,7 +132,20 @@ class _CustomerHomeState extends State<CustomerHome> {
               )
             ],
           ),
-        ));
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: blackClr,
+        child: Icon(
+          Icons.notifications,
+          color: lightYellowClr,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      backgroundColor: yellowClr,
+      bottomNavigationBar: BottomBar(pageName),
+    );
   }
 
   void navigateToNewOrder(BuildContext context) {

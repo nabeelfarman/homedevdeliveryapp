@@ -38,13 +38,17 @@ class _ItemsPageState extends State<ItemsPage>
     this.businessID,
   );
 
-  Color blackClr = Color(0xff2d2d2d);
-  // Color yellowClr = Color(0xfff7d73a);
+  Color blackClr = Color(0xff1D2028);
+
   Color whiteClr = Color(0x0ffffffff);
-  Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
-  Color greenClr = Color(0x0ff8ee269);
-  Color redClr = Color(0x0fff0513c);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   bool isSearching = false;
 
@@ -289,16 +293,17 @@ class _ItemsPageState extends State<ItemsPage>
       appBar: new AppBar(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: whiteClr,
+        backgroundColor: darkYellowClr,
         title: !isSearching
             ? Text('Select Items',
                 style: TextStyle(
-                    color: blackClr, fontFamily: 'Josefin', fontSize: 25))
+                    color: blackClr, fontFamily: 'Anton', fontSize: 25))
             : TextField(
                 onChanged: (Text) {
                   // supplierListPage.prinText(value);
                   _filteredItems(Text);
                   // _tabController.animateTo(_tabController.index - 1);
+                  print(1);
                 },
                 style: TextStyle(color: redClr),
                 decoration: InputDecoration(
@@ -311,36 +316,38 @@ class _ItemsPageState extends State<ItemsPage>
                     hintText: 'search item',
                     hintStyle: TextStyle(
                         color: redClr, fontFamily: 'Baloo', fontSize: 18))),
+        actions: <Widget>[
+          isSearching
+              ? IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    setState(() {
+                      this.isSearching = false;
+                    });
+                  },
+                  color: redClr)
+              : IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      this.isSearching = true;
+                    });
+                  },
+                  color: redClr)
+        ],
       ),
       body: ListView(
         children: <Widget>[
-          FadeAnimation(
-            1.0,
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextField(
-                  onChanged: (Text) {
-                    // supplierListPage.prinText(value);
-                    _filteredItems(Text);
-                    // _tabController.animateTo(_tabController.index - 1);
-                    print(1);
-                  },
-                  style: TextStyle(color: redClr),
-                  decoration: InputDecoration(
-                      icon: Icon(
-                        Icons.search,
-                        color: redClr,
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: redClr)),
-                      hintText: 'search item',
-                      hintStyle: TextStyle(
-                          color: redClr, fontFamily: 'Baloo', fontSize: 18))),
-            ),
-          ),
           Container(
-            height: MediaQuery.of(context).size.height - 180.0,
+            height: MediaQuery.of(context).size.height - 50.0,
             width: double.infinity,
+            decoration: new BoxDecoration(
+              // color: yellowClr,
+              gradient: new LinearGradient(
+                  colors: [darkYellowClr, lightYellowClr, yellowClr],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+            ),
             child: new ListView.builder(
               itemCount: filteredItems.length,
               itemBuilder: (BuildContext context, int index) =>
@@ -353,10 +360,14 @@ class _ItemsPageState extends State<ItemsPage>
         onPressed: () {
           navigateToShoppingCart(context);
         },
-        backgroundColor: Color(0xFFF17532),
-        child: Icon(Icons.shopping_cart),
+        backgroundColor: blackClr,
+        child: Icon(
+          Icons.shopping_cart,
+          color: lightYellowClr,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      backgroundColor: lightYellowClr,
       bottomNavigationBar: BottomBar(
         pageName,
       ),
@@ -366,91 +377,96 @@ class _ItemsPageState extends State<ItemsPage>
   Widget buildItemCard(BuildContext context, int index) {
     final item = filteredItems[index];
     return FadeAnimation(
-      1.5,
+      1.0,
       Card(
+          color: whiteClr,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.all(8),
+            child: Column(
               children: <Widget>[
-                Text(item['itemTitle'],
-                    style: TextStyle(
-                        color: blackClr,
-                        fontFamily: 'Baloo',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800)),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Rs. ' + item['price'],
-                    style: TextStyle(
-                        color: blackClr, fontFamily: 'Baloo', fontSize: 18)),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    RaisedButton(
-                      color: lightClr,
-                      shape: CircleBorder(),
-                      onPressed: () {
-                        setState(() {
-                          int qty = int.parse(item['quantity']);
-
-                          if (qty > 0) {
-                            item['quantity'] = (qty - 1).toString();
-
-                            productID = item['itemCode'].toString();
-
-                            removeToCart();
-                          }
-                        });
-                      },
-                      child: Text(
-                        '-',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    Text(
-                      item['quantity'],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Baloo'),
-                    ),
-                    RaisedButton(
-                      color: greenClr,
-                      shape: CircleBorder(),
-                      onPressed: () {
-                        setState(() {
-                          var qty = int.parse(item['quantity']);
-                          if (qty < 500) {
-                            item['quantity'] = (qty + 1).toString();
-
-                            productID = item['itemCode'].toString();
-                            salePrice = item['price'].toString();
-
-                            addToCart();
-                          }
-                        });
-                      },
-                      child: Text(
-                        '+',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
+                    Text(item['itemTitle'],
+                        style: TextStyle(
+                            color: blackClr,
+                            fontFamily: 'Baloo',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800)),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Rs. ' + item['price'],
+                        style: TextStyle(
+                            color: blackClr,
+                            fontFamily: 'Baloo',
+                            fontSize: 18)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        RaisedButton(
+                          color: lightClr,
+                          shape: CircleBorder(),
+                          onPressed: () {
+                            setState(() {
+                              int qty = int.parse(item['quantity']);
+
+                              if (qty > 0) {
+                                item['quantity'] = (qty - 1).toString();
+
+                                productID = item['itemCode'].toString();
+
+                                removeToCart();
+                              }
+                            });
+                          },
+                          child: Text(
+                            '-',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        Text(
+                          item['quantity'],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Baloo'),
+                        ),
+                        RaisedButton(
+                          color: greenClr,
+                          shape: CircleBorder(),
+                          onPressed: () {
+                            setState(() {
+                              var qty = int.parse(item['quantity']);
+                              if (qty < 500) {
+                                item['quantity'] = (qty + 1).toString();
+
+                                productID = item['itemCode'].toString();
+                                salePrice = item['price'].toString();
+
+                                addToCart();
+                              }
+                            });
+                          },
+                          child: Text(
+                            '+',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-      )),
+            ),
+          )),
     );
   }
 

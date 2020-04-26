@@ -11,19 +11,17 @@ class HomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //declaration
-    Color blackClr = Color(0xff2d2d2d);
-    // Color yellowClr = Color(0xfff7d73a);
+    Color blackClr = Color(0xff1D2028);
+
     Color whiteClr = Color(0x0ffffffff);
-    Color lightClr = Color(0x0fffdebe7);
-    Color purpleClr = Color(0x0ffd183fd);
-    Color greenClr = Color(0x0ff8ee269);
-    Color redClr = Color(0x0fff0513c);
+
+    Color redClr = Color(0x0ffcf3f3d);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
         color: whiteClr,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: InkWell(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

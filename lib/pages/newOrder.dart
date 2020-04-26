@@ -46,13 +46,17 @@ class _NewOrderPageState extends State<NewOrderPage>
     CategoryModel(4, 'Meat')
   ];
   TabController _tabController;
-  Color blackClr = Color(0xff2d2d2d);
-  // Color yellowClr = Color(0xfff7d73a);
+  Color blackClr = Color(0xff1D2028);
+
   Color whiteClr = Color(0x0ffffffff);
-  Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
-  Color greenClr = Color(0x0ff8ee269);
-  Color redClr = Color(0x0fff0513c);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   bool isSearching = false;
   SupplierListView supplierListPage;
@@ -150,11 +154,11 @@ class _NewOrderPageState extends State<NewOrderPage>
       appBar: new AppBar(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: whiteClr,
+        backgroundColor: darkYellowClr,
         title: !isSearching
             ? Text('Home Delivery',
                 style: TextStyle(
-                    color: blackClr, fontFamily: 'Josefin', fontSize: 25))
+                    color: blackClr, fontFamily: 'Anton', fontSize: 25))
             : TextField(
                 onChanged: (Text) {
                   // supplierListPage.prinText(value);
@@ -202,7 +206,8 @@ class _NewOrderPageState extends State<NewOrderPage>
       body: ListView(
         // padding: EdgeInsets.only(left: 20),
         children: <Widget>[
-          SizedBox(
+          Container(
+              color: darkYellowClr,
               height: 40.0,
               child: Padding(
                 padding: const EdgeInsets.only(left: 30, top: 10),
@@ -218,7 +223,7 @@ class _NewOrderPageState extends State<NewOrderPage>
           Material(
             elevation: 1.0,
             child: Container(
-              color: whiteClr,
+              color: darkYellowClr,
               child: TabBar(
                   controller: _tabController,
                   indicatorColor: Colors.transparent,
@@ -229,7 +234,7 @@ class _NewOrderPageState extends State<NewOrderPage>
                       fontWeight: FontWeight.w500),
                   isScrollable: true,
                   labelPadding: EdgeInsets.only(left: 30.0, right: 30.0),
-                  unselectedLabelColor: redClr,
+                  unselectedLabelColor: blackClr,
                   unselectedLabelStyle: TextStyle(
                       fontFamily: 'Baloo',
                       fontSize: 20,
@@ -247,6 +252,13 @@ class _NewOrderPageState extends State<NewOrderPage>
           ),
           Container(
               height: MediaQuery.of(context).size.height - 50.0,
+              decoration: new BoxDecoration(
+                // color: yellowClr,
+                gradient: new LinearGradient(
+                    colors: [darkYellowClr, lightYellowClr, yellowClr],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter),
+              ),
               width: double.infinity,
               child: TabBarView(controller: _tabController, children: [
                 supplierListPage = SupplierListView(
@@ -282,10 +294,11 @@ class _NewOrderPageState extends State<NewOrderPage>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: Color(0xFFF17532),
-        child: Icon(Icons.shopping_cart),
+        backgroundColor: blackClr,
+        child: Icon(Icons.shopping_cart, color: lightYellowClr),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      backgroundColor: lightYellowClr,
       bottomNavigationBar: BottomBar(
         pageName,
       ),

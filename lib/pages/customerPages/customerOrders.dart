@@ -29,14 +29,17 @@ class CustomerOrders extends StatefulWidget {
 
 class _CustomerOrdersState extends State<CustomerOrders>
     with SingleTickerProviderStateMixin {
-  Color blackClr = Color(0xff2d2d2d);
-  // Color yellowClr = Color(0xfff7d73a);
+  Color blackClr = Color(0xff1D2028);
+
   Color whiteClr = Color(0x0ffffffff);
-  Color lightClr = Color(0x0fffdebe7);
-  Color purpleClr = Color(0x0ffd183fd);
-  Color greenClr = Color(0x0ff8ee269);
-  Color orangeClr = Color(0x0ffFFA500);
-  Color redClr = Color(0x0fff0513c);
+  Color lightClr = Color(0x0ffEEF2F5);
+  Color greyClr = Color(0x0ffB5BED0);
+  Color greenClr = Color(0x0ffA3C12E);
+  Color redClr = Color(0x0ffcf3f3d);
+
+  Color yellowClr = Color(0x0ffF8D247);
+  Color darkYellowClr = Color(0x0ffdfbd3f);
+  Color lightYellowClr = Color(0x0ffffde22);
 
   String pageName;
   int userID;
@@ -191,11 +194,11 @@ class _CustomerOrdersState extends State<CustomerOrders>
       appBar: new AppBar(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: whiteClr,
+        backgroundColor: darkYellowClr,
         title: !isSearching
             ? Text('Your Orders',
                 style: TextStyle(
-                    color: blackClr, fontFamily: 'Josefin', fontSize: 25))
+                    color: blackClr, fontFamily: 'Anton', fontSize: 25))
             : TextField(
                 onChanged: (Text) {
                   // supplierListPage.prinText(value);
@@ -248,10 +251,14 @@ class _CustomerOrdersState extends State<CustomerOrders>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: Color(0xFFF17532),
-        child: Icon(Icons.shopping_cart),
+        backgroundColor: blackClr,
+        child: Icon(
+          Icons.shopping_cart,
+          color: lightYellowClr,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      backgroundColor: lightYellowClr,
       bottomNavigationBar: BottomBar(
         pageName,
       ),
@@ -265,6 +272,8 @@ class _CustomerOrdersState extends State<CustomerOrders>
       1.5,
       Card(
           color: whiteClr,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -341,7 +350,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
                                 ? Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        color: orangeClr),
+                                        color: Colors.orange),
                                     child: Padding(
                                       padding: const EdgeInsets.only(
                                           left: 20, right: 20),
