@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/pages/customerPages/customerOrderDetails.dart';
 import 'package:homemobileapp/pages/customerPages/customerOrders.dart';
+import 'package:homemobileapp/pages/customerPages/orderPlacement.dart';
 import 'package:homemobileapp/pages/customerPages/shoppingCart.dart';
 import 'package:homemobileapp/pages/loginPage.dart';
 import 'package:homemobileapp/pages/newOrder.dart';
@@ -416,6 +417,12 @@ class Routes {
         name: '/inventory',
         builder: (context, args, params) {
           return InventoryPage();
+        },
+      ),
+      SailorRoute(
+        name: '/orderPlacement',
+        builder: (context, args, params) {
+          return OrderPlacement();
         },
       ),
     ]);

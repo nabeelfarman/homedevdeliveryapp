@@ -113,6 +113,7 @@ class _ShoppingCartState extends State<ShoppingCart>
       if (responseJson["msg"] == "Success") {
         // pr.hide();
         print('Success');
+        navigateToOrderPlacement(context);
       } else {
         // pr.hide();
 
@@ -346,5 +347,9 @@ class _ShoppingCartState extends State<ShoppingCart>
 
   void navigateToItems(BuildContext context) {
     Routes.sailor.navigate('/item');
+  }
+
+  void navigateToOrderPlacement(BuildContext context) {
+    Routes.sailor.navigate('/orderPlacement');
   }
 }
