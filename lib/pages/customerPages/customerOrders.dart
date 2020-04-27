@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
+import 'package:homemobileapp/sidebar/sidebar_layout.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -89,6 +90,10 @@ class _CustomerOrdersState extends State<CustomerOrders>
 
   Future<String> getCustomerOrders() async {
     try {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+
       var response = await http.get(
           "http://95.217.147.105:2001/api/getcusorders?CustomerID=" +
               userID.toString(),
@@ -96,7 +101,6 @@ class _CustomerOrdersState extends State<CustomerOrders>
             "Content-Type": "application/json",
           });
 
-      // pr.show();
       var responseJson = json.decode(response.body);
 
       for (int i = 0; i < responseJson.length; i++) {
@@ -154,17 +158,20 @@ class _CustomerOrdersState extends State<CustomerOrders>
           });
         }
       }
-      pr.hide();
 
       setState(() {
-        // pr.hide();
-
         customerOrdersList = customer_orders;
+      });
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
       });
 
       return 'success';
     } catch (e) {
-      pr.hide();
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
 
       print(e);
     }
@@ -178,7 +185,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
       borderRadius: 10.0,
       backgroundColor: blackClr,
       progressWidget: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
       ),
       elevation: 20.0,
       insetAnimCurve: Curves.easeInOut,
@@ -192,6 +199,17 @@ class _CustomerOrdersState extends State<CustomerOrders>
 
     return Scaffold(
       appBar: new AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            print(userID);
+            print(townID);
+            print(pageName);
+            // navigateToCustomerHome(context);
+          },
+          child: Icon(
+            Icons.arrow_back, // add custom icons also
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: darkYellowClr,
@@ -412,11 +430,23 @@ class _CustomerOrdersState extends State<CustomerOrders>
     );
   }
 
+  void navigateToCustomerHome(BuildContext context) {
+    Routes.sailor.navigate(
+      '/customerHome',
+      params: {
+        'userID': userID,
+        'townID': townID,
+      },
+    );
+  }
+
   void navigateToOrderDetail(BuildContext context) {
     Routes.sailor.navigate(
       '/orderDetail',
       params: {
         'pageName': pageName,
+        'townID': townID,
+        'userID': userID,
         'orderNo': orderNo,
         'supplier': supplier,
         'address': address,

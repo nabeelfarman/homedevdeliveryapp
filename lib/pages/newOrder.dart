@@ -7,6 +7,8 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../main.dart';
+
 class NewOrderPage extends StatefulWidget with NavigationStates {
   final int userID;
   final int townID;
@@ -86,7 +88,9 @@ class _NewOrderPageState extends State<NewOrderPage>
       },
     );
     try {
-      // pr.show();
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
 
       var response = await http.get(
           "http://95.217.147.105:2001/api/getmerchantintown?TownID=" +
@@ -94,6 +98,7 @@ class _NewOrderPageState extends State<NewOrderPage>
           headers: {
             "Content-Type": "application/json",
           });
+
       var responseJson = json.decode(response.body);
 
       for (int i = 0; i < responseJson.length; i++) {
@@ -106,13 +111,14 @@ class _NewOrderPageState extends State<NewOrderPage>
         });
       }
 
-      print(supplierList.length);
-      print(userID);
-      print(townID);
-
-      // pr.hide();
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
     } catch (e) {
-      // pr.hide();
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
       AlertDialog alert = AlertDialog(
         title: Text("Error!"),
         content: Text(e.toString()),
@@ -293,7 +299,9 @@ class _NewOrderPageState extends State<NewOrderPage>
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          navigateToShoppingCart(context);
+        },
         backgroundColor: blackClr,
         child: Icon(Icons.shopping_cart, color: lightYellowClr),
       ),
@@ -302,6 +310,15 @@ class _NewOrderPageState extends State<NewOrderPage>
       bottomNavigationBar: BottomBar(
         pageName,
       ),
+    );
+  }
+
+  void navigateToShoppingCart(BuildContext context) {
+    Routes.sailor.navigate(
+      '/shoppingCart',
+      params: {
+        'customerID': userID,
+      },
     );
   }
 }

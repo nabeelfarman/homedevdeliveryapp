@@ -179,11 +179,12 @@ class _SideBarState extends State<SideBar>
                             onTap: () {
                               onIconPressed();
                               print(userID);
-                              BlocProvider.of<NavigationBloc>(context)
-                                  .add(customerHome(
-                                userID: userID,
-                                townID: townID,
-                              ));
+                              BlocProvider.of<NavigationBloc>(context).add(
+                                customerHome(
+                                  userID: userID,
+                                  townID: townID,
+                                ),
+                              );
                             },
                           ),
                           GestureDetector(

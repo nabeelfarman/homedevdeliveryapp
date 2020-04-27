@@ -66,11 +66,7 @@ class _ItemsPageState extends State<ItemsPage>
   @override
   void initState() {
     super.initState();
-
-    print("value: $businessID");
-    print("supplier: $supplierID");
     this.getItems();
-    // print(items_data.toList());
   }
 
   @override
@@ -91,7 +87,10 @@ class _ItemsPageState extends State<ItemsPage>
 
   Future<String> getItems() async {
     try {
-      // showProgressDialog(context, "Please Wait");
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+
       var response = await http.get(
           "http://95.217.147.105:2001/api/getmerchantproducts?MerchantID=" +
               supplierID.toString() +
@@ -100,6 +99,7 @@ class _ItemsPageState extends State<ItemsPage>
           headers: {
             "Content-Type": "application/json",
           });
+
       var responseJson = json.decode(response.body);
 
       for (int i = 0; i < responseJson.length; i++) {
@@ -115,10 +115,18 @@ class _ItemsPageState extends State<ItemsPage>
       setState(() {
         filteredItems = items_data;
       });
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
       return 'success';
     } catch (e) {
       print(e);
-      pr.hide();
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
     }
   }
 
@@ -235,36 +243,6 @@ class _ItemsPageState extends State<ItemsPage>
       }
     } catch (e) {
       pr.hide();
-      print(e);
-    }
-  }
-
-  static showProgressDialog(BuildContext context, String title) {
-    try {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) {
-            return AlertDialog(
-              content: Flex(
-                direction: Axis.horizontal,
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15),
-                  ),
-                  Flexible(
-                      flex: 8,
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      )),
-                ],
-              ),
-            );
-          });
-    } catch (e) {
       print(e);
     }
   }

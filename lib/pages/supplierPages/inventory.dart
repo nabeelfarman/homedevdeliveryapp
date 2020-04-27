@@ -285,21 +285,21 @@ class _InventoryPageState extends State<InventoryPage>
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                     )),
-                    Text('  Quantity:  ',
-                        style: TextStyle(
-                            color: redClr, fontFamily: 'Baloo', fontSize: 18)),
-                    Flexible(
-                        child: TextFormField(
-                      key: Key('quantity'),
-                      decoration: InputDecoration(
-                        hintText: 'quantity',
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: redClr)),
-                      ),
-                      maxLength: 5,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                    )),
+                    // Text('  Quantity:  ',
+                    //     style: TextStyle(
+                    //         color: redClr, fontFamily: 'Baloo', fontSize: 18)),
+                    // Flexible(
+                    //     child: TextFormField(
+                    //   key: Key('quantity'),
+                    //   decoration: InputDecoration(
+                    //     hintText: 'quantity',
+                    //     focusedBorder: UnderlineInputBorder(
+                    //         borderSide: BorderSide(color: redClr)),
+                    //   ),
+                    //   maxLength: 5,
+                    //   keyboardType: TextInputType.number,
+                    //   textInputAction: TextInputAction.done,
+                    // )),
                     Text('  ' + item['unit'] + '   ',
                         style: TextStyle(
                             color: redClr, fontFamily: 'Baloo', fontSize: 18)),

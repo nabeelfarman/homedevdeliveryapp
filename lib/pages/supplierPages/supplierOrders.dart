@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/supplier_bottom_bar.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -48,6 +49,8 @@ class _SupplierOrdersState extends State<SupplierOrders>
   String address;
   String status;
 
+  ProgressDialog pr;
+
   _SupplierOrdersState(
     this.pageName,
     this.userID,
@@ -87,6 +90,10 @@ class _SupplierOrdersState extends State<SupplierOrders>
 
   Future<String> getSupplierOrders() async {
     try {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+
       var response = await http.get(
           "http://95.217.147.105:2001/api/getsuporders?MerchantID=" +
               userID.toString(),
@@ -94,7 +101,6 @@ class _SupplierOrdersState extends State<SupplierOrders>
             "Content-Type": "application/json",
           });
 
-      // pr.show();
       var responseJson = json.decode(response.body);
 
       for (int i = 0; i < responseJson.length; i++) {
@@ -154,19 +160,43 @@ class _SupplierOrdersState extends State<SupplierOrders>
         }
       }
 
-      // pr.hide();
-
       setState(() {
         supplierOrdersList = supplier_orders;
       });
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
       return 'success';
     } catch (e) {
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
       print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
       appBar: new AppBar(
         centerTitle: true,
@@ -387,6 +417,8 @@ class _SupplierOrdersState extends State<SupplierOrders>
       '/supplierOrderDetail',
       params: {
         'pageName': pageName,
+        'townID': townID,
+        'userID': userID,
         'orderNo': orderNo,
         'customer': supplier,
         'address': address,

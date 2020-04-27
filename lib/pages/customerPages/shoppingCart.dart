@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/pages/customerPages/itemsPage.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -31,6 +32,8 @@ class _ShoppingCartState extends State<ShoppingCart>
   Color lightYellowClr = Color(0x0ffffde22);
   int customerID;
 
+  ProgressDialog pr;
+
   _ShoppingCartState(this.customerID);
 
   List cart_items = [];
@@ -48,6 +51,9 @@ class _ShoppingCartState extends State<ShoppingCart>
   @override
   Future<String> getCartItems() async {
     try {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
       var response = await http.get(
           "http://95.217.147.105:2001/api/getcartprod?CustomerID=" +
               customerID.toString(),
@@ -71,70 +77,17 @@ class _ShoppingCartState extends State<ShoppingCart>
 
         this.shoppingSum();
       });
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
       return 'success';
     } catch (e) {
-      print(e);
-    }
-  }
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
 
-  Future<String> genOrder() async {
-    try {
-      Widget okButton = FlatButton(
-        child: Text("OK"),
-        onPressed: () {
-          Navigator.pop(context);
-          // navigateToHome(context);
-        },
-      );
-      // pr.show();
-
-      var now = new DateTime.now();
-      // print(now);
-      String currentDate = new DateFormat("yyyy-MM-dd").format(now).toString();
-      print(currentDate);
-      print(customerID);
-
-      http.Response response = await http.post(
-        'http://95.217.147.105:2001/api/genorder',
-        headers: <String, String>{
-          "Accept": "application/json",
-          "content-type": "application/json"
-        },
-        body: jsonEncode(
-          {
-            "ProfileID": customerID,
-            "OrderDate": currentDate,
-          },
-        ),
-      );
-
-      final Map responseJson = json.decode(response.body);
-
-      if (responseJson["msg"] == "Success") {
-        // pr.hide();
-        print('Success');
-        navigateToOrderPlacement(context);
-      } else {
-        // pr.hide();
-
-        // set up the AlertDialog
-        AlertDialog alert = AlertDialog(
-          title: Text("Error!"),
-          content: Text(responseJson["msg"]),
-          actions: [
-            okButton,
-          ],
-        );
-        // show the dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
-      }
-    } catch (e) {
-      // pr.hide();
       print(e);
     }
   }
@@ -146,8 +99,6 @@ class _ShoppingCartState extends State<ShoppingCart>
         var item = cartItems[i];
         totalAmount +=
             double.parse(item['price']) * double.parse(item['quantity']);
-
-        print(totalAmount);
       }
     } catch (e) {
       print(e);
@@ -156,6 +107,24 @@ class _ShoppingCartState extends State<ShoppingCart>
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
       appBar: new AppBar(
         centerTitle: true,
@@ -165,13 +134,13 @@ class _ShoppingCartState extends State<ShoppingCart>
             style:
                 TextStyle(color: blackClr, fontFamily: 'Anton', fontSize: 25)),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              navigateToItems(context);
-            },
-            color: redClr,
-          )
+          // IconButton(
+          //   icon: Icon(Icons.arrow_back),
+          //   onPressed: () {
+          //     navigateToItems(context);
+          //   },
+          //   color: redClr,
+          // )
         ],
       ),
       body: ListView(
@@ -229,7 +198,9 @@ class _ShoppingCartState extends State<ShoppingCart>
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
                 onPressed: () {
-                  genOrder();
+                  if (cartItems.length > 0) {
+                    navigateToOrderPlacement(context);
+                  }
                 },
                 child: Text(
                   'Check Out',
@@ -350,6 +321,13 @@ class _ShoppingCartState extends State<ShoppingCart>
   }
 
   void navigateToOrderPlacement(BuildContext context) {
-    Routes.sailor.navigate('/orderPlacement');
+    Routes.sailor.navigate(
+      '/orderPlacement',
+      params: {
+        'customerID': customerID,
+        // 'orderNo': orderNo,
+        'totalAmount': totalAmount,
+      },
+    );
   }
 }

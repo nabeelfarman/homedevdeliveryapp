@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../main.dart';
+
 class CustomerOrderDetail extends StatefulWidget {
   final String pageName;
+  final int townID;
+  final int userID;
   final String orderNo;
   final String supplier;
   final String address;
@@ -14,6 +19,8 @@ class CustomerOrderDetail extends StatefulWidget {
   @override
   CustomerOrderDetail({
     @required this.pageName,
+    @required this.townID,
+    @required this.userID,
     @required this.orderNo,
     @required this.supplier,
     @required this.address,
@@ -23,6 +30,8 @@ class CustomerOrderDetail extends StatefulWidget {
   @override
   _CustomerOrderDetailState createState() => _CustomerOrderDetailState(
         this.pageName,
+        this.townID,
+        this.userID,
         this.orderNo,
         this.supplier,
         this.address,
@@ -45,6 +54,8 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
   Color lightYellowClr = Color(0x0ffffde22);
 
   String pageName;
+  int townID;
+  int userID;
   String orderNo;
   String supplier;
   String address;
@@ -54,9 +65,13 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
   double totalAmount = 0;
   bool _isBtnDisabled;
 
+  ProgressDialog pr;
+
   @override
   _CustomerOrderDetailState(
     this.pageName,
+    this.townID,
+    this.userID,
     this.orderNo,
     this.supplier,
     this.address,
@@ -94,6 +109,10 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
 
   Future<String> getOrderDetail() async {
     try {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+
       var response = await http.get(
           "http://95.217.147.105:2001/api/getorderdetail?OrderID=" +
               orderNo.toString(),
@@ -137,8 +156,16 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
 
         this.shoppingSum();
       });
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
       return 'success';
     } catch (e) {
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
       print(e);
     }
   }
@@ -153,6 +180,7 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
         },
       );
 
+      pr.show();
       http.Response response = await http.post(
         'http://95.217.147.105:2001/api/cancelorder',
         headers: <String, String>{
@@ -169,12 +197,27 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
       final Map responseJson = json.decode(response.body);
 
       if (responseJson["msg"] == "Success") {
-        // pr.hide();
-        print('Success');
+        pr.hide();
 
+        print('Success');
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text("Order Canceled Successfully"),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
         _isBtnDisabled = false;
       } else {
-        // pr.hide();
+        pr.hide();
 
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
@@ -193,6 +236,7 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
         );
       }
     } catch (e) {
+      pr.hide();
       print(e);
     }
   }
@@ -238,8 +282,34 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
       appBar: new AppBar(
+          leading: GestureDetector(
+            onTap: () {
+              navigateToCustomerOrder(context);
+            },
+            child: Icon(
+              Icons.arrow_back, // add custom icons also
+            ),
+          ),
           centerTitle: true,
           elevation: 0,
           backgroundColor: darkYellowClr,
@@ -512,6 +582,17 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
               ],
             ),
           )),
+    );
+  }
+
+  void navigateToCustomerOrder(BuildContext context) {
+    Routes.sailor.navigate(
+      '/customerOrder',
+      params: {
+        'pageName': pageName,
+        'userID': userID,
+        'townID': townID,
+      },
     );
   }
 }

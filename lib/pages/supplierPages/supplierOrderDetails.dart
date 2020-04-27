@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../main.dart';
+
 class SupplierOrderDetails extends StatefulWidget {
   final String pageName;
+  final int townID;
+  final int userID;
   final String orderNo;
   final String customer;
   final String address;
@@ -14,6 +19,8 @@ class SupplierOrderDetails extends StatefulWidget {
   @override
   SupplierOrderDetails({
     @required this.pageName,
+    @required this.townID,
+    @required this.userID,
     @required this.orderNo,
     @required this.customer,
     @required this.address,
@@ -23,6 +30,8 @@ class SupplierOrderDetails extends StatefulWidget {
   @override
   _SupplierOrderDetailsState createState() => _SupplierOrderDetailsState(
         this.pageName,
+        this.townID,
+        this.userID,
         this.orderNo,
         this.customer,
         this.address,
@@ -45,6 +54,8 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
   Color lightYellowClr = Color(0x0ffffde22);
 
   String pageName;
+  int townID;
+  int userID;
   String orderNo;
   String customer;
   String address;
@@ -54,8 +65,12 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
   double totalAmount = 0;
   bool _isBtnDisabled;
 
+  ProgressDialog pr;
+
   _SupplierOrderDetailsState(
     this.pageName,
+    this.townID,
+    this.userID,
     this.orderNo,
     this.customer,
     this.address,
@@ -93,6 +108,10 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
 
   Future<String> getOrderDetail() async {
     try {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+
       var response = await http.get(
           "http://95.217.147.105:2001/api/getorderdetail?OrderID=" +
               orderNo.toString(),
@@ -113,7 +132,6 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
           time = oDate.substring(10, 20);
         }
 
-        print(time);
         orderStatus.add({
           'orderState': responseJson["aRows"][i]["orderStatus"].toString(),
           'deliveryTime': "-",
@@ -136,8 +154,16 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
 
         this.shoppingSum();
       });
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.hide();
+      });
+
       return 'success';
     } catch (e) {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.hide();
+      });
+
       print(e);
     }
   }
@@ -152,6 +178,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         },
       );
 
+      pr.show();
       http.Response response = await http.post(
         'http://95.217.147.105:2001/api/confirmorder',
         headers: <String, String>{
@@ -168,12 +195,28 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
       final Map responseJson = json.decode(response.body);
 
       if (responseJson["msg"] == "Success") {
-        // pr.hide();
+        pr.hide();
         print('Success');
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text("Order Successfully Confirmed!"),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
 
         _isBtnDisabled = false;
       } else {
-        // pr.hide();
+        pr.hide();
 
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
@@ -192,6 +235,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         );
       }
     } catch (e) {
+      pr.hide();
       print(e);
     }
   }
@@ -206,6 +250,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         },
       );
 
+      pr.show();
       http.Response response = await http.post(
         'http://95.217.147.105:2001/api/deliverbysup',
         headers: <String, String>{
@@ -222,12 +267,27 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
       final Map responseJson = json.decode(response.body);
 
       if (responseJson["msg"] == "Success") {
-        // pr.hide();
+        pr.hide();
         print('Success');
 
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text("Order Delivered Successfully"),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
         _isBtnDisabled = false;
       } else {
-        // pr.hide();
+        pr.hide();
 
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
@@ -246,6 +306,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         );
       }
     } catch (e) {
+      pr.hide();
       print(e);
     }
   }
@@ -260,6 +321,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         },
       );
 
+      pr.show();
       http.Response response = await http.post(
         'http://95.217.147.105:2001/api/rejectbysuporder',
         headers: <String, String>{
@@ -276,12 +338,27 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
       final Map responseJson = json.decode(response.body);
 
       if (responseJson["msg"] == "Success") {
-        // pr.hide();
+        pr.hide();
         print('Success');
 
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text("Order Rejected Successfully!"),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
         _isBtnDisabled = false;
       } else {
-        // pr.hide();
+        pr.hide();
 
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
@@ -300,6 +377,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         );
       }
     } catch (e) {
+      pr.hide();
       print(e);
     }
   }
@@ -344,8 +422,37 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
       appBar: new AppBar(
+          leading: GestureDetector(
+            onTap: () {
+              print(userID);
+              print(townID);
+              print(pageName);
+              navigateToSupplierOrder(context);
+            },
+            child: Icon(
+              Icons.arrow_back, // add custom icons also
+            ),
+          ),
           centerTitle: true,
           elevation: 0,
           backgroundColor: darkYellowClr,
@@ -658,6 +765,17 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
               ],
             ),
           )),
+    );
+  }
+
+  void navigateToSupplierOrder(BuildContext context) {
+    Routes.sailor.navigate(
+      '/supplierOrder',
+      params: {
+        'pageName': pageName,
+        'userID': userID,
+        'townID': townID,
+      },
     );
   }
 }

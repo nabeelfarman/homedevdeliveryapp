@@ -380,6 +380,8 @@ class Routes {
         builder: (context, args, params) {
           return CustomerOrderDetail(
             pageName: params.param<String>('pageName'),
+            townID: params.param<int>('townID'),
+            userID: params.param<int>('userID'),
             orderNo: params.param<String>('orderNo'),
             supplier: params.param<String>('supplier'),
             address: params.param<String>('address'),
@@ -388,6 +390,8 @@ class Routes {
         },
         params: [
           SailorParam<String>(name: 'pageName', isRequired: true),
+          SailorParam<int>(name: 'townID', isRequired: true),
+          SailorParam<int>(name: 'userID', isRequired: true),
           SailorParam<String>(name: 'orderNo', isRequired: true),
           SailorParam<String>(name: 'supplier', isRequired: true),
           SailorParam<String>(name: 'address', isRequired: true),
@@ -399,6 +403,8 @@ class Routes {
         builder: (context, args, params) {
           return SupplierOrderDetails(
             pageName: params.param<String>('pageName'),
+            townID: params.param<int>('townID'),
+            userID: params.param<int>('userID'),
             orderNo: params.param<String>('orderNo'),
             customer: params.param<String>('customer'),
             address: params.param<String>('address'),
@@ -407,6 +413,8 @@ class Routes {
         },
         params: [
           SailorParam<String>(name: 'pageName', isRequired: true),
+          SailorParam<int>(name: 'townID', isRequired: true),
+          SailorParam<int>(name: 'userID', isRequired: true),
           SailorParam<String>(name: 'orderNo', isRequired: true),
           SailorParam<String>(name: 'customer', isRequired: true),
           SailorParam<String>(name: 'address', isRequired: true),
