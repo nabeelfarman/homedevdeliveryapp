@@ -155,6 +155,9 @@ class _SupplierHomeState extends State<SupplierHome> {
   void navigateToInventory(BuildContext context) {
     Routes.sailor.navigate(
       '/inventory',
+      params: {
+        'userID': userID,
+      },
     );
   }
 }

@@ -31,6 +31,7 @@ class _ShoppingCartState extends State<ShoppingCart>
   Color darkYellowClr = Color(0x0ffdfbd3f);
   Color lightYellowClr = Color(0x0ffffde22);
   int customerID;
+  String companyName;
 
   ProgressDialog pr;
 
@@ -63,6 +64,7 @@ class _ShoppingCartState extends State<ShoppingCart>
       var responseJson = json.decode(response.body);
 
       for (int i = 0; i < responseJson.length; i++) {
+        companyName = responseJson[i]["companyName"];
         cart_items.add({
           'itemCode': responseJson[i]["productProfileStoreID"],
           'itemTitle': responseJson[i]["productName"],
@@ -325,7 +327,7 @@ class _ShoppingCartState extends State<ShoppingCart>
       '/orderPlacement',
       params: {
         'customerID': customerID,
-        // 'orderNo': orderNo,
+        'companyName': companyName,
         'totalAmount': totalAmount,
       },
     );

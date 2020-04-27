@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/supplier_bottom_bar.dart';
+import 'package:http/http.dart' as http;
+import 'package:progress_dialog/progress_dialog.dart';
+import 'dart:convert';
 
 class InventoryPage extends StatefulWidget {
+  final int userID;
   @override
-  _InventoryPageState createState() => _InventoryPageState();
+  InventoryPage({@required this.userID});
+
+  @override
+  _InventoryPageState createState() => _InventoryPageState(this.userID);
 }
 
 class _InventoryPageState extends State<InventoryPage>
@@ -21,108 +28,18 @@ class _InventoryPageState extends State<InventoryPage>
   Color darkYellowClr = Color(0x0ffdfbd3f);
   Color lightYellowClr = Color(0x0ffffde22);
 
+  TextEditingController txtPrice = new TextEditingController();
+  String salePrice;
+  String productName;
+  int userID;
   bool isSearching = false;
+  List items_data = [];
 
-  List items_data = [
-    {
-      'itemCode': '21',
-      'itemTitle': 'Pespsi 1.5 Ltr',
-      'price': '150',
-      'unit': 'piece',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '22',
-      'itemTitle': 'Dalada Banaspati',
-      'price': '180',
-      'unit': 'liter',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '23',
-      'itemTitle': 'Sensodyn Toothpaste',
-      'price': '230',
-      'unit': 'piece',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '24',
-      'itemTitle': 'Surf Excel 1kg',
-      'price': '530',
-      'unit': '1 kg',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '25',
-      'itemTitle': 'Safe Guard Soap',
-      'price': '60',
-      'unit': 'piece',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '26',
-      'itemTitle': 'Lays Chips Small',
-      'price': '20',
-      'unit': 'piece',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '27',
-      'itemTitle': 'Dawn Bread',
-      'price': '85',
-      'unit': 'pack',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '28',
-      'itemTitle': 'Rice Kernal Banaspati',
-      'price': '280',
-      'unit': 'kg',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '29',
-      'itemTitle': 'Daal Mash',
-      'price': '140',
-      'unit': 'kg',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '30',
-      'itemTitle': 'Tissue Roll',
-      'price': '45',
-      'unit': 'piece',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '31',
-      'itemTitle': 'Tomato Katchup',
-      'price': '150',
-      'unit': 'bottle',
-      'quantity': '0',
-      'mol': '0'
-    },
-    {
-      'itemCode': '32',
-      'itemTitle': 'Head & Shoulders Small',
-      'price': '210',
-      'unit': 'piece',
-      'quantity': '0',
-      'mol': '0'
-    }
-  ];
+  ProgressDialog pr;
 
   List filteredItems = List();
+
+  _InventoryPageState(this.userID);
 
   @override
   void initState() {
@@ -149,18 +66,68 @@ class _InventoryPageState extends State<InventoryPage>
 
   Future<String> getItems() async {
     try {
-      // var resBody = json.decode(items_data.);
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getmerchantproducts?MerchantID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+
+      var responseJson = json.decode(response.body);
+
+      for (int i = 0; i < responseJson.length; i++) {
+        items_data.add({
+          'itemCode': responseJson[i]["productProfileStoreID"].toString(),
+          'itemTitle': responseJson[i]["productName"],
+          'price': responseJson[i]["salePrice"].toString(),
+          // 'unit': responseJson[i]["measurementUnit"],
+          'unit': 'piece',
+          'quantity': responseJson[i]["qty"].toString(),
+        });
+      }
+
       setState(() {
         filteredItems = items_data;
       });
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
       return 'success';
     } catch (e) {
       print(e);
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
       appBar: new AppBar(
         centerTitle: true,
@@ -259,12 +226,14 @@ class _InventoryPageState extends State<InventoryPage>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(item['itemTitle'],
-                        style: TextStyle(
-                            color: blackClr,
-                            fontFamily: 'Baloo',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800)),
+                    Text(
+                      item['itemTitle'],
+                      style: TextStyle(
+                          color: blackClr,
+                          fontFamily: 'Baloo',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800),
+                    ),
                   ],
                 ),
                 Row(
@@ -274,17 +243,40 @@ class _InventoryPageState extends State<InventoryPage>
                         style: TextStyle(
                             color: redClr, fontFamily: 'Baloo', fontSize: 18)),
                     Flexible(
+                      child: Focus(
                         child: TextFormField(
-                      key: Key('price'),
-                      decoration: InputDecoration(
-                        hintText: 'price',
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: redClr)),
+                          // controller: item['price'],
+                          key: Key('price'),
+                          decoration: InputDecoration(
+                            hintText: 'price',
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: redClr)),
+                          ),
+                          maxLength: 5,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          onChanged: (value) {
+                            // print(value);
+                            salePrice = "";
+                            productName = item["itemTitle"];
+                            salePrice = value;
+                          },
+                        ),
+                        onFocusChange: (value) {
+                          if (value == true) {
+                            if (salePrice == null) {
+                              salePrice = "";
+                            } else if (salePrice != "") {
+                              print(productName);
+                              print(salePrice);
+                              salePrice = "";
+                            } else {
+                              print('salePrice is empty');
+                            }
+                          }
+                        },
                       ),
-                      maxLength: 5,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                    )),
+                    ),
                     // Text('  Quantity:  ',
                     //     style: TextStyle(
                     //         color: redClr, fontFamily: 'Baloo', fontSize: 18)),
@@ -300,9 +292,11 @@ class _InventoryPageState extends State<InventoryPage>
                     //   keyboardType: TextInputType.number,
                     //   textInputAction: TextInputAction.done,
                     // )),
-                    Text('  ' + item['unit'] + '   ',
-                        style: TextStyle(
-                            color: redClr, fontFamily: 'Baloo', fontSize: 18)),
+                    Text(
+                      '  ' + item['unit'] + '   ',
+                      style: TextStyle(
+                          color: redClr, fontFamily: 'Baloo', fontSize: 18),
+                    ),
                   ],
                 )
               ],

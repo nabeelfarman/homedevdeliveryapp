@@ -424,14 +424,28 @@ class Routes {
       SailorRoute(
         name: '/inventory',
         builder: (context, args, params) {
-          return InventoryPage();
+          return InventoryPage(
+            userID: params.param<int>('userID'),
+          );
         },
+        params: [
+          SailorParam<int>(name: 'userID', isRequired: true),
+        ],
       ),
       SailorRoute(
         name: '/orderPlacement',
         builder: (context, args, params) {
-          return OrderPlacement();
+          return OrderPlacement(
+            customerID: params.param<int>('customerID'),
+            companyName: params.param<String>('companyName'),
+            totalAmount: params.param<double>('totalAmount'),
+          );
         },
+        params: [
+          SailorParam<int>(name: 'customerID', isRequired: true),
+          SailorParam<String>(name: 'companyName', isRequired: true),
+          SailorParam<double>(name: 'totalAmount', isRequired: true),
+        ],
       ),
     ]);
   }

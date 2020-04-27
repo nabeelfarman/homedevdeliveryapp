@@ -2,8 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class OrderPlacement extends StatefulWidget {
+  final int customerID;
+  final String companyName;
+  final double totalAmount;
+
   @override
-  _OrderPlacementState createState() => _OrderPlacementState();
+  OrderPlacement({
+    @required this.customerID,
+    @required this.companyName,
+    @required this.totalAmount,
+  });
+
+  @override
+  _OrderPlacementState createState() => _OrderPlacementState(
+        this.customerID,
+        this.companyName,
+        this.totalAmount,
+      );
 }
 
 class _OrderPlacementState extends State<OrderPlacement> {
@@ -19,11 +34,18 @@ class _OrderPlacementState extends State<OrderPlacement> {
   Color darkYellowClr = Color(0x0ffdfbd3f);
   Color lightYellowClr = Color(0x0ffffde22);
 
-  String supplier = 'Save Mart';
-  String address = 'G.T Road near G-15 Islamabad';
-  double totalAmount = 20345;
+  int customerID;
+  String companyName;
+  // String address = 'G.T Road near G-15 Islamabad';
+  double totalAmount;
   final formatter = new NumberFormat('##,###.##');
   double orderNo = 1735;
+
+  _OrderPlacementState(
+    this.customerID,
+    this.companyName,
+    this.totalAmount,
+  );
 
   Future<String> genOrder() async {
     try {
@@ -138,18 +160,18 @@ class _OrderPlacementState extends State<OrderPlacement> {
                           ),
                           children: <TextSpan>[
                             new TextSpan(
-                                text: 'Please, process your ',
+                                text: 'Please, process your order',
                                 style: new TextStyle(color: blackClr)),
-                            new TextSpan(
-                                text: 'Order No. ' + orderNo.toString(),
-                                style: TextStyle(
-                                    color: redClr,
-                                    fontWeight: FontWeight.w900)),
+                            // new TextSpan(
+                            //     text: 'Order No. ' + orderNo.toString(),
+                            //     style: TextStyle(
+                            //         color: redClr,
+                            //         fontWeight: FontWeight.w900)),
                             new TextSpan(
                                 text: ' from ',
                                 style: TextStyle(color: blackClr)),
                             new TextSpan(
-                                text: 'M/s ' + supplier,
+                                text: 'M/s ' + companyName,
                                 style: new TextStyle(
                                     fontWeight: FontWeight.w900,
                                     color: redClr)),
