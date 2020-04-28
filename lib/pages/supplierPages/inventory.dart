@@ -28,9 +28,9 @@ class _InventoryPageState extends State<InventoryPage>
   Color darkYellowClr = Color(0x0ffdfbd3f);
   Color lightYellowClr = Color(0x0ffffde22);
 
-  TextEditingController txtPrice = new TextEditingController();
   String salePrice;
   String productName;
+  String productID;
   int userID;
   bool isSearching = false;
   List items_data = [];
@@ -105,6 +105,61 @@ class _InventoryPageState extends State<InventoryPage>
       Future.delayed(Duration(seconds: 2)).then((value) {
         pr.hide();
       });
+    }
+  }
+
+  void saveItemPrice() async {
+    try {
+      Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+          // navigateToHome(context);
+        },
+      );
+      pr.show();
+
+      http.Response response = await http.post(
+        'http://95.217.147.105:2001/api/altersaleprice',
+        headers: <String, String>{
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "ProductProfileStoreID": productID,
+            "SalePrice": salePrice,
+            "Userid": userID,
+          },
+        ),
+      );
+
+      final Map responseJson = json.decode(response.body);
+
+      if (responseJson["msg"] == "Success") {
+        pr.hide();
+        print('Success');
+      } else {
+        pr.hide();
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error!"),
+          content: Text(responseJson["msg"]),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -245,7 +300,7 @@ class _InventoryPageState extends State<InventoryPage>
                     Flexible(
                       child: Focus(
                         child: TextFormField(
-                          // controller: item['price'],
+                          initialValue: item['price'],
                           key: Key('price'),
                           decoration: InputDecoration(
                             hintText: 'price',
@@ -259,6 +314,7 @@ class _InventoryPageState extends State<InventoryPage>
                             // print(value);
                             salePrice = "";
                             productName = item["itemTitle"];
+                            productID = item["itemCode"];
                             salePrice = value;
                           },
                         ),
@@ -267,7 +323,7 @@ class _InventoryPageState extends State<InventoryPage>
                             if (salePrice == null) {
                               salePrice = "";
                             } else if (salePrice != "") {
-                              print(productName);
+                              saveItemPrice();
                               print(salePrice);
                               salePrice = "";
                             } else {
@@ -292,11 +348,11 @@ class _InventoryPageState extends State<InventoryPage>
                     //   keyboardType: TextInputType.number,
                     //   textInputAction: TextInputAction.done,
                     // )),
-                    Text(
-                      '  ' + item['unit'] + '   ',
-                      style: TextStyle(
-                          color: redClr, fontFamily: 'Baloo', fontSize: 18),
-                    ),
+                    // Text(
+                    //   '  ' + item['unit'] + '   ',
+                    //   style: TextStyle(
+                    //       color: redClr, fontFamily: 'Baloo', fontSize: 18),
+                    // ),
                   ],
                 )
               ],

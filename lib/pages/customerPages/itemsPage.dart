@@ -4,6 +4,7 @@ import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'dart:convert';
+import 'package:badges/badges.dart';
 import '../../main.dart';
 
 class ItemsPage extends StatefulWidget {
@@ -31,6 +32,7 @@ class _ItemsPageState extends State<ItemsPage>
   int supplierID;
   int userID;
   int businessID;
+  int totalItems = 0;
 
   _ItemsPageState(
     this.supplierID,
@@ -67,6 +69,39 @@ class _ItemsPageState extends State<ItemsPage>
   void initState() {
     super.initState();
     this.getItems();
+    this.getCartItems();
+  }
+
+  @override
+  Future<String> getCartItems() async {
+    try {
+      // Future.delayed(Duration(seconds: 1)).then((value) {
+      //   pr.show();
+      // });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getcartprod?CustomerID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      setState(() {
+        totalItems = responseJson.length;
+      });
+
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      return 'success';
+    } catch (e) {
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      print(e);
+    }
   }
 
   @override
@@ -162,6 +197,7 @@ class _ItemsPageState extends State<ItemsPage>
       final Map responseJson = json.decode(response.body);
 
       if (responseJson["msg"] == "Success") {
+        getCartItems();
         pr.hide();
         print('Success');
         // navigateToShoppingCart(context);
@@ -219,6 +255,7 @@ class _ItemsPageState extends State<ItemsPage>
       final Map responseJson = json.decode(response.body);
 
       if (responseJson["msg"] == "Success") {
+        getCartItems();
         pr.hide();
         print('Success');
         // navigateToShoppingCart(context);
@@ -339,10 +376,22 @@ class _ItemsPageState extends State<ItemsPage>
           navigateToShoppingCart(context);
         },
         backgroundColor: blackClr,
-        child: Icon(
-          Icons.shopping_cart,
-          color: lightYellowClr,
-        ),
+        child: totalItems != 0
+            ? Badge(
+                child: Icon(
+                  Icons.shopping_cart,
+                  color: lightYellowClr,
+                ),
+                badgeContent: Text(
+                  totalItems.toString(),
+                ),
+                badgeColor: Colors.white,
+                animationType: BadgeAnimationType.scale,
+              )
+            : Icon(
+                Icons.shopping_cart,
+                color: lightYellowClr,
+              ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       backgroundColor: lightYellowClr,

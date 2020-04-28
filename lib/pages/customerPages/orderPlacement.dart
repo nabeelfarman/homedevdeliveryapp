@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class OrderPlacement extends StatefulWidget {
   final int customerID;
@@ -41,6 +44,8 @@ class _OrderPlacementState extends State<OrderPlacement> {
   final formatter = new NumberFormat('##,###.##');
   double orderNo = 1735;
 
+  ProgressDialog pr;
+
   _OrderPlacementState(
     this.customerID,
     this.companyName,
@@ -56,36 +61,36 @@ class _OrderPlacementState extends State<OrderPlacement> {
           // navigateToHome(context);
         },
       );
-      // pr.show();
+      pr.show();
 
       var now = new DateTime.now();
       // print(now);
       String currentDate = new DateFormat("yyyy-MM-dd").format(now).toString();
-      print(currentDate);
+      // print(currentDate);
       // print(customerID);
 
-      // http.Response response = await http.post(
-      //   'http://95.217.147.105:2001/api/genorder',
-      //   headers: <String, String>{
-      //     "Accept": "application/json",
-      //     "content-type": "application/json"
-      //   },
-      //   body: jsonEncode(
-      //     {
-      //       "ProfileID": customerID,
-      //       "OrderDate": currentDate,
-      //     },
-      //   ),
-      // );
+      http.Response response = await http.post(
+        'http://95.217.147.105:2001/api/genorder',
+        headers: <String, String>{
+          "Accept": "application/json",
+          "content-type": "application/json"
+        },
+        body: jsonEncode(
+          {
+            "ProfileID": customerID,
+            "OrderDate": currentDate,
+          },
+        ),
+      );
 
-      // final Map responseJson = json.decode(response.body);
-      var responseJson;
+      final Map responseJson = json.decode(response.body);
+      // var responseJson;
 
       if (responseJson["msg"] == "Success") {
-        // pr.hide();
+        pr.hide();
         print('Success');
       } else {
-        // pr.hide();
+        pr.hide();
 
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
@@ -104,13 +109,31 @@ class _OrderPlacementState extends State<OrderPlacement> {
         );
       }
     } catch (e) {
-      // pr.hide();
+      pr.hide();
       print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return Scaffold(
         appBar: new AppBar(
           centerTitle: true,
@@ -206,7 +229,9 @@ class _OrderPlacementState extends State<OrderPlacement> {
                     color: redClr,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {},
+                    onPressed: () {
+                      genOrder();
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(

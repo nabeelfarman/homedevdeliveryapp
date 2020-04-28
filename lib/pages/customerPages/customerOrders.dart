@@ -4,6 +4,7 @@ import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/sidebar/sidebar_layout.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:intl/intl.dart';
+import 'package:badges/badges.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../main.dart';
@@ -49,6 +50,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
   String supplier;
   String address;
   String status;
+  int totalItems = 0;
 
   _CustomerOrdersState(
     this.pageName,
@@ -70,6 +72,39 @@ class _CustomerOrdersState extends State<CustomerOrders>
   void initState() {
     super.initState();
     this.getCustomerOrders();
+    this.getCartItems();
+  }
+
+  @override
+  Future<String> getCartItems() async {
+    try {
+      // Future.delayed(Duration(seconds: 1)).then((value) {
+      //   pr.show();
+      // });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getcartprod?CustomerID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      setState(() {
+        totalItems = responseJson.length;
+      });
+
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      return 'success';
+    } catch (e) {
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      print(e);
+    }
   }
 
   @override
@@ -108,25 +143,25 @@ class _CustomerOrdersState extends State<CustomerOrders>
         if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 0 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "pending";
+          orderStatus = "Pending";
         } else if (responseJson[i]["oStatus"] == 2 &&
             responseJson[i]["cStatus"] == 0 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "cancel";
+          orderStatus = "Cancelled";
         } else if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 1 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "confirm";
+          orderStatus = "Confirmed";
         } else if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 2 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "rejected";
+          orderStatus = "Rejected";
         } else if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 1 &&
             responseJson[i]["dStatus"] == 1) {
-          orderStatus = "completed";
+          orderStatus = "Completed";
         }
-        if (pageName == "inProcess" && orderStatus == "confirm") {
+        if (pageName == "inProcess" && orderStatus == "Confirmed") {
           customer_orders.add({
             'orderNo': responseJson[i]["orderID"].toString(),
             'customerID': responseJson[i]["customerID"].toString(),
@@ -136,7 +171,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
             'totalAmount': responseJson[i]["totalAmount"].toString(),
             'orderStatus': orderStatus,
           });
-        } else if (pageName == "Delivery" && orderStatus == "completed") {
+        } else if (pageName == "Delivery" && orderStatus == "Completed") {
           customer_orders.add({
             'orderNo': responseJson[i]["orderID"].toString(),
             'customerID': responseJson[i]["customerID"].toString(),
@@ -275,12 +310,26 @@ class _CustomerOrdersState extends State<CustomerOrders>
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          navigateToShoppingCart(context);
+        },
         backgroundColor: blackClr,
-        child: Icon(
-          Icons.shopping_cart,
-          color: lightYellowClr,
-        ),
+        child: totalItems != 0
+            ? Badge(
+                child: Icon(
+                  Icons.shopping_cart,
+                  color: lightYellowClr,
+                ),
+                badgeContent: Text(
+                  totalItems.toString(),
+                ),
+                badgeColor: Colors.white,
+                animationType: BadgeAnimationType.scale,
+              )
+            : Icon(
+                Icons.shopping_cart,
+                color: lightYellowClr,
+              ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       backgroundColor: lightYellowClr,
@@ -335,7 +384,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
                             fontFamily: 'Baloo',
                             fontSize: 18,
                             fontWeight: FontWeight.w700)),
-                    item['orderStatus'] == 'pending'
+                    item['orderStatus'] == 'Pending'
                         ? Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -353,7 +402,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
                               ),
                             ),
                           )
-                        : item['orderStatus'] == 'completed'
+                        : item['orderStatus'] == 'Completed'
                             ? Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -371,7 +420,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
                                   ),
                                 ),
                               )
-                            : item['orderStatus'] == 'confirm'
+                            : item['orderStatus'] == 'Confirmed'
                                 ? Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
@@ -436,6 +485,15 @@ class _CustomerOrdersState extends State<CustomerOrders>
       params: {
         'userID': userID,
         'townID': townID,
+      },
+    );
+  }
+
+  void navigateToShoppingCart(BuildContext context) {
+    Routes.sailor.navigate(
+      '/shoppingCart',
+      params: {
+        'customerID': userID,
       },
     );
   }

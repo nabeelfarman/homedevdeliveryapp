@@ -30,6 +30,7 @@ dependencies:
   sailor: ^0.6.0
   flutter_bloc: ^2.1.1
   equatable: ^0.1.6
+  badges: ^1.1.1
 
   http: any
   progress_dialog: ^1.2.1

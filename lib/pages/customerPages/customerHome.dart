@@ -4,7 +4,10 @@ import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/UI/home_card.dart';
 import 'package:homemobileapp/UI/image_carousel.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
-
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:badges/badges.dart';
 import '../../main.dart';
 
 class CustomerHome extends StatefulWidget with NavigationStates {
@@ -26,6 +29,9 @@ class _CustomerHomeState extends State<CustomerHome> {
   String pageName;
   int userID;
   int townID;
+  int totalItems = 0;
+
+  ProgressDialog pr;
 
   @override
   _CustomerHomeState(this.userID, this.townID);
@@ -34,6 +40,39 @@ class _CustomerHomeState extends State<CustomerHome> {
   void initState() {
     super.initState();
     print(userID);
+    this.getCartItems();
+  }
+
+  @override
+  Future<String> getCartItems() async {
+    try {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getcartprod?CustomerID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      setState(() {
+        totalItems = responseJson.length;
+      });
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
+      return 'success';
+    } catch (e) {
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
+      print(e);
+    }
   }
 
   //declaration
@@ -135,12 +174,26 @@ class _CustomerHomeState extends State<CustomerHome> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          navigateToShoppingCart(context);
+        },
         backgroundColor: blackClr,
-        child: Icon(
-          Icons.notifications,
-          color: lightYellowClr,
-        ),
+        child: totalItems != 0
+            ? Badge(
+                child: Icon(
+                  Icons.shopping_cart,
+                  color: lightYellowClr,
+                ),
+                badgeContent: Text(
+                  totalItems.toString(),
+                ),
+                badgeColor: Colors.white,
+                animationType: BadgeAnimationType.scale,
+              )
+            : Icon(
+                Icons.shopping_cart,
+                color: lightYellowClr,
+              ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       backgroundColor: yellowClr,
@@ -165,6 +218,15 @@ class _CustomerHomeState extends State<CustomerHome> {
         'pageName': pageName,
         'userID': userID,
         'townID': townID,
+      },
+    );
+  }
+
+  void navigateToShoppingCart(BuildContext context) {
+    Routes.sailor.navigate(
+      '/shoppingCart',
+      params: {
+        'customerID': userID,
       },
     );
   }

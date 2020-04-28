@@ -4,6 +4,7 @@ import 'package:homemobileapp/UI/supplierListView.dart';
 import 'package:homemobileapp/models/categoryModel.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:badges/badges.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -40,6 +41,7 @@ class _NewOrderPageState extends State<NewOrderPage>
   String pageName = 'newOrder';
   List supplierList = [];
   ProgressDialog pr;
+  int totalItems = 0;
 
   final List<CategoryModel> categoryList = [
     CategoryModel(1, 'Grocery'),
@@ -68,6 +70,7 @@ class _NewOrderPageState extends State<NewOrderPage>
   void initState() {
     super.initState();
     getMerchants();
+    this.getCartItems();
     print(supplierList.length);
 
     _tabController =
@@ -78,6 +81,38 @@ class _NewOrderPageState extends State<NewOrderPage>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  @override
+  Future<String> getCartItems() async {
+    try {
+      // Future.delayed(Duration(seconds: 1)).then((value) {
+      //   pr.show();
+      // });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getcartprod?CustomerID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      setState(() {
+        totalItems = responseJson.length;
+      });
+
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      return 'success';
+    } catch (e) {
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      print(e);
+    }
   }
 
   Future<String> getMerchants() async {
@@ -303,7 +338,22 @@ class _NewOrderPageState extends State<NewOrderPage>
           navigateToShoppingCart(context);
         },
         backgroundColor: blackClr,
-        child: Icon(Icons.shopping_cart, color: lightYellowClr),
+        child: totalItems != 0
+            ? Badge(
+                child: Icon(
+                  Icons.shopping_cart,
+                  color: lightYellowClr,
+                ),
+                badgeContent: Text(
+                  totalItems.toString(),
+                ),
+                badgeColor: Colors.white,
+                animationType: BadgeAnimationType.scale,
+              )
+            : Icon(
+                Icons.shopping_cart,
+                color: lightYellowClr,
+              ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       backgroundColor: lightYellowClr,

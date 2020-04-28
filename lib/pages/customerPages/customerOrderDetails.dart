@@ -88,17 +88,17 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
 
     print(status);
 
-    if (status == "confirm") {
+    if (status == "Confirmed") {
       statusText = "Order already confirmed";
-    } else if (status == "rejected") {
+    } else if (status == "Rejected") {
       statusText = "Order already rejected";
-    } else if (status == "cancel") {
+    } else if (status == "Cancelled") {
       statusText = "Order already canceled";
-    } else if (status == "completed") {
+    } else if (status == "Completed") {
       statusText = "Order already completed";
     }
 
-    if (status == "pending") {
+    if (status == "Pending") {
       _isBtnDisabled = true;
     } else {
       _isBtnDisabled = false;

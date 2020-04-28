@@ -127,7 +127,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
           orderStatus = "completed";
         }
 
-        if (pageName == "inProcess" && orderStatus == "confirm") {
+        if (pageName == "inProcess" && orderStatus == "Confirmed") {
           supplier_orders.add({
             'orderNo': responseJson[i]["orderID"].toString(),
             'customerID': responseJson[i]["customerID"].toString(),
@@ -137,7 +137,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
             'totalAmount': responseJson[i]["totalAmount"].toString(),
             'orderStatus': orderStatus,
           });
-        } else if (pageName == "Delivery" && orderStatus == "completed") {
+        } else if (pageName == "Delivery" && orderStatus == "Completed") {
           supplier_orders.add({
             'orderNo': responseJson[i]["orderID"].toString(),
             'customerID': responseJson[i]["customerID"].toString(),

@@ -87,17 +87,17 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
 
     print(pageName);
 
-    if (status == "confirm" && pageName == "Orders") {
+    if (status == "Confirmed" && pageName == "Orders") {
       statusText = "Order already confirmed";
-    } else if (status == "rejected") {
+    } else if (status == "Rejected") {
       statusText = "Order already rejected";
-    } else if (status == "cancel") {
+    } else if (status == "Cancelled") {
       statusText = "Order already canceled";
-    } else if (status == "completed") {
+    } else if (status == "Completed") {
       statusText = "Order already completed";
     }
 
-    if (status == "pending") {
+    if (status == "Pending") {
       _isBtnDisabled = true;
     } else {
       _isBtnDisabled = false;
@@ -587,7 +587,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
                                 }
                               else if (pageName == "inProcess")
                                 {
-                                  if (status == "confirm")
+                                  if (status == "Confirmed")
                                     {
                                       _isBtnDisabled = true,
                                     },
