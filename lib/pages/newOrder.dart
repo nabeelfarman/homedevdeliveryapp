@@ -73,8 +73,8 @@ class _NewOrderPageState extends State<NewOrderPage>
     this.getCartItems();
     print(supplierList.length);
 
-    _tabController =
-        new TabController(length: categoryList.length, vsync: this);
+    // _tabController =
+    //     new TabController(length: categoryList.length, vsync: this);
   }
 
   @override
@@ -145,7 +145,8 @@ class _NewOrderPageState extends State<NewOrderPage>
           'active': true,
         });
       }
-
+      _tabController =
+          new TabController(length: categoryList.length, vsync: this);
       Future.delayed(Duration(seconds: 2)).then((value) {
         pr.hide();
       });
@@ -282,13 +283,17 @@ class _NewOrderPageState extends State<NewOrderPage>
                       fontWeight: FontWeight.w500),
                   indicator: BoxDecoration(
                       borderRadius: BorderRadius.circular(50), color: redClr),
-                  tabs: categoryList.map((category) {
-                    return Tab(
-                      key: Key('category_' + category.id.toString()),
-                      text: category.title,
-                      //icon: Icon(getMaterialIcon(name: category.icon)),
-                    );
-                  }).toList()),
+                  tabs: List<Widget>.generate(categoryList.length, (int index) {
+                    return new Tab(text: categoryList[index].title);
+                  })
+                  // tabs: categoryList.map((category) {
+                  //   return Tab(
+                  //     key: Key('category_' + category.id.toString()),
+                  //     text: category.title,
+                  //     //icon: Icon(getMaterialIcon(name: category.icon)),
+                  //   );
+                  // }).toList()
+                  ),
             ),
           ),
           Container(
@@ -301,36 +306,48 @@ class _NewOrderPageState extends State<NewOrderPage>
                     end: Alignment.bottomCenter),
               ),
               width: double.infinity,
-              child: TabBarView(controller: _tabController, children: [
-                supplierListPage = SupplierListView(
-                  value: 1,
-                  searchText: '',
-                  userID: userID,
-                  townID: townID,
-                  supplierList: supplierList,
-                ),
-                supplierListPage = SupplierListView(
-                  value: 2,
-                  searchText: '',
-                  userID: userID,
-                  townID: townID,
-                  supplierList: supplierList,
-                ),
-                supplierListPage = SupplierListView(
-                  value: 3,
-                  searchText: '',
-                  userID: userID,
-                  townID: townID,
-                  supplierList: supplierList,
-                ),
-                supplierListPage = SupplierListView(
-                  value: 4,
-                  searchText: '',
-                  userID: userID,
-                  townID: townID,
-                  supplierList: supplierList,
-                )
-              ]))
+              child: TabBarView(
+                controller: _tabController,
+                children:
+                    List<Widget>.generate(categoryList.length, (int index) {
+                  return new SupplierListView(
+                      value: categoryList[index].id,
+                      searchText: '',
+                      userID: userID,
+                      townID: townID,
+                      supplierList: supplierList);
+                }),
+                // children: [
+                //   supplierListPage = SupplierListView(
+                //     value: 1,
+                //     searchText: '',
+                //     userID: userID,
+                //     townID: townID,
+                //     supplierList: supplierList,
+                //   ),
+                //   supplierListPage = SupplierListView(
+                //     value: 2,
+                //     searchText: '',
+                //     userID: userID,
+                //     townID: townID,
+                //     supplierList: supplierList,
+                //   ),
+                //   supplierListPage = SupplierListView(
+                //     value: 3,
+                //     searchText: '',
+                //     userID: userID,
+                //     townID: townID,
+                //     supplierList: supplierList,
+                //   ),
+                //   supplierListPage = SupplierListView(
+                //     value: 4,
+                //     searchText: '',
+                //     userID: userID,
+                //     townID: townID,
+                //     supplierList: supplierList,
+                //   )
+                // ]
+              ))
         ],
       ),
       floatingActionButton: FloatingActionButton(
