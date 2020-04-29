@@ -71,10 +71,9 @@ class _NewOrderPageState extends State<NewOrderPage>
     super.initState();
     getMerchants();
     this.getCartItems();
-    print(supplierList.length);
 
-    // _tabController =
-    //     new TabController(length: categoryList.length, vsync: this);
+    print(supplierList.length);
+    _tabController = TabController(length: categoryList.length, vsync: this);
   }
 
   @override
@@ -145,8 +144,11 @@ class _NewOrderPageState extends State<NewOrderPage>
           'active': true,
         });
       }
-      _tabController =
-          new TabController(length: categoryList.length, vsync: this);
+
+      // this.dispose();
+
+      // _tabController = TabController(length: categoryList.length, vsync: this);
+
       Future.delayed(Duration(seconds: 2)).then((value) {
         pr.hide();
       });

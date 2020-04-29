@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:homemobileapp/UI/bottom_bar.dart';
 import 'package:homemobileapp/UI/home_card.dart';
@@ -130,7 +131,11 @@ class _CustomerHomeState extends State<CustomerHome> {
                         cardColor: redClr,
                       ),
                       onTap: () {
-                        navigateToNewOrder(context);
+                        // navigateToNewOrder(context);
+                        BlocProvider.of<NavigationBloc>(context).add(newOrder(
+                          userID: userID,
+                          townID: townID,
+                        ));
                       },
                     ),
                     GestureDetector(
