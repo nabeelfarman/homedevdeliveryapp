@@ -37,7 +37,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
 
       var response = await http.get(
           "http://95.217.147.105:2001/api/login?MobileNo=" +
-              mobileNumber +
+              mobileNumber.substring(1, 11) +
               "&HashPassword=" +
               password,
           headers: {
@@ -114,30 +114,6 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
     }
   }
 
-  Future<bool> onWillPop() async {
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () => {
-        Navigator.of(context).pop(true),
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      title: Text("Warning!"),
-      content: Text("You Sure Wanna Quite"),
-      actions: [
-        okButton,
-      ],
-    );
-    // show the dialog
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     //declarations
@@ -172,7 +148,9 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
     );
 
     return WillPopScope(
-      onWillPop: onWillPop,
+      onWillPop: () async {
+        return Future.value(false);
+      },
       child: MaterialApp(
           home: Scaffold(
         body: Container(
@@ -236,7 +214,7 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                           TextField(
                             style: TextStyle(color: blackClr),
                             controller: mobile,
-                            maxLength: 10,
+                            maxLength: 11,
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
                             decoration: new InputDecoration(
@@ -330,6 +308,11 @@ class _LoginPage extends State<LoginPage> with SingleTickerProviderStateMixin {
                                 ),
                               ),
                               onPressed: () {
+                                String mob = mobile.text;
+                                if (mob.length != 0) {
+                                  print(mob.length);
+                                  print(mob.substring(1, 10));
+                                }
                                 setState(() {
                                   mobile.text.isEmpty
                                       ? validateMobile = true

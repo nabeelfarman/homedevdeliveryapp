@@ -40,8 +40,24 @@ class _UserNamePassword extends State<UserNamePassword>
     try {
       _regPwd = regPwd.text;
       _cnfrmPwd = cnfrmPwd.text;
+      _mobile = regMobile.text;
 
-      if (_regPwd != _cnfrmPwd) {
+      if (_mobile.length != 11) {
+        AlertDialog alert = AlertDialog(
+          title: Text("Success!"),
+          content: Text('Please enter correct mobile number'),
+          actions: [
+            okButton,
+          ],
+        );
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      } else if (_regPwd != _cnfrmPwd) {
         AlertDialog alert = AlertDialog(
           title: Text("Success!"),
           content: Text('Password & Confirm Password not Matched'),
@@ -57,7 +73,6 @@ class _UserNamePassword extends State<UserNamePassword>
           },
         );
       } else {
-        _mobile = regMobile.text;
         _code = "123";
 
         pr.show();
@@ -68,7 +83,10 @@ class _UserNamePassword extends State<UserNamePassword>
             "Accept": "application/json",
             "content-type": "application/json"
           },
-          body: jsonEncode(<String, String>{'Cellno': _mobile, 'Code': _code}),
+          body: jsonEncode(<String, String>{
+            'Cellno': _mobile.substring(1, 11),
+            'Code': _code
+          }),
         );
 
         final Map responseJson = json.decode(response.body);
@@ -209,7 +227,7 @@ class _UserNamePassword extends State<UserNamePassword>
                                 ),
                                 TextField(
                                   controller: regMobile,
-                                  maxLength: 10,
+                                  maxLength: 11,
                                   key: Key('mobileNumber'),
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
