@@ -49,6 +49,10 @@ class _SupplierOrdersState extends State<SupplierOrders>
   String address;
   String status;
 
+  String userName;
+  int appTypeID;
+  String email;
+
   ProgressDialog pr;
 
   _SupplierOrdersState(
@@ -69,7 +73,43 @@ class _SupplierOrdersState extends State<SupplierOrders>
   void initState() {
     super.initState();
 
+    print(pageName);
     this.getSupplierOrders();
+    getUserData();
+  }
+
+  @override
+  Future<String> getUserData() async {
+    try {
+      // Future.delayed(Duration(seconds: 1)).then((value) {
+      //   pr.show();
+      // });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getuserdetail?UserID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      userID = responseJson[0]["userID"];
+      userName = responseJson[0]["userName"];
+      appTypeID = responseJson[0]["appTypeID"];
+      email = responseJson[0]["email"];
+      townID = responseJson[0]["townID"];
+
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      return 'success';
+    } catch (e) {
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      print(e);
+    }
   }
 
   @override
@@ -108,23 +148,23 @@ class _SupplierOrdersState extends State<SupplierOrders>
         if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 0 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "pending";
+          orderStatus = "Pending";
         } else if (responseJson[i]["oStatus"] == 2 &&
             responseJson[i]["cStatus"] == 0 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "cancel";
+          orderStatus = "Cancelled";
         } else if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 1 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "confirm";
+          orderStatus = "Confirmed";
         } else if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 2 &&
             responseJson[i]["dStatus"] == 0) {
-          orderStatus = "rejected";
+          orderStatus = "Rejected";
         } else if (responseJson[i]["oStatus"] == 1 &&
             responseJson[i]["cStatus"] == 1 &&
             responseJson[i]["dStatus"] == 1) {
-          orderStatus = "completed";
+          orderStatus = "Completed";
         }
 
         if (pageName == "inProcess" && orderStatus == "Confirmed") {
@@ -185,7 +225,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
       borderRadius: 10.0,
       backgroundColor: blackClr,
       progressWidget: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
       ),
       elevation: 20.0,
       insetAnimCurve: Curves.easeInOut,
@@ -199,6 +239,17 @@ class _SupplierOrdersState extends State<SupplierOrders>
 
     return Scaffold(
       appBar: new AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            print(userID);
+            print(townID);
+            print(pageName);
+            navigateToSideBarLayout(context);
+          },
+          child: Icon(
+            Icons.arrow_back, // add custom icons also
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: darkYellowClr,
@@ -319,7 +370,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
                             fontFamily: 'Baloo',
                             fontSize: 18,
                             fontWeight: FontWeight.w700)),
-                    item['orderStatus'] == 'pending'
+                    item['orderStatus'] == 'Pending'
                         ? Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -337,7 +388,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
                               ),
                             ),
                           )
-                        : item['orderStatus'] == 'completed'
+                        : item['orderStatus'] == 'Completed'
                             ? Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -355,7 +406,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
                                   ),
                                 ),
                               )
-                            : item['orderStatus'] == 'confirm'
+                            : item['orderStatus'] == 'Confirmed'
                                 ? Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
@@ -423,6 +474,19 @@ class _SupplierOrdersState extends State<SupplierOrders>
         'customer': supplier,
         'address': address,
         'status': status,
+      },
+    );
+  }
+
+  void navigateToSideBarLayout(BuildContext context) {
+    Routes.sailor.navigate(
+      '/sideBarLayout',
+      params: {
+        'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
+        'townID': townID,
       },
     );
   }

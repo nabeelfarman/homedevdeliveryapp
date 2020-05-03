@@ -287,11 +287,13 @@ class Routes {
           return NewOrderPage(
             userID: params.param<int>('userID'),
             townID: params.param<int>('townID'),
+            supplierList: params.param<List>('supplierList'),
           );
         },
         params: [
           SailorParam<int>(name: 'userID', isRequired: true),
           SailorParam<int>(name: 'townID', isRequired: true),
+          SailorParam<int>(name: 'supplierList', isRequired: true),
         ],
       ),
       SailorRoute(
@@ -436,12 +438,14 @@ class Routes {
         name: '/orderPlacement',
         builder: (context, args, params) {
           return OrderPlacement(
+            supplierID: params.param<int>('supplierID'),
             customerID: params.param<int>('customerID'),
             companyName: params.param<String>('companyName'),
             totalAmount: params.param<double>('totalAmount'),
           );
         },
         params: [
+          SailorParam<int>(name: 'supplierID', isRequired: true),
           SailorParam<int>(name: 'customerID', isRequired: true),
           SailorParam<String>(name: 'companyName', isRequired: true),
           SailorParam<double>(name: 'totalAmount', isRequired: true),

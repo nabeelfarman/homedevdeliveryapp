@@ -3,6 +3,7 @@ import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:edge_alert/edge_alert.dart';
 import 'dart:convert';
 
 import '../../main.dart';
@@ -61,10 +62,14 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
   String address;
   String status;
   String statusText;
+  String remainingTime;
+
   final formatter = new NumberFormat('##,###.##');
   double totalAmount = 0;
   bool _isBtnDisabled;
 
+  TextEditingController estimatedTime = new TextEditingController();
+  bool validateTime = false;
   ProgressDialog pr;
 
   _SupplierOrderDetailsState(
@@ -120,16 +125,24 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
           });
       var responseJson = json.decode(response.body);
 
+      remainingTime = responseJson["rTime"];
+
       List tempList = [];
       for (int i = 0; i < responseJson["aRows"].length; i++) {
         String oDate = responseJson["aRows"][i]["gendate"];
 
-        String date = oDate.substring(0, 9);
+        String date;
         String time;
+        print(responseJson["aRows"][i]["gendate"].length);
         if (responseJson["aRows"][i]["gendate"].length == 21) {
-          time = oDate.substring(10, 21);
-        } else {
-          time = oDate.substring(10, 20);
+          date = oDate.substring(0, 9);
+          time = oDate.substring(9, 21);
+        } else if (responseJson["aRows"][i]["gendate"].length == 20) {
+          date = oDate.substring(0, 9);
+          time = oDate.substring(9, 20);
+        } else if (responseJson["aRows"][i]["gendate"].length == 19) {
+          date = oDate.substring(0, 8);
+          time = oDate.substring(8, 19);
         }
 
         orderStatus.add({
@@ -178,6 +191,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         },
       );
 
+      String time = estimatedTime.text;
       pr.show();
       http.Response response = await http.post(
         'http://95.217.147.105:2001/api/confirmorder',
@@ -188,6 +202,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         body: jsonEncode(
           {
             "OrderId": orderNo,
+            "ExpectedDeliveryTime": time,
           },
         ),
       );
@@ -198,21 +213,15 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         pr.hide();
         print('Success');
 
-        // set up the AlertDialog
-        AlertDialog alert = AlertDialog(
-          title: Text("Error!"),
-          content: Text("Order Successfully Confirmed!"),
-          actions: [
-            okButton,
-          ],
+        EdgeAlert.show(
+          context,
+          title: "Order Successfully Confirmed!",
+          // description: 'Description',
+          gravity: EdgeAlert.TOP,
+          icon: Icons.check,
+          backgroundColor: blackClr,
         );
-        // show the dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
+        navigateToSupplierOrder(context);
 
         _isBtnDisabled = false;
       } else {
@@ -260,6 +269,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         body: jsonEncode(
           {
             "OrderId": orderNo,
+            "CashTendered": 0.0,
           },
         ),
       );
@@ -270,21 +280,16 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         pr.hide();
         print('Success');
 
-        // set up the AlertDialog
-        AlertDialog alert = AlertDialog(
-          title: Text("Error!"),
-          content: Text("Order Delivered Successfully"),
-          actions: [
-            okButton,
-          ],
+        EdgeAlert.show(
+          context,
+          title: "Order Delivered Successfully!",
+          // description: 'Description',
+          gravity: EdgeAlert.TOP,
+          icon: Icons.check,
+          backgroundColor: blackClr,
         );
-        // show the dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
+        navigateToSupplierOrder(context);
+
         _isBtnDisabled = false;
       } else {
         pr.hide();
@@ -341,21 +346,16 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
         pr.hide();
         print('Success');
 
-        // set up the AlertDialog
-        AlertDialog alert = AlertDialog(
-          title: Text("Error!"),
-          content: Text("Order Rejected Successfully!"),
-          actions: [
-            okButton,
-          ],
+        EdgeAlert.show(
+          context,
+          title: "Order Rejected Successfully!",
+          // description: 'Description',
+          gravity: EdgeAlert.TOP,
+          icon: Icons.warning,
+          backgroundColor: blackClr,
         );
-        // show the dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
+        navigateToSupplierOrder(context);
+
         _isBtnDisabled = false;
       } else {
         pr.hide();
@@ -413,7 +413,8 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
     try {
       for (int i = 0; i < cartItems.length; i++) {
         var item = cartItems[i];
-        totalAmount += int.parse(item['price']) * int.parse(item['quantity']);
+        totalAmount +=
+            double.parse(item['price']) * double.parse(item['quantity']);
       }
     } catch (e) {
       print(e);
@@ -428,7 +429,7 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
       borderRadius: 10.0,
       backgroundColor: blackClr,
       progressWidget: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
       ),
       elevation: 20.0,
       insetAnimCurve: Curves.easeInOut,
@@ -512,111 +513,192 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
                 1.0,
                 Column(
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: TextFormField(
-                            key: Key('EstimatedTime'),
-                            decoration: InputDecoration(
-                                hintText: '',
-                                prefixIcon: Icon(
-                                  Icons.watch_later,
-                                  color: redClr,
-                                )),
-                            maxLength: 3,
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                        Text(
-                          'time in minutes for delivery',
-                          style: TextStyle(
-                              color: Colors.black45,
-                              fontFamily: 'Baloo',
-                              fontSize: 17),
-                        )
-                      ],
+                    Center(
+                      child: status == "Pending" && pageName == "Orders"
+                          ? Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: TextFormField(
+                                    controller: estimatedTime,
+                                    key: Key('EstimatedTime'),
+                                    decoration: InputDecoration(
+                                      hintText: '',
+                                      prefixIcon: Icon(
+                                        Icons.watch_later,
+                                        color: redClr,
+                                      ),
+                                      errorText: validateTime
+                                          ? 'Please Enter Delivery Time'
+                                          : null,
+                                    ),
+                                    maxLength: 3,
+                                    keyboardType: TextInputType.number,
+                                  ),
+                                ),
+                                Text(
+                                  'time in minutes for delivery',
+                                  style: TextStyle(
+                                      color: Colors.black45,
+                                      fontFamily: 'Baloo',
+                                      fontSize: 17),
+                                )
+                              ],
+                            )
+                          : Row(),
                     ),
-                    TextFormField(
-                      key: Key('Remarks'),
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                          hintText: 'comments and remarks', hintMaxLines: 4),
-                    ),
+                    // TextFormField(
+                    //   key: Key('Remarks'),
+                    //   maxLines: 4,
+                    //   decoration: InputDecoration(
+                    //       hintText: 'comments and remarks', hintMaxLines: 4),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          RaisedButton(
-                            onPressed: () => {
-                              if (_isBtnDisabled == true)
-                                {
-                                  rejectCustomerOrder(),
-                                }
-                              else
-                                {
-                                  orderResponse(statusText),
-                                }
-                            },
-                            elevation: 5,
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                20, 5, 20, 5),
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10)),
-                            color: redClr,
-                            child: Text(
-                              'Reject',
-                              style: TextStyle(
-                                  color: whiteClr,
-                                  fontFamily: 'Baloo',
-                                  fontSize: 20),
-                            ),
-                          ),
-                          RaisedButton(
-                            onPressed: () => {
-                              if (pageName == "Orders")
-                                {
-                                  if (_isBtnDisabled == true)
-                                    {
-                                      acceptCustomerOrder(),
-                                    }
-                                  else
-                                    {
-                                      orderResponse(statusText),
-                                    }
-                                }
-                              else if (pageName == "inProcess")
-                                {
-                                  if (status == "Confirmed")
-                                    {
-                                      _isBtnDisabled = true,
-                                    },
-                                  if (_isBtnDisabled == true)
-                                    {
-                                      deliverCustomerOrder(),
-                                    }
-                                  else
-                                    {
-                                      orderResponse(statusText),
-                                    }
-                                },
-                            },
-                            elevation: 5,
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                20, 5, 20, 5),
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10)),
-                            color: blackClr,
-                            child: Text(
-                              'Accept',
-                              style: TextStyle(
-                                  color: whiteClr,
-                                  fontFamily: 'Baloo',
-                                  fontSize: 20),
-                            ),
-                          )
-                        ],
-                      ),
+                      child: status == "Pending" && pageName == "Orders"
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                RaisedButton(
+                                  onPressed: () => {
+                                    if (_isBtnDisabled == true)
+                                      {
+                                        rejectCustomerOrder(),
+                                      }
+                                    else
+                                      {
+                                        orderResponse(statusText),
+                                      }
+                                  },
+                                  elevation: 5,
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      20, 5, 20, 5),
+                                  shape: new RoundedRectangleBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(10)),
+                                  color: redClr,
+                                  child: Text(
+                                    'Reject',
+                                    style: TextStyle(
+                                        color: whiteClr,
+                                        fontFamily: 'Baloo',
+                                        fontSize: 20),
+                                  ),
+                                ),
+                                RaisedButton(
+                                  onPressed: () => {
+                                    setState(() {
+                                      estimatedTime.text.isEmpty
+                                          ? validateTime = true
+                                          : validateTime = false;
+                                      if (estimatedTime.text.isNotEmpty) {
+                                        if (pageName == "Orders") {
+                                          if (_isBtnDisabled == true) {
+                                            acceptCustomerOrder();
+                                          } else {
+                                            orderResponse(statusText);
+                                          }
+                                        } else if (pageName == "inProcess") {
+                                          if (status == "Confirmed") {
+                                            _isBtnDisabled = true;
+                                          }
+                                          if (_isBtnDisabled == true) {
+                                            deliverCustomerOrder();
+                                          } else {
+                                            orderResponse(statusText);
+                                          }
+                                        }
+                                      }
+                                    })
+                                  },
+                                  elevation: 5,
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      20, 5, 20, 5),
+                                  shape: new RoundedRectangleBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(10)),
+                                  color: blackClr,
+                                  child: Text(
+                                    'Accept',
+                                    style: TextStyle(
+                                        color: whiteClr,
+                                        fontFamily: 'Baloo',
+                                        fontSize: 20),
+                                  ),
+                                )
+                              ],
+                            )
+                          : status == "Confirmed" && pageName == "inProcess"
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    SizedBox(),
+                                    // RaisedButton(
+                                    //   onPressed: () => {
+                                    //     if (_isBtnDisabled == true)
+                                    //       {
+                                    //         rejectCustomerOrder(),
+                                    //       }
+                                    //     else
+                                    //       {
+                                    //         orderResponse(statusText),
+                                    //       }
+                                    //   },
+                                    //   elevation: 5,
+                                    //   padding: const EdgeInsetsDirectional.fromSTEB(
+                                    //       20, 5, 20, 5),
+                                    //   shape: new RoundedRectangleBorder(
+                                    //       borderRadius:
+                                    //           new BorderRadius.circular(10)),
+                                    //   color: redClr,
+                                    //   child: Text(
+                                    //     'Reject',
+                                    //     style: TextStyle(
+                                    //         color: whiteClr,
+                                    //         fontFamily: 'Baloo',
+                                    //         fontSize: 20),
+                                    //   ),
+                                    // ),
+                                    RaisedButton(
+                                      onPressed: () => {
+                                        if (pageName == "inProcess")
+                                          {
+                                            if (status == "Confirmed")
+                                              {
+                                                _isBtnDisabled = true,
+                                              },
+                                            if (_isBtnDisabled == true)
+                                              {
+                                                deliverCustomerOrder(),
+                                              }
+                                            else
+                                              {
+                                                orderResponse(statusText),
+                                              }
+                                          }
+                                      },
+                                      elevation: 5,
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              20, 5, 20, 5),
+                                      shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(10)),
+                                      color: blackClr,
+                                      child: Text(
+                                        'Accept',
+                                        style: TextStyle(
+                                            color: whiteClr,
+                                            fontFamily: 'Baloo',
+                                            fontSize: 20),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                ),
                     )
                   ],
                 ),
@@ -703,9 +785,14 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(
-                        'Time Estimate ' + item['deliveryTime'] + ' minute',
-                        style: TextStyle(fontFamily: 'Baloo', fontSize: 16),
+                      Center(
+                        child: remainingTime != "00:00"
+                            ? Text(
+                                'Time Estimate: ' + remainingTime,
+                                style: TextStyle(
+                                    fontFamily: 'Baloo', fontSize: 16),
+                              )
+                            : Text(""),
                       ),
                       Text(
                         item['stateTime'],
@@ -745,6 +832,11 @@ class _SupplierOrderDetailsState extends State<SupplierOrderDetails>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text('Rs. ' + item['price'] + ' per item',
+                        style: TextStyle(
+                            color: blackClr,
+                            fontFamily: 'Baloo',
+                            fontSize: 18)),
+                    Text('Qty ' + item['quantity'],
                         style: TextStyle(
                             color: blackClr,
                             fontFamily: 'Baloo',

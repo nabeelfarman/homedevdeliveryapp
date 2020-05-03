@@ -3,14 +3,19 @@ import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:edge_alert/edge_alert.dart';
+import '../../main.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class OrderPlacement extends StatefulWidget {
+  final int supplierID;
   final int customerID;
   final String companyName;
   final double totalAmount;
 
   @override
   OrderPlacement({
+    @required this.supplierID,
     @required this.customerID,
     @required this.companyName,
     @required this.totalAmount,
@@ -18,6 +23,7 @@ class OrderPlacement extends StatefulWidget {
 
   @override
   _OrderPlacementState createState() => _OrderPlacementState(
+        this.supplierID,
         this.customerID,
         this.companyName,
         this.totalAmount,
@@ -37,20 +43,90 @@ class _OrderPlacementState extends State<OrderPlacement> {
   Color darkYellowClr = Color(0x0ffdfbd3f);
   Color lightYellowClr = Color(0x0ffffde22);
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   int customerID;
+  int supplierID;
   String companyName;
-  // String address = 'G.T Road near G-15 Islamabad';
   double totalAmount;
+
+  int userID;
+  String userName;
+  int appTypeID;
+  String email;
+  int townID;
   final formatter = new NumberFormat('##,###.##');
   double orderNo = 1735;
 
   ProgressDialog pr;
 
   _OrderPlacementState(
+    this.supplierID,
     this.customerID,
     this.companyName,
     this.totalAmount,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    print(supplierID);
+    this.getUserData();
+
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var ios = new IOSInitializationSettings();
+    var initSettings = new InitializationSettings(android, ios);
+    flutterLocalNotificationsPlugin.initialize(initSettings,
+        onSelectNotification: selectNotification);
+  }
+
+  Future selectNotification(String payload) {
+    debugPrint("payload: $payload");
+    showSuccessMsg();
+  }
+
+  showNotification(String id, String notify, String message) async {
+    var android = new AndroidNotificationDetails(
+        'channel id', 'channel NAME', 'channel Description');
+    var ios = new IOSNotificationDetails();
+    var platform = new NotificationDetails(android, ios);
+    await flutterLocalNotificationsPlugin.show(0, notify, message, platform);
+  }
+
+  @override
+  Future<String> getUserData() async {
+    try {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getuserdetail?UserID=" +
+              customerID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      userID = responseJson[0]["userID"];
+      userName = responseJson[0]["userName"];
+      appTypeID = responseJson[0]["appTypeID"];
+      email = responseJson[0]["email"];
+      townID = responseJson[0]["townID"];
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
+      return 'success';
+    } catch (e) {
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
+      print(e);
+    }
+  }
 
   Future<String> genOrder() async {
     try {
@@ -89,6 +165,8 @@ class _OrderPlacementState extends State<OrderPlacement> {
       if (responseJson["msg"] == "Success") {
         pr.hide();
         print('Success');
+        generateNotification();
+        navigateToSideBarLayout(context);
       } else {
         pr.hide();
 
@@ -114,6 +192,36 @@ class _OrderPlacementState extends State<OrderPlacement> {
     }
   }
 
+  void generateNotification() async {
+    try {
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getuserdetail?UserID=" +
+              supplierID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+      String mobile;
+
+      mobile = responseJson[0]["cellNo"].toString();
+
+      showNotification(mobile, 'Order Placed', "Order Placed by " + userName);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void showSuccessMsg() async {
+    EdgeAlert.show(
+      context,
+      title: "Your order is placed successfully!",
+      // description: 'Description',
+      gravity: EdgeAlert.TOP,
+      icon: Icons.check,
+      backgroundColor: blackClr,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
@@ -122,7 +230,7 @@ class _OrderPlacementState extends State<OrderPlacement> {
       borderRadius: 10.0,
       backgroundColor: blackClr,
       progressWidget: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
       ),
       elevation: 20.0,
       insetAnimCurve: Curves.easeInOut,
@@ -247,5 +355,18 @@ class _OrderPlacementState extends State<OrderPlacement> {
             ],
           ),
         ));
+  }
+
+  void navigateToSideBarLayout(BuildContext context) {
+    Routes.sailor.navigate(
+      '/sideBarLayout',
+      params: {
+        'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
+        'townID': townID,
+      },
+    );
   }
 }

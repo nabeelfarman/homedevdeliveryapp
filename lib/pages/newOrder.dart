@@ -13,17 +13,20 @@ import '../main.dart';
 class NewOrderPage extends StatefulWidget with NavigationStates {
   final int userID;
   final int townID;
+  final List supplierList;
 
   @required
   NewOrderPage({
     @required this.userID,
     @required this.townID,
+    @required this.supplierList,
   });
 
   @override
   _NewOrderPageState createState() => _NewOrderPageState(
-        userID,
-        townID,
+        this.userID,
+        this.townID,
+        this.supplierList,
       );
 }
 
@@ -31,15 +34,20 @@ class _NewOrderPageState extends State<NewOrderPage>
     with SingleTickerProviderStateMixin {
   int userID;
   int townID;
+  List supplierList;
 
   _NewOrderPageState(
     this.userID,
     this.townID,
+    this.supplierList,
   );
+
+  String userName;
+  int appTypeID;
+  String email;
 
   //declaration
   String pageName = 'newOrder';
-  List supplierList = [];
   ProgressDialog pr;
   int totalItems = 0;
 
@@ -69,11 +77,45 @@ class _NewOrderPageState extends State<NewOrderPage>
   @override
   void initState() {
     super.initState();
-    getMerchants();
+    getUserData();
     this.getCartItems();
 
     print(supplierList.length);
     _tabController = TabController(length: categoryList.length, vsync: this);
+  }
+
+  @override
+  Future<String> getUserData() async {
+    try {
+      // Future.delayed(Duration(seconds: 1)).then((value) {
+      //   pr.show();
+      // });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getuserdetail?UserID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      userID = responseJson[0]["userID"];
+      userName = responseJson[0]["userName"];
+      appTypeID = responseJson[0]["appTypeID"];
+      email = responseJson[0]["email"];
+      townID = responseJson[0]["townID"];
+
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      return 'success';
+    } catch (e) {
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      print(e);
+    }
   }
 
   @override
@@ -182,7 +224,7 @@ class _NewOrderPageState extends State<NewOrderPage>
       borderRadius: 10.0,
       backgroundColor: blackClr,
       progressWidget: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
       ),
       elevation: 20.0,
       insetAnimCurve: Curves.easeInOut,
@@ -196,6 +238,17 @@ class _NewOrderPageState extends State<NewOrderPage>
 
     return Scaffold(
       appBar: new AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            print(userID);
+            print(townID);
+            print(pageName);
+            navigateToSideBarLayout(context);
+          },
+          child: Icon(
+            Icons.arrow_back, // add custom icons also
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: darkYellowClr,
@@ -387,6 +440,19 @@ class _NewOrderPageState extends State<NewOrderPage>
       '/shoppingCart',
       params: {
         'customerID': userID,
+      },
+    );
+  }
+
+  void navigateToSideBarLayout(BuildContext context) {
+    Routes.sailor.navigate(
+      '/sideBarLayout',
+      params: {
+        'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
+        'townID': townID,
       },
     );
   }

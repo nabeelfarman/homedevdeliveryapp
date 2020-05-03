@@ -6,7 +6,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-
+import 'package:edge_alert/edge_alert.dart';
 import '../../main.dart';
 
 class ShoppingCart extends StatefulWidget {
@@ -31,6 +31,7 @@ class _ShoppingCartState extends State<ShoppingCart>
   Color darkYellowClr = Color(0x0ffdfbd3f);
   Color lightYellowClr = Color(0x0ffffde22);
   int customerID;
+  int supplierID;
   String companyName;
 
   ProgressDialog pr;
@@ -64,6 +65,7 @@ class _ShoppingCartState extends State<ShoppingCart>
       var responseJson = json.decode(response.body);
 
       for (int i = 0; i < responseJson.length; i++) {
+        supplierID = responseJson[i]["merchantID"];
         companyName = responseJson[i]["companyName"];
         cart_items.add({
           'itemCode': responseJson[i]["productProfileStoreID"],
@@ -107,6 +109,17 @@ class _ShoppingCartState extends State<ShoppingCart>
     }
   }
 
+  void showErrorMsg() async {
+    EdgeAlert.show(
+      context,
+      title: "Sorry! No item's in the Cart",
+      // description: 'Description',
+      gravity: EdgeAlert.TOP,
+      icon: Icons.warning,
+      backgroundColor: blackClr,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
@@ -115,7 +128,7 @@ class _ShoppingCartState extends State<ShoppingCart>
       borderRadius: 10.0,
       backgroundColor: blackClr,
       progressWidget: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
       ),
       elevation: 20.0,
       insetAnimCurve: Curves.easeInOut,
@@ -202,6 +215,8 @@ class _ShoppingCartState extends State<ShoppingCart>
                 onPressed: () {
                   if (cartItems.length > 0) {
                     navigateToOrderPlacement(context);
+                  } else {
+                    showErrorMsg();
                   }
                 },
                 child: Text(
@@ -326,6 +341,7 @@ class _ShoppingCartState extends State<ShoppingCart>
     Routes.sailor.navigate(
       '/orderPlacement',
       params: {
+        'supplierID': supplierID,
         'customerID': customerID,
         'companyName': companyName,
         'totalAmount': totalAmount,

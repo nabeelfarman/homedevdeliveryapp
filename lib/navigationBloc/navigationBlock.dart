@@ -89,12 +89,12 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates> {
         townID: event.townID,
       );
     }
-    if (event is newOrder) {
-      yield NewOrderPage(
-        userID: event.userID,
-        townID: event.townID,
-      );
-    }
+    // if (event is newOrder) {
+    //   yield NewOrderPage(
+    //     userID: event.userID,
+    //     townID: event.townID,
+    //   );
+    // }
     if (event is supplierHome) {
       yield SupplierHome(
         userID: event.userID,

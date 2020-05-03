@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+
 class BottomBar extends StatefulWidget {
   String pageName;
 
@@ -60,15 +62,11 @@ class _BottomBar extends State<BottomBar> {
                         children: <Widget>[
                           GestureDetector(
                             child: Icon(
-                              Icons.arrow_back,
+                              Icons.exit_to_app,
                               color: lightYellowClr,
                             ),
                             onTap: () {
-                              if (pageName == "ItemsPage") {
-                                print(pageName);
-                              } else {
-                                print(pageName);
-                              }
+                              navigateToLogin(context);
                             },
                           ),
                           // Icon(Icons.person_outline, color: Color(0xFF676E79))
@@ -85,5 +83,11 @@ class _BottomBar extends State<BottomBar> {
                         ],
                       )),
                 ])));
+  }
+
+  void navigateToLogin(BuildContext context) {
+    Routes.sailor.navigate(
+      '/login',
+    );
   }
 }

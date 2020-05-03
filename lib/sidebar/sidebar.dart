@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'package:homemobileapp/pages/newOrder.dart';
 import 'package:homemobileapp/sidebar/menu_item.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:homemobileapp/main.dart';
-import 'package:homemobileapp/pages/newOrder.dart';
 import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:homemobileapp/navigationBloc/navigationBlock.dart';
 import 'package:sailor/sailor.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class SideBar extends StatefulWidget {
   int userID;
@@ -71,6 +71,8 @@ class _SideBarState extends State<SideBar>
   Color darkYellowClr = Color(0x0ffdfbd3f);
   Color lightYellowClr = Color(0x0ffffde22);
 
+  List supplierList = [];
+  ProgressDialog pr;
   // final bool isSidebarOpened = true;
 
   final _animationDuration = const Duration(milliseconds: 500);
@@ -89,6 +91,67 @@ class _SideBarState extends State<SideBar>
     print(appTypeID);
     print(email);
     print(townID);
+    getMerchants();
+  }
+
+  Future<String> getMerchants() async {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    try {
+      Future.delayed(Duration(seconds: 1)).then((value) {
+        pr.show();
+      });
+
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getmerchantintown?TownID=" +
+              townID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+
+      var responseJson = json.decode(response.body);
+
+      for (int i = 0; i < responseJson.length; i++) {
+        supplierList.add({
+          'id': responseJson[i]["merchantID"],
+          'title': responseJson[i]["companyName"],
+          'address': responseJson[i]["townName"],
+          'category': responseJson[i]["businessID"],
+          'active': true,
+        });
+      }
+
+      // this.dispose();
+
+      // _tabController = TabController(length: categoryList.length, vsync: this);
+
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+    } catch (e) {
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        pr.hide();
+      });
+
+      AlertDialog alert = AlertDialog(
+        title: Text("Error!"),
+        content: Text(e.toString()),
+        actions: [
+          okButton,
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
   }
 
   @override
@@ -115,6 +178,25 @@ class _SideBarState extends State<SideBar>
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Please Wait...',
+      borderRadius: 10.0,
+      backgroundColor: blackClr,
+      progressWidget: CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
+      ),
+      elevation: 20.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
+
     return StreamBuilder<bool>(
         initialData: false,
         stream: isSideBarOpenedStream,
@@ -171,35 +253,67 @@ class _SideBarState extends State<SideBar>
                             indent: 32,
                             endIndent: 32,
                           ),
-                          GestureDetector(
-                            child: MenuItem(
-                              icon: Icons.home,
-                              title: 'Home Page',
-                            ),
-                            onTap: () {
-                              onIconPressed();
-                              print(userID);
-                              BlocProvider.of<NavigationBloc>(context).add(
-                                customerHome(
-                                  userID: userID,
-                                  townID: townID,
-                                ),
-                              );
-                            },
+                          Center(
+                            child: appTypeID == 1
+                                ? GestureDetector(
+                                    child: MenuItem(
+                                      icon: Icons.home,
+                                      title: 'Home Page',
+                                    ),
+                                    onTap: () {
+                                      onIconPressed();
+                                      print(userID);
+                                      BlocProvider.of<NavigationBloc>(context)
+                                          .add(
+                                        customerHome(
+                                          userID: userID,
+                                          townID: townID,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : GestureDetector(
+                                    child: MenuItem(
+                                      icon: Icons.home,
+                                      title: 'Home Page',
+                                    ),
+                                    onTap: () {
+                                      onIconPressed();
+                                      print(userID);
+                                      BlocProvider.of<NavigationBloc>(context)
+                                          .add(
+                                        supplierHome(
+                                          userID: userID,
+                                          townID: townID,
+                                        ),
+                                      );
+                                    },
+                                  ),
                           ),
-                          GestureDetector(
-                            child: MenuItem(
-                              icon: Icons.shopping_basket,
-                              title: 'My Orders',
-                            ),
-                            onTap: () {
-                              onIconPressed();
-                              BlocProvider.of<NavigationBloc>(context)
-                                  .add(newOrder(
-                                userID: userID,
-                                townID: townID,
-                              ));
-                            },
+                          Center(
+                            child: appTypeID == 1
+                                ? GestureDetector(
+                                    child: MenuItem(
+                                      icon: Icons.shopping_basket,
+                                      title: 'My Orders',
+                                    ),
+                                    onTap: () {
+                                      onIconPressed();
+
+                                      navigateToNewOrder(context);
+                                    },
+                                  )
+                                : GestureDetector(
+                                    child: MenuItem(
+                                      icon: Icons.shopping_basket,
+                                      title: 'Inventory',
+                                    ),
+                                    onTap: () {
+                                      onIconPressed();
+
+                                      navigateToInventory(context);
+                                    },
+                                  ),
                           ),
                           Divider(
                             height: 64,
@@ -209,7 +323,15 @@ class _SideBarState extends State<SideBar>
                             endIndent: 32,
                           ),
                           MenuItem(icon: Icons.settings, title: 'Settings'),
-                          MenuItem(icon: Icons.exit_to_app, title: 'Log Out'),
+                          GestureDetector(
+                            child: MenuItem(
+                              icon: Icons.exit_to_app,
+                              title: 'Log Out',
+                            ),
+                            onTap: () {
+                              navigateToLogin(context);
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -240,6 +362,32 @@ class _SideBarState extends State<SideBar>
             ),
           );
         });
+  }
+
+  void navigateToInventory(BuildContext context) {
+    Routes.sailor.navigate(
+      '/inventory',
+      params: {
+        'userID': userID,
+      },
+    );
+  }
+
+  void navigateToNewOrder(BuildContext context) {
+    Routes.sailor.navigate(
+      '/newOrder',
+      params: {
+        'userID': userID,
+        'townID': townID,
+        'supplierList': supplierList,
+      },
+    );
+  }
+
+  void navigateToLogin(BuildContext context) {
+    Routes.sailor.navigate(
+      '/login',
+    );
   }
 }
 

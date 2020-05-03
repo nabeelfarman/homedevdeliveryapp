@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../main.dart';
+
 class SupplierBottomBar extends StatelessWidget {
   Color blackClr = Color(0xff1D2028);
 
@@ -36,7 +38,15 @@ class SupplierBottomBar extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Icon(Icons.arrow_back, color: lightYellowClr),
+                          GestureDetector(
+                            child: Icon(
+                              Icons.exit_to_app,
+                              color: lightYellowClr,
+                            ),
+                            onTap: () {
+                              navigateToLogin(context);
+                            },
+                          ),
                           // Icon(Icons.person_outline, color: Color(0xFF676E79))
                         ],
                       )),
@@ -57,5 +67,11 @@ class SupplierBottomBar extends StatelessWidget {
                         ],
                       )),
                 ])));
+  }
+
+  void navigateToLogin(BuildContext context) {
+    Routes.sailor.navigate(
+      '/login',
+    );
   }
 }

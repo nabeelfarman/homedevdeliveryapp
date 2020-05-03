@@ -32,6 +32,7 @@ class _CustomerHomeState extends State<CustomerHome> {
   int townID;
   int totalItems = 0;
 
+  List supplierList = [];
   ProgressDialog pr;
 
   @override
@@ -42,6 +43,67 @@ class _CustomerHomeState extends State<CustomerHome> {
     super.initState();
     print(userID);
     this.getCartItems();
+    getMerchants();
+  }
+
+  Future<String> getMerchants() async {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    try {
+      // Future.delayed(Duration(seconds: 1)).then((value) {
+      //   pr.show();
+      // });
+
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getmerchantintown?TownID=" +
+              townID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+
+      var responseJson = json.decode(response.body);
+
+      for (int i = 0; i < responseJson.length; i++) {
+        supplierList.add({
+          'id': responseJson[i]["merchantID"],
+          'title': responseJson[i]["companyName"],
+          'address': responseJson[i]["townName"],
+          'category': responseJson[i]["businessID"],
+          'active': true,
+        });
+      }
+
+      // this.dispose();
+
+      // _tabController = TabController(length: categoryList.length, vsync: this);
+
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+    } catch (e) {
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      AlertDialog alert = AlertDialog(
+        title: Text("Error!"),
+        content: Text(e.toString()),
+        actions: [
+          okButton,
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
   }
 
   @override
@@ -90,6 +152,24 @@ class _CustomerHomeState extends State<CustomerHome> {
   Color lightYellowClr = Color(0x0ffffde22);
   @override
   Widget build(BuildContext context) {
+    // pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    // pr.style(
+    //   message: 'Please Wait...',
+    //   borderRadius: 10.0,
+    //   backgroundColor: blackClr,
+    //   progressWidget: CircularProgressIndicator(
+    //     valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
+    //   ),
+    //   elevation: 20.0,
+    //   insetAnimCurve: Curves.easeInOut,
+    //   progress: 0.0,
+    //   maxProgress: 100.0,
+    //   progressTextStyle: TextStyle(
+    //       color: Colors.white, fontSize: 13.0, fontWeight: FontWeight.w400),
+    //   messageTextStyle: TextStyle(
+    //       color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600),
+    // );
+
     return Scaffold(
       appBar: new AppBar(
         centerTitle: true,
@@ -131,11 +211,11 @@ class _CustomerHomeState extends State<CustomerHome> {
                         cardColor: redClr,
                       ),
                       onTap: () {
-                        // navigateToNewOrder(context);
-                        BlocProvider.of<NavigationBloc>(context).add(newOrder(
-                          userID: userID,
-                          townID: townID,
-                        ));
+                        navigateToNewOrder(context);
+                        // BlocProvider.of<NavigationBloc>(context).add(newOrder(
+                        //   userID: userID,
+                        //   townID: townID,
+                        // ));
                       },
                     ),
                     GestureDetector(
@@ -212,6 +292,7 @@ class _CustomerHomeState extends State<CustomerHome> {
       params: {
         'userID': userID,
         'townID': townID,
+        'supplierList': supplierList,
       },
     );
   }

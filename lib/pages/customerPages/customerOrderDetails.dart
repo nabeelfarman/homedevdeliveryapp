@@ -3,6 +3,7 @@ import 'package:homemobileapp/Animation/FadeinAnimation.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:edge_alert/edge_alert.dart';
 import 'dart:convert';
 
 import '../../main.dart';
@@ -64,6 +65,7 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
   final formatter = new NumberFormat('##,###.##');
   double totalAmount = 0;
   bool _isBtnDisabled;
+  String remainingTime;
 
   ProgressDialog pr;
 
@@ -121,16 +123,24 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
           });
       var responseJson = json.decode(response.body);
 
+      remainingTime = responseJson["rTime"];
+
       List tempList = [];
       for (int i = 0; i < responseJson["aRows"].length; i++) {
         String oDate = responseJson["aRows"][i]["gendate"];
 
-        String date = oDate.substring(0, 9);
+        String date;
         String time;
+        print(responseJson["aRows"][i]["gendate"].length);
         if (responseJson["aRows"][i]["gendate"].length == 21) {
-          time = oDate.substring(10, 21);
-        } else {
-          time = oDate.substring(10, 20);
+          date = oDate.substring(0, 9);
+          time = oDate.substring(9, 21);
+        } else if (responseJson["aRows"][i]["gendate"].length == 20) {
+          date = oDate.substring(0, 9);
+          time = oDate.substring(9, 20);
+        } else if (responseJson["aRows"][i]["gendate"].length == 19) {
+          date = oDate.substring(0, 8);
+          time = oDate.substring(8, 19);
         }
 
         print(time);
@@ -200,21 +210,17 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
         pr.hide();
 
         print('Success');
-        // set up the AlertDialog
-        AlertDialog alert = AlertDialog(
-          title: Text("Error!"),
-          content: Text("Order Canceled Successfully"),
-          actions: [
-            okButton,
-          ],
+
+        EdgeAlert.show(
+          context,
+          title: "Order Canceled Successfully!",
+          // description: 'Description',
+          gravity: EdgeAlert.TOP,
+          icon: Icons.warning,
+          backgroundColor: blackClr,
         );
-        // show the dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
+        navigateToCustomerOrder(context);
+
         _isBtnDisabled = false;
       } else {
         pr.hide();
@@ -288,7 +294,7 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
       borderRadius: 10.0,
       backgroundColor: blackClr,
       progressWidget: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
       ),
       elevation: 20.0,
       insetAnimCurve: Curves.easeInOut,
@@ -371,69 +377,49 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
                 1.0,
                 Column(
                   children: <Widget>[
-                    TextFormField(
-                      key: Key('Remarks'),
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                          hintText: 'comments and remarks', hintMaxLines: 4),
-                    ),
+                    // TextFormField(
+                    //   key: Key('Remarks'),
+                    //   maxLines: 4,
+                    //   decoration: InputDecoration(
+                    //       hintText: 'comments and remarks', hintMaxLines: 4),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          RaisedButton(
-                            onPressed: () => {
-                              if (_isBtnDisabled == true)
-                                {
-                                  cancelOrder(),
-                                }
-                              else
-                                {
-                                  orderResponse(statusText),
-                                }
-                            },
-                            elevation: 5,
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                20, 5, 20, 5),
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10)),
-                            color: redClr,
-                            child: Text(
-                              'Reject',
-                              style: TextStyle(
-                                  color: whiteClr,
-                                  fontFamily: 'Baloo',
-                                  fontSize: 20),
+                      child: pageName == "History" && status == "Pending"
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                RaisedButton(
+                                  onPressed: () => {
+                                    if (_isBtnDisabled == true)
+                                      {
+                                        cancelOrder(),
+                                      }
+                                    else
+                                      {
+                                        orderResponse(statusText),
+                                      }
+                                  },
+                                  elevation: 5,
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      20, 5, 20, 5),
+                                  shape: new RoundedRectangleBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(10)),
+                                  color: redClr,
+                                  child: Text(
+                                    'Reject',
+                                    style: TextStyle(
+                                        color: whiteClr,
+                                        fontFamily: 'Baloo',
+                                        fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             ),
-                          ),
-                          RaisedButton(
-                            onPressed: () => {
-                              if (_isBtnDisabled == true)
-                                {
-                                  // cancelOrder(),
-                                }
-                              else
-                                {
-                                  orderResponse(statusText),
-                                }
-                            },
-                            elevation: 5,
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                20, 5, 20, 5),
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10)),
-                            color: greenClr,
-                            child: Text(
-                              'Accept',
-                              style: TextStyle(
-                                  color: whiteClr,
-                                  fontFamily: 'Baloo',
-                                  fontSize: 20),
-                            ),
-                          )
-                        ],
-                      ),
                     )
                   ],
                 ),
@@ -520,9 +506,14 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(
-                        'Time Estimate ' + item['deliveryTime'] + ' minute',
-                        style: TextStyle(fontFamily: 'Baloo', fontSize: 16),
+                      Center(
+                        child: remainingTime != "00:00"
+                            ? Text(
+                                'Time Estimate: ' + remainingTime,
+                                style: TextStyle(
+                                    fontFamily: 'Baloo', fontSize: 16),
+                              )
+                            : Text(""),
                       ),
                       Text(
                         item['stateTime'],
@@ -562,6 +553,11 @@ class _CustomerOrderDetailState extends State<CustomerOrderDetail>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text('Rs. ' + item['price'] + ' per item',
+                        style: TextStyle(
+                            color: blackClr,
+                            fontFamily: 'Baloo',
+                            fontSize: 18)),
+                    Text('Qty ' + item['quantity'],
                         style: TextStyle(
                             color: blackClr,
                             fontFamily: 'Baloo',

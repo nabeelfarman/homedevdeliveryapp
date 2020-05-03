@@ -52,6 +52,10 @@ class _CustomerOrdersState extends State<CustomerOrders>
   String status;
   int totalItems = 0;
 
+  String userName;
+  int appTypeID;
+  String email;
+
   _CustomerOrdersState(
     this.pageName,
     this.userID,
@@ -73,6 +77,41 @@ class _CustomerOrdersState extends State<CustomerOrders>
     super.initState();
     this.getCustomerOrders();
     this.getCartItems();
+    this.getUserData();
+  }
+
+  @override
+  Future<String> getUserData() async {
+    try {
+      // Future.delayed(Duration(seconds: 1)).then((value) {
+      //   pr.show();
+      // });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getuserdetail?UserID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      userID = responseJson[0]["userID"];
+      userName = responseJson[0]["userName"];
+      appTypeID = responseJson[0]["appTypeID"];
+      email = responseJson[0]["email"];
+      townID = responseJson[0]["townID"];
+
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      return 'success';
+    } catch (e) {
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      print(e);
+    }
   }
 
   @override
@@ -239,7 +278,7 @@ class _CustomerOrdersState extends State<CustomerOrders>
             print(userID);
             print(townID);
             print(pageName);
-            // navigateToCustomerHome(context);
+            navigateToSideBarLayout(context);
           },
           child: Icon(
             Icons.arrow_back, // add custom icons also
@@ -479,11 +518,14 @@ class _CustomerOrdersState extends State<CustomerOrders>
     );
   }
 
-  void navigateToCustomerHome(BuildContext context) {
+  void navigateToSideBarLayout(BuildContext context) {
     Routes.sailor.navigate(
-      '/customerHome',
+      '/sideBarLayout',
       params: {
         'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
         'townID': townID,
       },
     );

@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'dart:convert';
 
+import '../../main.dart';
+
 class InventoryPage extends StatefulWidget {
   final int userID;
   @override
@@ -35,6 +37,11 @@ class _InventoryPageState extends State<InventoryPage>
   bool isSearching = false;
   List items_data = [];
 
+  String userName;
+  int appTypeID;
+  int townID;
+  String email;
+
   ProgressDialog pr;
 
   List filteredItems = List();
@@ -45,7 +52,41 @@ class _InventoryPageState extends State<InventoryPage>
   void initState() {
     super.initState();
     this.getItems();
-    // print(items_data.toList());
+    getUserData();
+  }
+
+  @override
+  Future<String> getUserData() async {
+    try {
+      // Future.delayed(Duration(seconds: 1)).then((value) {
+      //   pr.show();
+      // });
+      var response = await http.get(
+          "http://95.217.147.105:2001/api/getuserdetail?UserID=" +
+              userID.toString(),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      var responseJson = json.decode(response.body);
+
+      userID = responseJson[0]["userID"];
+      userName = responseJson[0]["userName"];
+      appTypeID = responseJson[0]["appTypeID"];
+      email = responseJson[0]["email"];
+      townID = responseJson[0]["townID"];
+
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      return 'success';
+    } catch (e) {
+      // Future.delayed(Duration(seconds: 2)).then((value) {
+      //   pr.hide();
+      // });
+
+      print(e);
+    }
   }
 
   @override
@@ -171,7 +212,7 @@ class _InventoryPageState extends State<InventoryPage>
       borderRadius: 10.0,
       backgroundColor: blackClr,
       progressWidget: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(greenClr),
+        valueColor: new AlwaysStoppedAnimation<Color>(lightYellowClr),
       ),
       elevation: 20.0,
       insetAnimCurve: Curves.easeInOut,
@@ -185,6 +226,14 @@ class _InventoryPageState extends State<InventoryPage>
 
     return Scaffold(
       appBar: new AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            navigateToSideBarLayout(context);
+          },
+          child: Icon(
+            Icons.arrow_back, // add custom icons also
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: darkYellowClr,
@@ -358,6 +407,19 @@ class _InventoryPageState extends State<InventoryPage>
               ],
             ),
           )),
+    );
+  }
+
+  void navigateToSideBarLayout(BuildContext context) {
+    Routes.sailor.navigate(
+      '/sideBarLayout',
+      params: {
+        'userID': userID,
+        'userName': userName,
+        'appTypeID': appTypeID,
+        'email': email,
+        'townID': townID,
+      },
     );
   }
 }
