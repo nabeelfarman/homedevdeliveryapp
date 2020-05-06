@@ -297,7 +297,7 @@ class _SupplierOrdersState extends State<SupplierOrders>
       body: ListView(
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height - 50.0,
+            height: MediaQuery.of(context).size.height - 160.0,
             decoration: new BoxDecoration(
               // color: yellowClr,
               gradient: new LinearGradient(
